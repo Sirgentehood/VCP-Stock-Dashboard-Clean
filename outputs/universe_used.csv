@@ -1,0 +1,763 @@
+Company Name,Industry,Symbol,Series,ISIN Code,Ticker,sector,industry_group,is_fo_stock,fo_category,Include
+360 ONE WAM LIMITED,Financial Services,360ONE,EQ,INE466L01038,360ONE.NS,Unknown,Unknown,True,F&O,1
+3M India Limited,Diversified,3MINDIA,EQ,INE470A01017,3MINDIA.NS,Unknown,Unknown,False,Cash,1
+Aadhar Housing Finance Ltd.,Financial Services,AADHARHFC,EQ,INE883F01010,AADHARHFC.NS,Unknown,Unknown,False,Cash,1
+Aarti Drugs Limited,Healthcare,AARTIDRUGS,EQ,INE767A01016,AARTIDRUGS.NS,Unknown,Unknown,False,Cash,1
+Aarti Industries Limited,Chemicals,AARTIIND,EQ,INE769A01020,AARTIIND.NS,Unknown,Unknown,False,Cash,1
+Aarti Pharmalabs Limited,Healthcare,AARTIPHARM,EQ,INE0LRU01027,AARTIPHARM.NS,Unknown,Unknown,False,Cash,1
+Aavas Financiers Ltd.,Financial Services,AAVAS,EQ,INE216P01012,AAVAS.NS,Unknown,Unknown,False,Cash,1
+ABB India Limited,Capital Goods,ABB,EQ,INE117A01022,ABB.NS,Unknown,Unknown,True,F&O,1
+Abbott India Limited,Healthcare,ABBOTINDIA,EQ,INE358A01014,ABBOTINDIA.NS,Unknown,Unknown,False,Cash,1
+Aditya Birla Capital Limited,Financial Services,ABCAPITAL,EQ,INE674K01013,ABCAPITAL.NS,Unknown,Unknown,True,F&O,1
+Aditya Birla Fashion and Retail Limited,Consumer Services,ABFRL,EQ,INE647O01011,ABFRL.NS,Unknown,Unknown,False,Cash,1
+Aditya Birla Lifestyle Brands Ltd.,Consumer Services,ABLBL,EQ,INE14LE01019,ABLBL.NS,Unknown,Unknown,False,Cash,1
+Aditya Birla Real Estate Ltd.,Forest Materials,ABREL,EQ,INE055A01016,ABREL.NS,Unknown,Unknown,False,Cash,1
+Aditya Birla Sun Life AMC Limited,Financial Services,ABSLAMC,EQ,INE404A01024,ABSLAMC.NS,Unknown,Unknown,False,Cash,1
+ACC Limited,Construction Materials,ACC,EQ,INE012A01025,ACC.NS,Unknown,Unknown,False,Cash,1
+Action Construction Equipment Limited,Capital Goods,ACE,EQ,INE731H01025,ACE.NS,Unknown,Unknown,False,Cash,1
+Archean Chemical Industries Limited,Chemicals,ACI,EQ,INE128X01021,ACI.NS,Unknown,Unknown,False,Cash,1
+ACME Solar Holdings Ltd.,Power,ACMESOLAR,EQ,INE622W01025,ACMESOLAR.NS,Unknown,Unknown,False,Cash,1
+Adani Energy Solutions Limited,Power,ADANIENSOL,EQ,INE931S01010,ADANIENSOL.NS,Unknown,Unknown,True,F&O,1
+Adani Enterprises Limited,Metals & Mining,ADANIENT,EQ,INE423A01024,ADANIENT.NS,Unknown,Unknown,True,F&O,1
+Adani Green Energy Limited,Power,ADANIGREEN,EQ,INE364U01010,ADANIGREEN.NS,Unknown,Unknown,True,F&O,1
+Adani Ports and Special Economic Zone Limited,Services,ADANIPORTS,EQ,INE742F01042,ADANIPORTS.NS,Unknown,Unknown,True,F&O,1
+Adani Power Limited,Power,ADANIPOWER,EQ,INE814H01011,ADANIPOWER.NS,Unknown,Unknown,True,F&O,1
+Advanced Enzyme Technologies Limited,Healthcare,ADVENZYMES,EQ,INE837H01020,ADVENZYMES.NS,Unknown,Unknown,False,Cash,1
+Aegis Logistics Ltd.,"Oil, Gas & Consumable Fuels",AEGISLOG,EQ,INE208C01025,AEGISLOG.NS,Unknown,Unknown,False,Cash,1
+Aegis Vopak Terminals Ltd.,"Oil, Gas & Consumable Fuels",AEGISVOPAK,EQ,INE0INX01018,AEGISVOPAK.NS,Unknown,Unknown,False,Cash,1
+Aether Industries Limited,Chemicals,AETHER,EQ,INE0BWX01014,AETHER.NS,Unknown,Unknown,False,Cash,1
+Afcons Infrastructure Ltd.,Construction,AFCONS,EQ,INE101I01011,AFCONS.NS,Unknown,Unknown,False,Cash,1
+Affle (India) Limited,Information Technology,AFFLE,EQ,INE00WC01027,AFFLE.NS,Unknown,Unknown,False,Cash,1
+Dr. Agarwal's Health Care Ltd.,Healthcare,AGARWALEYE,EQ,INE943P01029,AGARWALEYE.NS,Unknown,Unknown,False,Cash,1
+AGI Greenpac Limited,Capital Goods,AGI,EQ,INE415A01038,AGI.NS,Unknown,Unknown,False,Cash,1
+Ahluwalia Contracts (India) Limited,Construction,AHLUCONT,EQ,INE758C01029,AHLUCONT.NS,Unknown,Unknown,False,Cash,1
+AIA Engineering Limited,Capital Goods,AIAENG,EQ,INE212H01026,AIAENG.NS,Unknown,Unknown,False,Cash,1
+Authum Investment & Infrastructure Ltd.,Financial Services,AIIL,EQ,INE206F01022,AIIL.NS,Unknown,Unknown,False,Cash,1
+Ajanta Pharma Limited,Healthcare,AJANTPHARM,EQ,INE031B01049,AJANTPHARM.NS,Unknown,Unknown,False,Cash,1
+Akums Drugs and Pharmaceuticals Ltd.,Healthcare,AKUMS,EQ,INE09XN01023,AKUMS.NS,Unknown,Unknown,False,Cash,1
+Akzo Nobel India Limited,Consumer Durables,AKZOINDIA,EQ,INE133A01011,AKZOINDIA.NS,Unknown,Unknown,False,Cash,1
+Alkem Laboratories Limited,Healthcare,ALKEM,EQ,INE540L01014,ALKEM.NS,Unknown,Unknown,True,F&O,1
+Alkyl Amines Chemicals Limited,Chemicals,ALKYLAMINE,EQ,INE150B01039,ALKYLAMINE.NS,Unknown,Unknown,False,Cash,1
+Allcargo Logistics Limited,Services,ALLCARGO,EQ,INE418H01029,ALLCARGO.NS,Unknown,Unknown,False,Cash,1
+Alok Industries Limited,Textiles,ALOKINDS,EQ,INE270A01029,ALOKINDS.NS,Unknown,Unknown,False,Cash,1
+Amber Enterprises India Limited,Consumer Durables,AMBER,EQ,INE371P01015,AMBER.NS,Unknown,Unknown,True,F&O,1
+Ambuja Cements Limited,Construction Materials,AMBUJACEM,EQ,INE079A01024,AMBUJACEM.NS,Unknown,Unknown,True,F&O,1
+Anand Rathi Wealth Limited,Financial Services,ANANDRATHI,EQ,INE463V01026,ANANDRATHI.NS,Unknown,Unknown,False,Cash,1
+Anant Raj Limited,Realty,ANANTRAJ,EQ,INE242C01024,ANANTRAJ.NS,Unknown,Unknown,False,Cash,1
+Angel One Limited,Financial Services,ANGELONE,EQ,INE732I01013,ANGELONE.NS,Unknown,Unknown,True,F&O,1
+Anupam Rasayan India Limited,Chemicals,ANURAS,EQ,INE930P01018,ANURAS.NS,Unknown,Unknown,False,Cash,1
+Apar Industries Limited,Capital Goods,APARINDS,EQ,INE372A01015,APARINDS.NS,Unknown,Unknown,False,Cash,1
+APL Apollo Tubes Limited,Capital Goods,APLAPOLLO,EQ,INE702C01027,APLAPOLLO.NS,Unknown,Unknown,True,F&O,1
+Alembic Pharmaceuticals Limited,Healthcare,APLLTD,EQ,INE901L01018,APLLTD.NS,Unknown,Unknown,False,Cash,1
+Apollo Micro Systems Limited,Capital Goods,APOLLO,EQ,INE713T01028,APOLLO.NS,Unknown,Unknown,False,Cash,1
+Apollo Hospitals Enterprise Limited,Healthcare,APOLLOHOSP,EQ,INE437A01024,APOLLOHOSP.NS,Unknown,Unknown,True,F&O,1
+Apollo Tyres Limited,Automobile and Auto Components,APOLLOTYRE,EQ,INE438A01022,APOLLOTYRE.NS,Unknown,Unknown,False,Cash,1
+Aptus Value Housing Finance India Limited,Financial Services,APTUS,EQ,INE852O01025,APTUS.NS,Unknown,Unknown,False,Cash,1
+Amara Raja Energy & Mobility Ltd.,Automobile and Auto Components,ARE&M,EQ,INE885A01032,ARE&M.NS,Unknown,Unknown,False,Cash,1
+Arvind Limited,Textiles,ARVIND,EQ,INE034A01011,ARVIND.NS,Unknown,Unknown,False,Cash,1
+Arvind Fashions Limited,Consumer Services,ARVINDFASN,EQ,INE955V01021,ARVINDFASN.NS,Unknown,Unknown,False,Cash,1
+Asahi India Glass Limited,Automobile and Auto Components,ASAHIINDIA,EQ,INE439A01020,ASAHIINDIA.NS,Unknown,Unknown,False,Cash,1
+Ashoka Buildcon Limited,Construction,ASHOKA,EQ,INE442H01029,ASHOKA.NS,Unknown,Unknown,False,Cash,1
+Ashok Leyland Limited,Capital Goods,ASHOKLEY,EQ,INE208A01029,ASHOKLEY.NS,Unknown,Unknown,True,F&O,1
+Asian Paints Limited,Consumer Durables,ASIANPAINT,EQ,INE021A01026,ASIANPAINT.NS,Unknown,Unknown,True,F&O,1
+Aster DM Healthcare Limited,Healthcare,ASTERDM,EQ,INE914M01019,ASTERDM.NS,Unknown,Unknown,False,Cash,1
+Astral Limited,Capital Goods,ASTRAL,EQ,INE006I01046,ASTRAL.NS,Unknown,Unknown,True,F&O,1
+Astra Microwave Products Limited,Capital Goods,ASTRAMICRO,EQ,INE386C01029,ASTRAMICRO.NS,Unknown,Unknown,False,Cash,1
+AstraZeneca Pharma India Limited,Healthcare,ASTRAZEN,EQ,INE203A01020,ASTRAZEN.NS,Unknown,Unknown,False,Cash,1
+Adani Total Gas Limited,"Oil, Gas & Consumable Fuels",ATGL,EQ,INE399L01023,ATGL.NS,Unknown,Unknown,False,Cash,1
+Ather Energy Ltd.,Automobile and Auto Components,ATHERENERG,EQ,INE0LEZ01016,ATHERENERG.NS,Unknown,Unknown,False,Cash,1
+Atul Limited,Chemicals,ATUL,EQ,INE100A01010,ATUL.NS,Unknown,Unknown,False,Cash,1
+AU Small Finance Bank Limited,Financial Services,AUBANK,EQ,INE949L01017,AUBANK.NS,Unknown,Unknown,True,F&O,1
+Aurobindo Pharma Limited,Healthcare,AUROPHARMA,EQ,INE406A01037,AUROPHARMA.NS,Unknown,Unknown,True,F&O,1
+Adani Wilmar Limited,Fast Moving Consumer Goods,AWL,EQ,INE699H01024,AWL.NS,Unknown,Unknown,False,Cash,1
+Axis Bank Limited,Financial Services,AXISBANK,EQ,INE238A01034,AXISBANK.NS,Unknown,Unknown,True,F&O,1
+Bajaj Auto Limited,Automobile and Auto Components,BAJAJ-AUTO,EQ,INE917I01010,BAJAJ-AUTO.NS,Unknown,Unknown,True,F&O,1
+Bajaj Consumer Care Limited,Fast Moving Consumer Goods,BAJAJCON,EQ,INE933K01021,BAJAJCON.NS,Unknown,Unknown,False,Cash,1
+Bajaj Finserv Limited,Financial Services,BAJAJFINSV,EQ,INE918I01026,BAJAJFINSV.NS,Unknown,Unknown,True,F&O,1
+Bajaj Housing Finance Ltd.,Financial Services,BAJAJHFL,EQ,INE377Y01014,BAJAJHFL.NS,Unknown,Unknown,False,Cash,1
+Bajaj Hindusthan Sugar Limited,Fast Moving Consumer Goods,BAJAJHIND,EQ,INE306A01021,BAJAJHIND.NS,Unknown,Unknown,False,Cash,1
+Bajaj Holdings & Investment Limited,Financial Services,BAJAJHLDNG,EQ,INE118A01012,BAJAJHLDNG.NS,Unknown,Unknown,True,F&O,1
+Bajaj Finance Limited,Financial Services,BAJFINANCE,EQ,INE296A01024,BAJFINANCE.NS,Unknown,Unknown,True,F&O,1
+Balaji Amines Limited,Chemicals,BALAMINES,EQ,INE050E01027,BALAMINES.NS,Unknown,Unknown,False,Cash,1
+Balkrishna Industries Limited,Automobile and Auto Components,BALKRISIND,EQ,INE787D01026,BALKRISIND.NS,Unknown,Unknown,False,Cash,1
+Balmer Lawrie & Company Limited,Diversified,BALMLAWRIE,EQ,INE164A01016,BALMLAWRIE.NS,Unknown,Unknown,False,Cash,1
+Balrampur Chini Mills Limited,Fast Moving Consumer Goods,BALRAMCHIN,EQ,INE119A01028,BALRAMCHIN.NS,Unknown,Unknown,False,Cash,1
+Banco Products (I) Limited,Automobile and Auto Components,BANCOINDIA,EQ,INE213C01025,BANCOINDIA.NS,Unknown,Unknown,False,Cash,1
+Bandhan Bank Limited,Financial Services,BANDHANBNK,EQ,INE545U01014,BANDHANBNK.NS,Unknown,Unknown,True,F&O,1
+Bank of Baroda,Financial Services,BANKBARODA,EQ,INE028A01039,BANKBARODA.NS,Unknown,Unknown,True,F&O,1
+Bank of India,Financial Services,BANKINDIA,EQ,INE084A01016,BANKINDIA.NS,Unknown,Unknown,True,F&O,1
+BASF India Limited,Chemicals,BASF,EQ,INE373A01013,BASF.NS,Unknown,Unknown,False,Cash,1
+Bata India Limited,Consumer Durables,BATAINDIA,EQ,INE176A01028,BATAINDIA.NS,Unknown,Unknown,False,Cash,1
+Bayer Cropscience Limited,Chemicals,BAYERCROP,EQ,INE462A01022,BAYERCROP.NS,Unknown,Unknown,False,Cash,1
+Bharat Bijlee Limited,Capital Goods,BBL,EQ,INE464A01028,BBL.NS,Unknown,Unknown,False,Cash,1
+Black Box Limited,Information Technology,BBOX,EQ,INE676A01027,BBOX.NS,Unknown,Unknown,False,Cash,1
+Bombay Burmah Trading Corporation Limited,Fast Moving Consumer Goods,BBTC,EQ,INE050A01025,BBTC.NS,Unknown,Unknown,False,Cash,1
+Bharat Dynamics Limited,Capital Goods,BDL,EQ,INE171Z01018,BDL.NS,Unknown,Unknown,True,F&O,1
+Mrs. Bectors Food Specialities Limited,Fast Moving Consumer Goods,BECTORFOOD,EQ,INE495P01012,BECTORFOOD.NS,Unknown,Unknown,False,Cash,1
+Bharat Electronics Limited,Capital Goods,BEL,EQ,INE263A01024,BEL.NS,Unknown,Unknown,True,F&O,1
+BEML Limited,Capital Goods,BEML,EQ,INE258A01016,BEML.NS,Unknown,Unknown,False,Cash,1
+Berger Paints (I) Limited,Consumer Durables,BERGEPAINT,EQ,INE463A01038,BERGEPAINT.NS,Unknown,Unknown,False,Cash,1
+Bharat Forge Limited,Capital Goods,BHARATFORG,EQ,INE465A01025,BHARATFORG.NS,Unknown,Unknown,True,F&O,1
+Bharat Rasayan Limited,Chemicals,BHARATRAS,EQ,INE838B01013,BHARATRAS.NS,Unknown,Unknown,False,Cash,1
+Bharti Airtel Limited,Telecommunication,BHARTIARTL,EQ,INE397D01024,BHARTIARTL.NS,Unknown,Unknown,True,F&O,1
+Bharti Hexacom Ltd.,Telecommunication,BHARTIHEXA,EQ,INE343G01021,BHARTIHEXA.NS,Unknown,Unknown,False,Cash,1
+Bharat Heavy Electricals Limited,Capital Goods,BHEL,EQ,INE257A01026,BHEL.NS,Unknown,Unknown,True,F&O,1
+Bikaji Foods International Limited,Fast Moving Consumer Goods,BIKAJI,EQ,INE00E101023,BIKAJI.NS,Unknown,Unknown,False,Cash,1
+Biocon Ltd.,Healthcare,BIOCON,EQ,INE376G01013,BIOCON.NS,Unknown,Unknown,True,F&O,1
+Birla Corporation Limited,Construction Materials,BIRLACORPN,EQ,INE340A01012,BIRLACORPN.NS,Unknown,Unknown,False,Cash,1
+BLS International Services Ltd.,Consumer Services,BLS,EQ,INE153T01027,BLS.NS,Unknown,Unknown,False,Cash,1
+Blue Dart Express Limited,Services,BLUEDART,EQ,INE233B01017,BLUEDART.NS,Unknown,Unknown,False,Cash,1
+Blue Jet Healthcare Ltd.,Healthcare,BLUEJET,EQ,INE0KBH01020,BLUEJET.NS,Unknown,Unknown,False,Cash,1
+Blue Star Limited,Consumer Durables,BLUESTARCO,EQ,INE472A01039,BLUESTARCO.NS,Unknown,Unknown,True,F&O,1
+Bombay Dyeing & Mfg Company Limited,Textiles,BOMDYEING,EQ,INE032A01023,BOMDYEING.NS,Unknown,Unknown,False,Cash,1
+Borosil Limited,Consumer Durables,BOROLTD,EQ,INE02PY01013,BOROLTD.NS,Unknown,Unknown,False,Cash,1
+BOROSIL RENEWABLES LIMITED,Capital Goods,BORORENEW,EQ,INE666D01022,BORORENEW.NS,Unknown,Unknown,False,Cash,1
+Bosch Limited,Automobile and Auto Components,BOSCHLTD,EQ,INE323A01026,BOSCHLTD.NS,Unknown,Unknown,True,F&O,1
+Bharat Petroleum Corporation Limited,"Oil, Gas & Consumable Fuels",BPCL,EQ,INE029A01011,BPCL.NS,Unknown,Unknown,True,F&O,1
+Brigade Enterprises Limited,Realty,BRIGADE,EQ,INE791I01019,BRIGADE.NS,Unknown,Unknown,False,Cash,1
+Britannia Industries Limited,Fast Moving Consumer Goods,BRITANNIA,EQ,INE216A01030,BRITANNIA.NS,Unknown,Unknown,True,F&O,1
+BSE Ltd.,Financial Services,BSE,EQ,INE118H01025,BSE.NS,Unknown,Unknown,True,F&O,1
+BIRLASOFT LIMITED,Information Technology,BSOFT,EQ,INE836A01035,BSOFT.NS,Unknown,Unknown,False,Cash,1
+Campus Activewear Limited,Consumer Durables,CAMPUS,EQ,INE278Y01022,CAMPUS.NS,Unknown,Unknown,False,Cash,1
+Computer Age Management Services Limited,Financial Services,CAMS,EQ,INE596I01012,CAMS.NS,Unknown,Unknown,True,F&O,1
+Canara Bank,Financial Services,CANBK,EQ,INE476A01014,CANBK.NS,Unknown,Unknown,True,F&O,1
+Can Fin Homes Limited,Financial Services,CANFINHOME,EQ,INE477A01020,CANFINHOME.NS,Unknown,Unknown,False,Cash,1
+Caplin Point Laboratories Limited,Healthcare,CAPLIPOINT,EQ,INE475E01026,CAPLIPOINT.NS,Unknown,Unknown,False,Cash,1
+Carborundum Universal Limited,Capital Goods,CARBORUNIV,EQ,INE120A01034,CARBORUNIV.NS,Unknown,Unknown,False,Cash,1
+Cartrade Tech Limited,Consumer Services,CARTRADE,EQ,INE290S01011,CARTRADE.NS,Unknown,Unknown,False,Cash,1
+Castrol India Limited,"Oil, Gas & Consumable Fuels",CASTROLIND,EQ,INE172A01027,CASTROLIND.NS,Unknown,Unknown,False,Cash,1
+CCL Products (India) Limited,Fast Moving Consumer Goods,CCL,EQ,INE421D01022,CCL.NS,Unknown,Unknown,False,Cash,1
+Central Depository Services (India) Ltd.,Financial Services,CDSL,EQ,INE736A01011,CDSL.NS,Unknown,Unknown,True,F&O,1
+Ceat Ltd.,Automobile and Auto Components,CEATLTD,EQ,INE482A01020,CEATLTD.NS,Unknown,Unknown,False,Cash,1
+Central Bank of India,Financial Services,CENTRALBK,EQ,INE483A01010,CENTRALBK.NS,Unknown,Unknown,False,Cash,1
+Century Plyboards (India) Limited,Consumer Durables,CENTURYPLY,EQ,INE348B01021,CENTURYPLY.NS,Unknown,Unknown,False,Cash,1
+Cera Sanitaryware Limited,Consumer Durables,CERA,EQ,INE739E01017,CERA.NS,Unknown,Unknown,False,Cash,1
+CESC Limited,Power,CESC,EQ,INE486A01021,CESC.NS,Unknown,Unknown,False,Cash,1
+Capri Global Capital Limited,Financial Services,CGCL,EQ,INE180C01026,CGCL.NS,Unknown,Unknown,False,Cash,1
+CG Power and Industrial Solutions Limited,Capital Goods,CGPOWER,EQ,INE067A01029,CGPOWER.NS,Unknown,Unknown,True,F&O,1
+Chalet Hotels Limited,Consumer Services,CHALET,EQ,INE427F01016,CHALET.NS,Unknown,Unknown,False,Cash,1
+Chambal Fertilizers & Chemicals Limited,Chemicals,CHAMBLFERT,EQ,INE085A01013,CHAMBLFERT.NS,Unknown,Unknown,False,Cash,1
+Chemplast Sanmar Limited,Chemicals,CHEMPLASTS,EQ,INE488A01050,CHEMPLASTS.NS,Unknown,Unknown,False,Cash,1
+Chennai Petroleum Corporation Limited,"Oil, Gas & Consumable Fuels",CHENNPETRO,EQ,INE178A01016,CHENNPETRO.NS,Unknown,Unknown,False,Cash,1
+Choice International Limited,Financial Services,CHOICEIN,EQ,INE102B01014,CHOICEIN.NS,Unknown,Unknown,False,Cash,1
+Cholamandalam Investment and Finance Company Limited,Financial Services,CHOLAFIN,EQ,INE121A01024,CHOLAFIN.NS,Unknown,Unknown,True,F&O,1
+Cholamandalam Financial Holdings Limited,Financial Services,CHOLAHLDNG,EQ,INE149A01033,CHOLAHLDNG.NS,Unknown,Unknown,False,Cash,1
+CIE Automotive India Limited,Automobile and Auto Components,CIEINDIA,EQ,INE536H01010,CIEINDIA.NS,Unknown,Unknown,False,Cash,1
+Cipla Limited,Healthcare,CIPLA,EQ,INE059A01026,CIPLA.NS,Unknown,Unknown,True,F&O,1
+Clean Science and Technology Limited,Chemicals,CLEAN,EQ,INE227W01023,CLEAN.NS,Unknown,Unknown,False,Cash,1
+CMS Info Systems Limited,Services,CMSINFO,EQ,INE925R01014,CMSINFO.NS,Unknown,Unknown,False,Cash,1
+Coal India Limited,"Oil, Gas & Consumable Fuels",COALINDIA,EQ,INE522F01014,COALINDIA.NS,Unknown,Unknown,True,F&O,1
+Cochin Shipyard Limited,Capital Goods,COCHINSHIP,EQ,INE704P01017,COCHINSHIP.NS,Unknown,Unknown,True,F&O,1
+Coforge Limited,Information Technology,COFORGE,EQ,INE591G01017,COFORGE.NS,Unknown,Unknown,True,F&O,1
+Cohance Lifesciences Ltd.,Healthcare,COHANCE,EQ,INE03QK01018,COHANCE.NS,Unknown,Unknown,False,Cash,1
+Colgate Palmolive (India) Limited,Fast Moving Consumer Goods,COLPAL,EQ,INE259A01022,COLPAL.NS,Unknown,Unknown,True,F&O,1
+Container Corporation of India Limited,Services,CONCOR,EQ,INE111A01025,CONCOR.NS,Unknown,Unknown,True,F&O,1
+Concord Biotech Limited,Healthcare,CONCORDBIO,EQ,INE338H01029,CONCORDBIO.NS,Unknown,Unknown,False,Cash,1
+Coromandel International Limited,Chemicals,COROMANDEL,EQ,INE169A01031,COROMANDEL.NS,Unknown,Unknown,False,Cash,1
+Craftsman Automation Limited,Automobile and Auto Components,CRAFTSMAN,EQ,INE00LO01017,CRAFTSMAN.NS,Unknown,Unknown,False,Cash,1
+CREDITACCESS GRAMEEN LIMITED,Financial Services,CREDITACC,EQ,INE741K01010,CREDITACC.NS,Unknown,Unknown,False,Cash,1
+CRISIL Limited,Financial Services,CRISIL,EQ,INE007A01025,CRISIL.NS,Unknown,Unknown,False,Cash,1
+Crompton Greaves Consumer Electricals Limited,Consumer Durables,CROMPTON,EQ,INE299U01018,CROMPTON.NS,Unknown,Unknown,True,F&O,1
+CSB Bank Limited,Financial Services,CSBBANK,EQ,INE679A01013,CSBBANK.NS,Unknown,Unknown,False,Cash,1
+City Union Bank Limited,Financial Services,CUB,EQ,INE491A01021,CUB.NS,Unknown,Unknown,False,Cash,1
+Cummins India Limited,Capital Goods,CUMMINSIND,EQ,INE298A01020,CUMMINSIND.NS,Unknown,Unknown,True,F&O,1
+Cyient Limited,Information Technology,CYIENT,EQ,INE136B01020,CYIENT.NS,Unknown,Unknown,False,Cash,1
+Cyient DLM Limited,Capital Goods,CYIENTDLM,EQ,INE055S01018,CYIENTDLM.NS,Unknown,Unknown,False,Cash,1
+Dabur India Limited,Fast Moving Consumer Goods,DABUR,EQ,INE016A01026,DABUR.NS,Unknown,Unknown,True,F&O,1
+Dalmia Bharat Limited,Construction Materials,DALBHARAT,EQ,INE00R701025,DALBHARAT.NS,Unknown,Unknown,True,F&O,1
+Dalmia Bharat Sugar and Industries Limited,Fast Moving Consumer Goods,DALMIASUG,EQ,INE495A01022,DALMIASUG.NS,Unknown,Unknown,False,Cash,1
+Datamatics Global Services Limited,Information Technology,DATAMATICS,EQ,INE365B01017,DATAMATICS.NS,Unknown,Unknown,False,Cash,1
+Data Patterns (India) Limited,Capital Goods,DATAPATTNS,EQ,INE0IX101010,DATAPATTNS.NS,Unknown,Unknown,False,Cash,1
+D.B.Corp Limited,"Media, Entertainment & Publication",DBCORP,EQ,INE950I01011,DBCORP.NS,Unknown,Unknown,False,Cash,1
+Dilip Buildcon Limited,Construction,DBL,EQ,INE917M01012,DBL.NS,Unknown,Unknown,False,Cash,1
+D B Realty Limited,Realty,DBREALTY,EQ,INE879I01012,DBREALTY.NS,Unknown,Unknown,False,Cash,1
+Dishman Carbogen Amcis Limited,Healthcare,DCAL,EQ,INE385W01011,DCAL.NS,Unknown,Unknown,False,Cash,1
+DCB Bank Limited,Financial Services,DCBBANK,EQ,INE503A01015,DCBBANK.NS,Unknown,Unknown,False,Cash,1
+DCM Shriram Limited,Diversified,DCMSHRIRAM,EQ,INE499A01024,DCMSHRIRAM.NS,Unknown,Unknown,False,Cash,1
+DCX Systems Limited,Capital Goods,DCXINDIA,EQ,INE0KL801015,DCXINDIA.NS,Unknown,Unknown,False,Cash,1
+Deepak Fertilizers and Petrochemicals Corporation Limited,Chemicals,DEEPAKFERT,EQ,INE501A01019,DEEPAKFERT.NS,Unknown,Unknown,False,Cash,1
+Deepak Nitrite Limited,Chemicals,DEEPAKNTR,EQ,INE288B01029,DEEPAKNTR.NS,Unknown,Unknown,False,Cash,1
+Delhivery Limited,Services,DELHIVERY,EQ,INE148O01028,DELHIVERY.NS,Unknown,Unknown,True,F&O,1
+Delta Corp Limited,Consumer Services,DELTACORP,EQ,INE124G01033,DELTACORP.NS,Unknown,Unknown,False,Cash,1
+Devyani International Limited,Consumer Services,DEVYANI,EQ,INE872J01023,DEVYANI.NS,Unknown,Unknown,False,Cash,1
+Dhanuka Agritech Limited,Chemicals,DHANUKA,EQ,INE435G01025,DHANUKA.NS,Unknown,Unknown,False,Cash,1
+Dish TV India Limited,"Media, Entertainment & Publication",DISHTV,EQ,INE836F01026,DISHTV.NS,Unknown,Unknown,False,Cash,1
+Divi's Laboratories Limited,Healthcare,DIVISLAB,EQ,INE361B01024,DIVISLAB.NS,Unknown,Unknown,True,F&O,1
+Dixon Technologies (India) Limited,Consumer Durables,DIXON,EQ,INE935N01020,DIXON.NS,Unknown,Unknown,True,F&O,1
+DLF Limited,Realty,DLF,EQ,INE271C01023,DLF.NS,Unknown,Unknown,True,F&O,1
+Avenue Supermarts Limited,Consumer Services,DMART,EQ,INE192R01011,DMART.NS,Unknown,Unknown,True,F&O,1
+Dodla Dairy Limited,Fast Moving Consumer Goods,DODLA,EQ,INE021O01019,DODLA.NS,Unknown,Unknown,False,Cash,1
+DOMS Industries Ltd.,Fast Moving Consumer Goods,DOMS,EQ,INE321T01012,DOMS.NS,Unknown,Unknown,False,Cash,1
+Dr. Reddy's Laboratories Limited,Healthcare,DRREDDY,EQ,INE089A01023,DRREDDY.NS,Unknown,Unknown,True,F&O,1
+Dynamatic Technologies Limited,Capital Goods,DYNAMATECH,EQ,INE221B01012,DYNAMATECH.NS,Unknown,Unknown,False,Cash,1
+Easy Trip Planners Limited,Consumer Services,EASEMYTRIP,EQ,INE07O001026,EASEMYTRIP.NS,Unknown,Unknown,False,Cash,1
+eClerx Services Limited,Services,ECLERX,EQ,INE738I01010,ECLERX.NS,Unknown,Unknown,False,Cash,1
+Edelweiss Financial Services Limited,Financial Services,EDELWEISS,EQ,INE532F01054,EDELWEISS.NS,Unknown,Unknown,False,Cash,1
+Eicher Motors Limited,Automobile and Auto Components,EICHERMOT,EQ,INE066A01021,EICHERMOT.NS,Unknown,Unknown,True,F&O,1
+EID Parry India Limited,Chemicals,EIDPARRY,EQ,INE126A01031,EIDPARRY.NS,Unknown,Unknown,False,Cash,1
+EIH Limited,Consumer Services,EIHOTEL,EQ,INE230A01023,EIHOTEL.NS,Unknown,Unknown,False,Cash,1
+Elecon Engineering Company Limited,Capital Goods,ELECON,EQ,INE205B01023,ELECON.NS,Unknown,Unknown,False,Cash,1
+Electrosteel Castings Limited,Capital Goods,ELECTCAST,EQ,INE086A01029,ELECTCAST.NS,Unknown,Unknown,False,Cash,1
+Elgi Equipments Limited,Capital Goods,ELGIEQUIP,EQ,INE285A01027,ELGIEQUIP.NS,Unknown,Unknown,False,Cash,1
+Emami Limited,Fast Moving Consumer Goods,EMAMILTD,EQ,INE548C01032,EMAMILTD.NS,Unknown,Unknown,False,Cash,1
+Emcure Pharmaceuticals Ltd.,Healthcare,EMCURE,EQ,INE168P01015,EMCURE.NS,Unknown,Unknown,False,Cash,1
+eMudhra Limited,Information Technology,EMUDHRA,EQ,INE01QM01018,EMUDHRA.NS,Unknown,Unknown,False,Cash,1
+Endurance Technologies Limited,Automobile and Auto Components,ENDURANCE,EQ,INE913H01037,ENDURANCE.NS,Unknown,Unknown,False,Cash,1
+Engineers India Limited,Construction,ENGINERSIN,EQ,INE510A01028,ENGINERSIN.NS,Unknown,Unknown,False,Cash,1
+Siemens Energy India Ltd.,Capital Goods,ENRIN,EQ,INE1NPP01017,ENRIN.NS,Unknown,Unknown,False,Cash,1
+Epigral Limited,Chemicals,EPIGRAL,EQ,INE071N01016,EPIGRAL.NS,Unknown,Unknown,False,Cash,1
+EPL Limited,Capital Goods,EPL,EQ,INE255A01020,EPL.NS,Unknown,Unknown,False,Cash,1
+Equitas Small Finance Bank Limited,Financial Services,EQUITASBNK,EQ,INE063P01018,EQUITASBNK.NS,Unknown,Unknown,False,Cash,1
+Eris Lifesciences Limited,Healthcare,ERIS,EQ,INE406M01024,ERIS.NS,Unknown,Unknown,False,Cash,1
+Esab India Limited,Capital Goods,ESABINDIA,EQ,INE284A01012,ESABINDIA.NS,Unknown,Unknown,False,Cash,1
+Escorts Kubota Limited,Capital Goods,ESCORTS,EQ,INE042A01014,ESCORTS.NS,Unknown,Unknown,False,Cash,1
+Eternal Ltd.,Consumer Services,ETERNAL,EQ,INE758T01015,ETERNAL.NS,Unknown,Unknown,True,F&O,1
+Exide Industries Limited,Automobile and Auto Components,EXIDEIND,EQ,INE302A01020,EXIDEIND.NS,Unknown,Unknown,True,F&O,1
+Fertilizers and Chemicals Travancore Limited,Chemicals,FACT,EQ,INE188A01015,FACT.NS,Unknown,Unknown,False,Cash,1
+Fineotex Chemical Limited,Chemicals,FCL,EQ,INE045J01026,FCL.NS,Unknown,Unknown,False,Cash,1
+FDC Limited,Healthcare,FDC,EQ,INE258B01022,FDC.NS,Unknown,Unknown,False,Cash,1
+The Federal Bank Limited,Financial Services,FEDERALBNK,EQ,INE171A01029,FEDERALBNK.NS,Unknown,Unknown,True,F&O,1
+Finolex Cables Limited,Capital Goods,FINCABLES,EQ,INE235A01022,FINCABLES.NS,Unknown,Unknown,False,Cash,1
+Fine Organic Industries Limited,Chemicals,FINEORG,EQ,INE686Y01026,FINEORG.NS,Unknown,Unknown,False,Cash,1
+Finolex Industries Limited,Capital Goods,FINPIPE,EQ,INE183A01024,FINPIPE.NS,Unknown,Unknown,False,Cash,1
+Brainbees Solutions Ltd.,Consumer Services,FIRSTCRY,EQ,INE02RE01045,FIRSTCRY.NS,Unknown,Unknown,False,Cash,1
+Five-Star Business Finance Limited,Financial Services,FIVESTAR,EQ,INE128S01021,FIVESTAR.NS,Unknown,Unknown,False,Cash,1
+Gujarat Fluorochemicals Limited,Chemicals,FLUOROCHEM,EQ,INE09N301011,FLUOROCHEM.NS,Unknown,Unknown,False,Cash,1
+FORCE MOTORS LTD,Automobile and Auto Components,FORCEMOT,EQ,INE451A01017,FORCEMOT.NS,Unknown,Unknown,True,F&O,1
+Fortis Healthcare Limited,Healthcare,FORTIS,EQ,INE061F01013,FORTIS.NS,Unknown,Unknown,True,F&O,1
+Firstsource Solutions Limited,Services,FSL,EQ,INE684F01012,FSL.NS,Unknown,Unknown,False,Cash,1
+Fusion Micro Finance Limited,Financial Services,FUSION,EQ,INE139R01012,FUSION.NS,Unknown,Unknown,False,Cash,1
+Gabriel India Limited,Automobile and Auto Components,GABRIEL,EQ,INE524A01029,GABRIEL.NS,Unknown,Unknown,False,Cash,1
+GAIL (India) Limited,"Oil, Gas & Consumable Fuels",GAIL,EQ,INE129A01019,GAIL.NS,Unknown,Unknown,True,F&O,1
+Galaxy Surfactants Limited,Chemicals,GALAXYSURF,EQ,INE600K01018,GALAXYSURF.NS,Unknown,Unknown,False,Cash,1
+Gallantt Ispat Limited,Capital Goods,GALLANTT,EQ,INE297H01019,GALLANTT.NS,Unknown,Unknown,False,Cash,1
+Garware Technical Fibres Limited,Textiles,GARFIBRES,EQ,INE276A01018,GARFIBRES.NS,Unknown,Unknown,False,Cash,1
+Gateway Distriparks Limited,Services,GATEWAY,EQ,INE079J01017,GATEWAY.NS,Unknown,Unknown,False,Cash,1
+Gensol Engineering Limited,Services,GENSOL,EQ,INE06H201014,GENSOL.NS,Unknown,Unknown,False,Cash,1
+Genus Power Infrastructures Limited,Capital Goods,GENUSPOWER,EQ,INE955D01029,GENUSPOWER.NS,Unknown,Unknown,False,Cash,1
+The Great Eastern Shipping Company Limited,Services,GESHIP,EQ,INE017A01032,GESHIP.NS,Unknown,Unknown,False,Cash,1
+GHCL Limited,Chemicals,GHCL,EQ,INE539A01019,GHCL.NS,Unknown,Unknown,False,Cash,1
+General Insurance Corporation of India,Financial Services,GICRE,EQ,INE481Y01014,GICRE.NS,Unknown,Unknown,False,Cash,1
+Gillette India Limited,Fast Moving Consumer Goods,GILLETTE,EQ,INE322A01010,GILLETTE.NS,Unknown,Unknown,False,Cash,1
+Gland Pharma Limited,Healthcare,GLAND,EQ,INE068V01023,GLAND.NS,Unknown,Unknown,False,Cash,1
+GlaxoSmithKline Pharmaceuticals Limited,Healthcare,GLAXO,EQ,INE159A01016,GLAXO.NS,Unknown,Unknown,False,Cash,1
+Glenmark Pharmaceuticals Limited,Healthcare,GLENMARK,EQ,INE935A01035,GLENMARK.NS,Unknown,Unknown,True,F&O,1
+Gujarat Mineral Development Corporation Limited,Metals & Mining,GMDCLTD,EQ,INE131A01031,GMDCLTD.NS,Unknown,Unknown,False,Cash,1
+GMM Pfaudler Limited,Capital Goods,GMMPFAUDLR,EQ,INE541A01023,GMMPFAUDLR.NS,Unknown,Unknown,False,Cash,1
+GMR Airports Ltd.,Services,GMRAIRPORT,EQ,INE776C01039,GMRAIRPORT.NS,Unknown,Unknown,True,F&O,1
+Gujarat Narmada Valley Fertilizers and Chemicals Limited,Chemicals,GNFC,EQ,INE113A01013,GNFC.NS,Unknown,Unknown,False,Cash,1
+Go Fashion (India) Limited,Consumer Services,GOCOLORS,EQ,INE0BJS01011,GOCOLORS.NS,Unknown,Unknown,False,Cash,1
+Godfrey Phillips India Limited,Fast Moving Consumer Goods,GODFRYPHLP,EQ,INE260B01028,GODFRYPHLP.NS,Unknown,Unknown,True,F&O,1
+Go Digit General Insurance Ltd.,Financial Services,GODIGIT,EQ,INE03JT01014,GODIGIT.NS,Unknown,Unknown,False,Cash,1
+Godrej Agrovet Limited,Fast Moving Consumer Goods,GODREJAGRO,EQ,INE850D01014,GODREJAGRO.NS,Unknown,Unknown,False,Cash,1
+Godrej Consumer Products Ltd.,Fast Moving Consumer Goods,GODREJCP,EQ,INE102D01028,GODREJCP.NS,Unknown,Unknown,True,F&O,1
+Godrej Industries Limited,Diversified,GODREJIND,EQ,INE233A01035,GODREJIND.NS,Unknown,Unknown,False,Cash,1
+Godrej Properties Limited,Realty,GODREJPROP,EQ,INE484J01027,GODREJPROP.NS,Unknown,Unknown,True,F&O,1
+Gokaldas Exports Limited,Textiles,GOKEX,EQ,INE887G01027,GOKEX.NS,Unknown,Unknown,False,Cash,1
+Godawari Power And Ispat limited,Capital Goods,GPIL,EQ,INE177H01021,GPIL.NS,Unknown,Unknown,False,Cash,1
+Gujarat Pipavav Port Limited,Services,GPPL,EQ,INE517F01014,GPPL.NS,Unknown,Unknown,False,Cash,1
+Granules India Limited,Healthcare,GRANULES,EQ,INE101D01020,GRANULES.NS,Unknown,Unknown,False,Cash,1
+Graphite India Limited,Capital Goods,GRAPHITE,EQ,INE371A01025,GRAPHITE.NS,Unknown,Unknown,False,Cash,1
+Grasim Industries Limited,Construction Materials,GRASIM,EQ,INE047A01021,GRASIM.NS,Unknown,Unknown,True,F&O,1
+Gravita India Limited,Metals & Mining,GRAVITA,EQ,INE024L01027,GRAVITA.NS,Unknown,Unknown,False,Cash,1
+Greenlam Industries Limited,Consumer Durables,GREENLAM,EQ,INE544R01021,GREENLAM.NS,Unknown,Unknown,False,Cash,1
+Greenpanel Industries Limited,Consumer Durables,GREENPANEL,EQ,INE08ZM01014,GREENPANEL.NS,Unknown,Unknown,False,Cash,1
+Grindwell Norton Limited,Capital Goods,GRINDWELL,EQ,INE536A01023,GRINDWELL.NS,Unknown,Unknown,False,Cash,1
+G R Infraprojects Limited,Construction,GRINFRA,EQ,INE201P01022,GRINFRA.NS,Unknown,Unknown,False,Cash,1
+Garden Reach Shipbuilders & Engineers Limited,Capital Goods,GRSE,EQ,INE382Z01011,GRSE.NS,Unknown,Unknown,False,Cash,1
+Garware Hi-Tech Films Limited,Capital Goods,GRWRHITECH,EQ,INE291A01017,GRWRHITECH.NS,Unknown,Unknown,False,Cash,1
+Gujarat State Fertilizers & Chemicals Limited,Chemicals,GSFC,EQ,INE026A01025,GSFC.NS,Unknown,Unknown,False,Cash,1
+Gujarat State Petronet Limited,"Oil, Gas & Consumable Fuels",GSPL,EQ,INE246F01010,GSPL.NS,Unknown,Unknown,False,Cash,1
+Gujarat Alkalies and Chemicals Limited,Chemicals,GUJALKALI,EQ,INE186A01019,GUJALKALI.NS,Unknown,Unknown,False,Cash,1
+Gujarat Gas Limited,"Oil, Gas & Consumable Fuels",GUJGASLTD,EQ,INE844O01030,GUJGASLTD.NS,Unknown,Unknown,False,Cash,1
+Gulf Oil Lubricants India Limited,"Oil, Gas & Consumable Fuels",GULFOILLUB,EQ,INE635Q01029,GULFOILLUB.NS,Unknown,Unknown,False,Cash,1
+GE Vernova T&D India Ltd.,Capital Goods,GVT&D,EQ,INE200A01026,GVT&D.NS,Unknown,Unknown,False,Cash,1
+Hindustan Aeronautics Limited,Capital Goods,HAL,EQ,INE066F01012,HAL.NS,Unknown,Unknown,True,F&O,1
+Happiest Minds Technologies Limited,Information Technology,HAPPSTMNDS,EQ,INE419U01012,HAPPSTMNDS.NS,Unknown,Unknown,False,Cash,1
+Harsha Engineers International Limited,Capital Goods,HARSHA,EQ,INE0JUS01029,HARSHA.NS,Unknown,Unknown,False,Cash,1
+Hathway Cable & Datacom Limited,"Media, Entertainment & Publication",HATHWAY,EQ,INE982F01036,HATHWAY.NS,Unknown,Unknown,False,Cash,1
+Hatsun Agro Product Limited,Fast Moving Consumer Goods,HATSUN,EQ,INE473B01035,HATSUN.NS,Unknown,Unknown,False,Cash,1
+Havells India Limited,Consumer Durables,HAVELLS,EQ,INE176B01034,HAVELLS.NS,Unknown,Unknown,True,F&O,1
+HBL Engineering Ltd.,Capital Goods,HBLENGINE,EQ,INE292B01021,HBLENGINE.NS,Unknown,Unknown,False,Cash,1
+Hindustan Construction Company Limited,Construction,HCC,EQ,INE549A01026,HCC.NS,Unknown,Unknown,False,Cash,1
+Healthcare Global Enterprises Limited,Healthcare,HCG,EQ,INE075I01017,HCG.NS,Unknown,Unknown,False,Cash,1
+HCL Technologies Limited,Information Technology,HCLTECH,EQ,INE860A01027,HCLTECH.NS,Unknown,Unknown,True,F&O,1
+HDFC Asset Management Company Limited,Financial Services,HDFCAMC,EQ,INE127D01025,HDFCAMC.NS,Unknown,Unknown,True,F&O,1
+HDFC Bank Limited,Financial Services,HDFCBANK,EQ,INE040A01034,HDFCBANK.NS,Unknown,Unknown,True,F&O,1
+HDFC Life Insurance Company Limited,Financial Services,HDFCLIFE,EQ,INE795G01014,HDFCLIFE.NS,Unknown,Unknown,True,F&O,1
+HEG Limited,Capital Goods,HEG,EQ,INE545A01016,HEG.NS,Unknown,Unknown,False,Cash,1
+HeidelbergCement India Limited,Construction Materials,HEIDELBERG,EQ,INE578A01017,HEIDELBERG.NS,Unknown,Unknown,False,Cash,1
+Hemisphere Properties India Limited,Realty,HEMIPROP,EQ,INE0AJG01018,HEMIPROP.NS,Unknown,Unknown,False,Cash,1
+Hero MotoCorp Limited,Automobile and Auto Components,HEROMOTOCO,EQ,INE158A01026,HEROMOTOCO.NS,Unknown,Unknown,True,F&O,1
+Hexaware Technologies Ltd.,Information Technology,HEXT,EQ,INE093A01041,HEXT.NS,Unknown,Unknown,False,Cash,1
+HFCL Limited,Telecommunication,HFCL,EQ,INE548A01028,HFCL.NS,Unknown,Unknown,False,Cash,1
+H.G. Infra Engineering Limited,Construction,HGINFRA,EQ,INE926X01010,HGINFRA.NS,Unknown,Unknown,False,Cash,1
+Hinduja Global Solutions Limited,Services,HGS,EQ,INE170I01016,HGS.NS,Unknown,Unknown,False,Cash,1
+Hikal Limited,Healthcare,HIKAL,EQ,INE475B01022,HIKAL.NS,Unknown,Unknown,False,Cash,1
+Hindalco Industries Limited,Metals & Mining,HINDALCO,EQ,INE038A01020,HINDALCO.NS,Unknown,Unknown,True,F&O,1
+Hindustan Copper Ltd.,Metals & Mining,HINDCOPPER,EQ,INE531E01026,HINDCOPPER.NS,Unknown,Unknown,False,Cash,1
+Hindustan Petroleum Corporation Limited,"Oil, Gas & Consumable Fuels",HINDPETRO,EQ,INE094A01015,HINDPETRO.NS,Unknown,Unknown,True,F&O,1
+Hindustan Unilever Limited,Fast Moving Consumer Goods,HINDUNILVR,EQ,INE030A01027,HINDUNILVR.NS,Unknown,Unknown,True,F&O,1
+Hindware Home Innovation Limited,Consumer Durables,HINDWAREAP,EQ,INE05AN01011,HINDWAREAP.NS,Unknown,Unknown,False,Cash,1
+Hindustan Zinc Limited,Metals & Mining,HINDZINC,EQ,INE267A01025,HINDZINC.NS,Unknown,Unknown,True,F&O,1
+HLE Glascoat Limited,Capital Goods,HLEGLAS,EQ,INE461D01028,HLEGLAS.NS,Unknown,Unknown,False,Cash,1
+Hindustan Foods Limited,Fast Moving Consumer Goods,HNDFDS,EQ,INE254N01026,HNDFDS.NS,Unknown,Unknown,False,Cash,1
+Home First Finance Company India Limited,Financial Services,HOMEFIRST,EQ,INE481N01025,HOMEFIRST.NS,Unknown,Unknown,False,Cash,1
+Honasa Consumer Ltd.,Fast Moving Consumer Goods,HONASA,EQ,INE0J5401028,HONASA.NS,Unknown,Unknown,False,Cash,1
+Honeywell Automation India Limited,Capital Goods,HONAUT,EQ,INE671A01010,HONAUT.NS,Unknown,Unknown,False,Cash,1
+Himadri Speciality Chemical Limited,Chemicals,HSCL,EQ,INE019C01026,HSCL.NS,Unknown,Unknown,False,Cash,1
+Housing & Urban Development Corporation Limited,Financial Services,HUDCO,EQ,INE031A01017,HUDCO.NS,Unknown,Unknown,False,Cash,1
+Hyundai Motor India Ltd.,Automobile and Auto Components,HYUNDAI,EQ,INE0V6F01027,HYUNDAI.NS,Unknown,Unknown,True,F&O,1
+ICICI Bank Limited,Financial Services,ICICIBANK,EQ,INE090A01021,ICICIBANK.NS,Unknown,Unknown,True,F&O,1
+ICICI Lombard General Insurance Company Limited,Financial Services,ICICIGI,EQ,INE765G01017,ICICIGI.NS,Unknown,Unknown,True,F&O,1
+ICICI Prudential Life Insurance Company Limited,Financial Services,ICICIPRULI,EQ,INE726G01019,ICICIPRULI.NS,Unknown,Unknown,True,F&O,1
+Indo Count Industries Limited,Textiles,ICIL,EQ,INE483B01026,ICIL.NS,Unknown,Unknown,False,Cash,1
+ICRA Limited,Financial Services,ICRA,EQ,INE725G01011,ICRA.NS,Unknown,Unknown,False,Cash,1
+IDBI Bank Limited,Financial Services,IDBI,EQ,INE008A01015,IDBI.NS,Unknown,Unknown,False,Cash,1
+Vodafone Idea Limited,Telecommunication,IDEA,EQ,INE669E01016,IDEA.NS,Unknown,Unknown,True,F&O,1
+IDFC First Bank Limited,Financial Services,IDFCFIRSTB,EQ,INE092T01019,IDFCFIRSTB.NS,Unknown,Unknown,True,F&O,1
+Indian Energy Exchange Limited,Financial Services,IEX,EQ,INE022Q01020,IEX.NS,Unknown,Unknown,True,F&O,1
+IFB Industries Limited,Consumer Durables,IFBIND,EQ,INE559A01017,IFBIND.NS,Unknown,Unknown,False,Cash,1
+IFCI Limited,Financial Services,IFCI,EQ,INE039A01010,IFCI.NS,Unknown,Unknown,False,Cash,1
+International Gemmological Institute (India) Ltd.,Services,IGIL,EQ,INE0Q9301021,IGIL.NS,Unknown,Unknown,False,Cash,1
+Indraprastha Gas Limited,"Oil, Gas & Consumable Fuels",IGL,EQ,INE203G01027,IGL.NS,Unknown,Unknown,False,Cash,1
+IIFL Finance Limited,Financial Services,IIFL,EQ,INE530B01024,IIFL.NS,Unknown,Unknown,False,Cash,1
+Inventurus Knowledge Solutions Ltd.,Information Technology,IKS,EQ,INE115Q01022,IKS.NS,Unknown,Unknown,False,Cash,1
+Imagicaaworld Entertainment Limited,Consumer Services,IMAGICAA,EQ,INE172N01012,IMAGICAA.NS,Unknown,Unknown,False,Cash,1
+Indian Metals & Ferro Alloys Limited,Metals & Mining,IMFA,EQ,INE919H01018,IMFA.NS,Unknown,Unknown,False,Cash,1
+Indegene Ltd.,Healthcare,INDGN,EQ,INE065X01017,INDGN.NS,Unknown,Unknown,False,Cash,1
+The Indian Hotels Company Limited,Consumer Services,INDHOTEL,EQ,INE053A01029,INDHOTEL.NS,Unknown,Unknown,True,F&O,1
+The India Cements Limited,Construction Materials,INDIACEM,EQ,INE383A01012,INDIACEM.NS,Unknown,Unknown,False,Cash,1
+Indiamart Intermesh Limited,Consumer Services,INDIAMART,EQ,INE933S01016,INDIAMART.NS,Unknown,Unknown,False,Cash,1
+Indian Bank,Financial Services,INDIANB,EQ,INE562A01011,INDIANB.NS,Unknown,Unknown,True,F&O,1
+InterGlobe Aviation Limited,Services,INDIGO,EQ,INE646L01027,INDIGO.NS,Unknown,Unknown,True,F&O,1
+Indigo Paints Limited,Consumer Durables,INDIGOPNTS,EQ,INE09VQ01012,INDIGOPNTS.NS,Unknown,Unknown,False,Cash,1
+IndusInd Bank Ltd.,Financial Services,INDUSINDBK,EQ,INE095A01012,INDUSINDBK.NS,Unknown,Unknown,True,F&O,1
+Indus Towers Limited,Telecommunication,INDUSTOWER,EQ,INE121J01017,INDUSTOWER.NS,Unknown,Unknown,True,F&O,1
+Infosys Limited,Information Technology,INFY,EQ,INE009A01021,INFY.NS,Unknown,Unknown,True,F&O,1
+Ingersoll Rand (India) Limited,Capital Goods,INGERRAND,EQ,INE177A01018,INGERRAND.NS,Unknown,Unknown,False,Cash,1
+INOX India Ltd.,Capital Goods,INOXINDIA,EQ,INE616N01034,INOXINDIA.NS,Unknown,Unknown,False,Cash,1
+Inox Wind Limited,Capital Goods,INOXWIND,EQ,INE066P01011,INOXWIND.NS,Unknown,Unknown,True,F&O,1
+Intellect Design Arena Limited,Information Technology,INTELLECT,EQ,INE306R01017,INTELLECT.NS,Unknown,Unknown,False,Cash,1
+Indian Overseas Bank,Financial Services,IOB,EQ,INE565A01014,IOB.NS,Unknown,Unknown,False,Cash,1
+Indian Oil Corporation Ltd.,"Oil, Gas & Consumable Fuels",IOC,EQ,INE242A01010,IOC.NS,Unknown,Unknown,True,F&O,1
+ION Exchange (India) Limited,Construction,IONEXCHANG,EQ,INE570A01022,IONEXCHANG.NS,Unknown,Unknown,False,Cash,1
+IPCA Laboratories Limited,Healthcare,IPCALAB,EQ,INE571A01038,IPCALAB.NS,Unknown,Unknown,False,Cash,1
+IRB Infrastructure Developers Limited,Construction,IRB,EQ,INE821I01022,IRB.NS,Unknown,Unknown,False,Cash,1
+Ircon International Limited,Construction,IRCON,EQ,INE962Y01021,IRCON.NS,Unknown,Unknown,False,Cash,1
+Indian Railway Catering And Tourism Corporation Ltd.,Consumer Services,IRCTC,EQ,INE335Y01020,IRCTC.NS,Unknown,Unknown,False,Cash,1
+Indian Renewable Energy Development Agency Ltd.,Financial Services,IREDA,EQ,INE202E01016,IREDA.NS,Unknown,Unknown,True,F&O,1
+Indian Railway Finance Corporation Limited,Financial Services,IRFC,EQ,INE053F01010,IRFC.NS,Unknown,Unknown,True,F&O,1
+Isgec Heavy Engineering Limited,Construction,ISGEC,EQ,INE858B01029,ISGEC.NS,Unknown,Unknown,False,Cash,1
+ITC Limited,Fast Moving Consumer Goods,ITC,EQ,INE154A01025,ITC.NS,Unknown,Unknown,True,F&O,1
+ITC Hotels Ltd.,Consumer Services,ITCHOTELS,EQ,INE379A01028,ITCHOTELS.NS,Unknown,Unknown,False,Cash,1
+India Tourism Development Corporation Limited,Consumer Services,ITDC,EQ,INE353K01014,ITDC.NS,Unknown,Unknown,False,Cash,1
+ITI Limited,Telecommunication,ITI,EQ,INE248A01017,ITI.NS,Unknown,Unknown,False,Cash,1
+The Jammu & Kashmir Bank Limited,Financial Services,J&KBANK,EQ,INE168A01041,J&KBANK.NS,Unknown,Unknown,False,Cash,1
+Jai Corp Limited,Capital Goods,JAICORPLTD,EQ,INE070D01027,JAICORPLTD.NS,Unknown,Unknown,False,Cash,1
+Jamna Auto Industries Limited,Automobile and Auto Components,JAMNAAUTO,EQ,INE039C01032,JAMNAAUTO.NS,Unknown,Unknown,False,Cash,1
+Jayaswal Neco Industries Limited,Capital Goods,JAYNECOIND,EQ,INE854B01010,JAYNECOIND.NS,Unknown,Unknown,False,Cash,1
+JB Chemicals & Pharmaceuticals Limited,Healthcare,JBCHEPHARM,EQ,INE572A01036,JBCHEPHARM.NS,Unknown,Unknown,False,Cash,1
+JBM Auto Ltd.,Automobile and Auto Components,JBMA,EQ,INE927D01051,JBMA.NS,Unknown,Unknown,False,Cash,1
+Jindal Saw Limited,Capital Goods,JINDALSAW,EQ,INE324A01024,JINDALSAW.NS,Unknown,Unknown,False,Cash,1
+Jindal Steel & Power Limited,Metals & Mining,JINDALSTEL,EQ,INE749A01030,JINDALSTEL.NS,Unknown,Unknown,True,F&O,1
+Jindal Worldwide Limited,Textiles,JINDWORLD,EQ,INE247D01039,JINDWORLD.NS,Unknown,Unknown,False,Cash,1
+Jio Financial Services Limited,Financial Services,JIOFIN,EQ,INE758E01017,JIOFIN.NS,Unknown,Unknown,True,F&O,1
+Jain Irrigation Systems Limited,Capital Goods,JISLJALEQS,EQ,INE175A01038,JISLJALEQS.NS,Unknown,Unknown,False,Cash,1
+J.K. Cement Ltd.,Construction Materials,JKCEMENT,EQ,INE823G01014,JKCEMENT.NS,Unknown,Unknown,False,Cash,1
+J.Kumar Infraprojects Limited,Construction,JKIL,EQ,INE576I01022,JKIL.NS,Unknown,Unknown,False,Cash,1
+JK Lakshmi Cement Limited,Construction Materials,JKLAKSHMI,EQ,INE786A01032,JKLAKSHMI.NS,Unknown,Unknown,False,Cash,1
+JK Paper Limited,Forest Materials,JKPAPER,EQ,INE789E01012,JKPAPER.NS,Unknown,Unknown,False,Cash,1
+JK Tyre & Industries Limited,Automobile and Auto Components,JKTYRE,EQ,INE573A01042,JKTYRE.NS,Unknown,Unknown,False,Cash,1
+Jupiter Life Line Hospitals Limited,Healthcare,JLHL,EQ,INE682M01012,JLHL.NS,Unknown,Unknown,False,Cash,1
+JM Financial Limited,Financial Services,JMFINANCIL,EQ,INE780C01023,JMFINANCIL.NS,Unknown,Unknown,False,Cash,1
+Jaiprakash Power Ventures Limited,Power,JPPOWER,EQ,INE351F01018,JPPOWER.NS,Unknown,Unknown,False,Cash,1
+Jindal Stainless Limited,Metals & Mining,JSL,EQ,INE220G01021,JSL.NS,Unknown,Unknown,False,Cash,1
+JSW Cement Ltd.,Construction Materials,JSWCEMENT,EQ,INE718I01012,JSWCEMENT.NS,Unknown,Unknown,False,Cash,1
+JSW Energy Limited,Power,JSWENERGY,EQ,INE121E01018,JSWENERGY.NS,Unknown,Unknown,True,F&O,1
+JSW Holdings Limited,Financial Services,JSWHL,EQ,INE824G01012,JSWHL.NS,Unknown,Unknown,False,Cash,1
+JSW Infrastructure Ltd.,Services,JSWINFRA,EQ,INE880J01026,JSWINFRA.NS,Unknown,Unknown,False,Cash,1
+JSW Steel Limited,Metals & Mining,JSWSTEEL,EQ,INE019A01038,JSWSTEEL.NS,Unknown,Unknown,True,F&O,1
+JTL INDUSTRIES LIMITED,Capital Goods,JTLIND,EQ,INE391J01024,JTLIND.NS,Unknown,Unknown,False,Cash,1
+Jubilant Foodworks Limited,Consumer Services,JUBLFOOD,EQ,INE797F01020,JUBLFOOD.NS,Unknown,Unknown,True,F&O,1
+Jubilant Ingrevia Limited,Chemicals,JUBLINGREA,EQ,INE0BY001018,JUBLINGREA.NS,Unknown,Unknown,False,Cash,1
+Jubilant Pharmova Limited,Healthcare,JUBLPHARMA,EQ,INE700A01033,JUBLPHARMA.NS,Unknown,Unknown,False,Cash,1
+Just Dial Limited,Consumer Services,JUSTDIAL,EQ,INE599M01018,JUSTDIAL.NS,Unknown,Unknown,False,Cash,1
+Jupiter Wagons Limited,Capital Goods,JWL,EQ,INE209L01016,JWL.NS,Unknown,Unknown,False,Cash,1
+Jyothy Labs Limited,Fast Moving Consumer Goods,JYOTHYLAB,EQ,INE668F01031,JYOTHYLAB.NS,Unknown,Unknown,False,Cash,1
+Jyoti CNC Automation Ltd.,Capital Goods,JYOTICNC,EQ,INE980O01024,JYOTICNC.NS,Unknown,Unknown,False,Cash,1
+Kajaria Ceramics Limited,Consumer Durables,KAJARIACER,EQ,INE217B01036,KAJARIACER.NS,Unknown,Unknown,False,Cash,1
+Kalyan Jewellers India Limited,Consumer Durables,KALYANKJIL,EQ,INE303R01014,KALYANKJIL.NS,Unknown,Unknown,True,F&O,1
+Kansai Nerolac Paints Limited,Consumer Durables,KANSAINER,EQ,INE531A01024,KANSAINER.NS,Unknown,Unknown,False,Cash,1
+Karur Vysya Bank Limited,Financial Services,KARURVYSYA,EQ,INE036D01028,KARURVYSYA.NS,Unknown,Unknown,False,Cash,1
+Kaynes Technology India Limited,Capital Goods,KAYNES,EQ,INE918Z01012,KAYNES.NS,Unknown,Unknown,True,F&O,1
+KDDL Limited,Consumer Durables,KDDL,EQ,INE291D01011,KDDL.NS,Unknown,Unknown,False,Cash,1
+KEC International Limited,Capital Goods,KEC,EQ,INE389H01022,KEC.NS,Unknown,Unknown,False,Cash,1
+KEI Industries Limited,Capital Goods,KEI,EQ,INE878B01027,KEI.NS,Unknown,Unknown,True,F&O,1
+Kfin Technologies Limited,Financial Services,KFINTECH,EQ,INE138Y01010,KFINTECH.NS,Unknown,Unknown,True,F&O,1
+Krishna Institute of Medical Sciences Limited,Healthcare,KIMS,EQ,INE967H01017,KIMS.NS,Unknown,Unknown,False,Cash,1
+Kirloskar Brothers Limited,Capital Goods,KIRLOSBROS,EQ,INE732A01036,KIRLOSBROS.NS,Unknown,Unknown,False,Cash,1
+Kirloskar Oil Engines Limited,Capital Goods,KIRLOSENG,EQ,INE146L01010,KIRLOSENG.NS,Unknown,Unknown,False,Cash,1
+Kirloskar Industries Limited,Capital Goods,KIRLOSIND,EQ,INE250A01039,KIRLOSIND.NS,Unknown,Unknown,False,Cash,1
+Kewal Kiran Clothing Limited,Textiles,KKCL,EQ,INE401H01017,KKCL.NS,Unknown,Unknown,False,Cash,1
+KNR Constructions Limited,Construction,KNRCON,EQ,INE634I01029,KNRCON.NS,Unknown,Unknown,False,Cash,1
+Kolte - Patil Developers Limited,Realty,KOLTEPATIL,EQ,INE094I01018,KOLTEPATIL.NS,Unknown,Unknown,False,Cash,1
+Kotak Mahindra Bank Limited,Financial Services,KOTAKBANK,EQ,INE237A01028,KOTAKBANK.NS,Unknown,Unknown,True,F&O,1
+KPI Green Energy Limited,Power,KPIGREEN,EQ,INE542W01017,KPIGREEN.NS,Unknown,Unknown,False,Cash,1
+Kalpataru Projects International Limited,Construction,KPIL,EQ,INE220B01022,KPIL.NS,Unknown,Unknown,False,Cash,1
+KPIT Technologies Limited,Information Technology,KPITTECH,EQ,INE04I401011,KPITTECH.NS,Unknown,Unknown,True,F&O,1
+K.P.R. Mill Ltd.,Textiles,KPRMILL,EQ,INE930H01031,KPRMILL.NS,Unknown,Unknown,False,Cash,1
+KRBL Limited,Fast Moving Consumer Goods,KRBL,EQ,INE001B01026,KRBL.NS,Unknown,Unknown,False,Cash,1
+Ksb Limited,Capital Goods,KSB,EQ,INE999A01015,KSB.NS,Unknown,Unknown,False,Cash,1
+Kaveri Seed Company Limited,Fast Moving Consumer Goods,KSCL,EQ,INE455I01029,KSCL.NS,Unknown,Unknown,False,Cash,1
+Kalyani Steels Limited,Capital Goods,KSL,EQ,INE907A01026,KSL.NS,Unknown,Unknown,False,Cash,1
+The Karnataka Bank Limited,Financial Services,KTKBANK,EQ,INE614B01018,KTKBANK.NS,Unknown,Unknown,False,Cash,1
+Dr. Lal Path Labs Ltd.,Healthcare,LALPATHLAB,EQ,INE600L01024,LALPATHLAB.NS,Unknown,Unknown,False,Cash,1
+La Opala RG Limited,Consumer Durables,LAOPALA,EQ,INE059D01020,LAOPALA.NS,Unknown,Unknown,False,Cash,1
+Latent View Analytics Limited,Information Technology,LATENTVIEW,EQ,INE0I7C01011,LATENTVIEW.NS,Unknown,Unknown,False,Cash,1
+Laurus Labs Limited,Healthcare,LAURUSLABS,EQ,INE947Q01028,LAURUSLABS.NS,Unknown,Unknown,True,F&O,1
+Lemon Tree Hotels Limited,Consumer Services,LEMONTREE,EQ,INE970X01018,LEMONTREE.NS,Unknown,Unknown,False,Cash,1
+LG Balakrishnan & Bros Limited,Automobile and Auto Components,LGBBROSLTD,EQ,INE337A01034,LGBBROSLTD.NS,Unknown,Unknown,False,Cash,1
+LIC Housing Finance Limited,Financial Services,LICHSGFIN,EQ,INE115A01026,LICHSGFIN.NS,Unknown,Unknown,True,F&O,1
+Life Insurance Corporation Of India,Financial Services,LICI,EQ,INE0J1Y01017,LICI.NS,Unknown,Unknown,True,F&O,1
+Linde India Limited,Chemicals,LINDEINDIA,EQ,INE473A01011,LINDEINDIA.NS,Unknown,Unknown,False,Cash,1
+Lloyds Metals And Energy Limited,Metals & Mining,LLOYDSME,EQ,INE281B01032,LLOYDSME.NS,Unknown,Unknown,False,Cash,1
+Macrotech Developers Limited,Realty,LODHA,EQ,INE670K01029,LODHA.NS,Unknown,Unknown,True,F&O,1
+Larsen & Toubro Limited,Construction,LT,EQ,INE018A01030,LT.NS,Unknown,Unknown,True,F&O,1
+L&T Finance Ltd.,Financial Services,LTF,EQ,INE498L01015,LTF.NS,Unknown,Unknown,True,F&O,1
+LT Foods Ltd.,Fast Moving Consumer Goods,LTFOODS,EQ,INE818H01020,LTFOODS.NS,Unknown,Unknown,False,Cash,1
+LTIMindtree Ltd.,Information Technology,LTM,EQ,INE214T01019,LTM.NS,Unknown,Unknown,True,F&O,1
+L&T Technology Services Ltd.,Information Technology,LTTS,EQ,INE010V01017,LTTS.NS,Unknown,Unknown,False,Cash,1
+Lupin Limited,Healthcare,LUPIN,EQ,INE326A01037,LUPIN.NS,Unknown,Unknown,True,F&O,1
+Lux Industries Limited,Textiles,LUXIND,EQ,INE150G01020,LUXIND.NS,Unknown,Unknown,False,Cash,1
+Laxmi Organic Industries Limited,Chemicals,LXCHEM,EQ,INE576O01020,LXCHEM.NS,Unknown,Unknown,False,Cash,1
+Mahindra & Mahindra Limited,Automobile and Auto Components,M&M,EQ,INE101A01026,M&M.NS,Unknown,Unknown,True,F&O,1
+Mahindra & Mahindra Financial Services Limited,Financial Services,M&MFIN,EQ,INE774D01024,M&MFIN.NS,Unknown,Unknown,False,Cash,1
+Bank of Maharashtra,Financial Services,MAHABANK,EQ,INE457A01014,MAHABANK.NS,Unknown,Unknown,False,Cash,1
+Mahindra Lifespace Developers Limited,Realty,MAHLIFE,EQ,INE813A01018,MAHLIFE.NS,Unknown,Unknown,False,Cash,1
+Maharashtra Scooters Limited,Financial Services,MAHSCOOTER,EQ,INE288A01013,MAHSCOOTER.NS,Unknown,Unknown,False,Cash,1
+Maharashtra Seamless Limited,Capital Goods,MAHSEAMLES,EQ,INE271B01025,MAHSEAMLES.NS,Unknown,Unknown,False,Cash,1
+Manappuram Finance Limited,Financial Services,MANAPPURAM,EQ,INE522D01027,MANAPPURAM.NS,Unknown,Unknown,True,F&O,1
+Man Infraconstruction Limited,Construction,MANINFRA,EQ,INE949H01023,MANINFRA.NS,Unknown,Unknown,False,Cash,1
+Mankind Pharma Limited,Healthcare,MANKIND,EQ,INE634S01028,MANKIND.NS,Unknown,Unknown,True,F&O,1
+Vedant Fashions Limited,Consumer Services,MANYAVAR,EQ,INE825V01034,MANYAVAR.NS,Unknown,Unknown,False,Cash,1
+C.E. Info Systems Limited,Information Technology,MAPMYINDIA,EQ,INE0BV301023,MAPMYINDIA.NS,Unknown,Unknown,False,Cash,1
+Marico Limited,Fast Moving Consumer Goods,MARICO,EQ,INE196A01026,MARICO.NS,Unknown,Unknown,True,F&O,1
+Marksans Pharma Limited,Healthcare,MARKSANS,EQ,INE750C01026,MARKSANS.NS,Unknown,Unknown,False,Cash,1
+Maruti Suzuki India Limited,Automobile and Auto Components,MARUTI,EQ,INE585B01010,MARUTI.NS,Unknown,Unknown,True,F&O,1
+MAS Financial Services Limited,Financial Services,MASFIN,EQ,INE348L01012,MASFIN.NS,Unknown,Unknown,False,Cash,1
+Mastek Limited,Information Technology,MASTEK,EQ,INE759A01021,MASTEK.NS,Unknown,Unknown,False,Cash,1
+Max Healthcare Institute Limited,Healthcare,MAXHEALTH,EQ,INE027H01010,MAXHEALTH.NS,Unknown,Unknown,True,F&O,1
+Mazagon Dock Shipbuilders Limited,Capital Goods,MAZDOCK,EQ,INE249Z01012,MAZDOCK.NS,Unknown,Unknown,True,F&O,1
+Multi Commodity Exchange of India Limited,Financial Services,MCX,EQ,INE745G01035,MCX.NS,Unknown,Unknown,True,F&O,1
+Global Health Limited,Healthcare,MEDANTA,EQ,INE474Q01031,MEDANTA.NS,Unknown,Unknown,False,Cash,1
+Medplus Health Services Limited,Consumer Services,MEDPLUS,EQ,INE804L01022,MEDPLUS.NS,Unknown,Unknown,False,Cash,1
+Metro Brands Limited,Consumer Durables,METROBRAND,EQ,INE317I01021,METROBRAND.NS,Unknown,Unknown,False,Cash,1
+Metropolis Healthcare Limited,Healthcare,METROPOLIS,EQ,INE112L01020,METROPOLIS.NS,Unknown,Unknown,False,Cash,1
+Max Financial Services Limited,Financial Services,MFSL,EQ,INE180A01020,MFSL.NS,Unknown,Unknown,True,F&O,1
+Mahanagar Gas Limited,"Oil, Gas & Consumable Fuels",MGL,EQ,INE002S01010,MGL.NS,Unknown,Unknown,False,Cash,1
+Mahindra Holidays & Resorts India Limited,Consumer Services,MHRIL,EQ,INE998I01010,MHRIL.NS,Unknown,Unknown,False,Cash,1
+Mishra Dhatu Nigam Limited,Capital Goods,MIDHANI,EQ,INE099Z01011,MIDHANI.NS,Unknown,Unknown,False,Cash,1
+Minda Corporation Limited,Automobile and Auto Components,MINDACORP,EQ,INE842C01021,MINDACORP.NS,Unknown,Unknown,False,Cash,1
+MMTC Limited,Services,MMTC,EQ,INE123F01029,MMTC.NS,Unknown,Unknown,False,Cash,1
+Samvardhana Motherson International Limited,Automobile and Auto Components,MOTHERSON,EQ,INE775A01035,MOTHERSON.NS,Unknown,Unknown,True,F&O,1
+Motilal Oswal Financial Services Limited,Financial Services,MOTILALOFS,EQ,INE338I01027,MOTILALOFS.NS,Unknown,Unknown,True,F&O,1
+MphasiS Limited,Information Technology,MPHASIS,EQ,INE356A01018,MPHASIS.NS,Unknown,Unknown,True,F&O,1
+MRF Limited,Automobile and Auto Components,MRF,EQ,INE883A01011,MRF.NS,Unknown,Unknown,False,Cash,1
+Mangalore Refinery and Petrochemicals Limited,"Oil, Gas & Consumable Fuels",MRPL,EQ,INE103A01014,MRPL.NS,Unknown,Unknown,False,Cash,1
+Mstc Limited,Services,MSTCLTD,EQ,INE255X01014,MSTCLTD.NS,Unknown,Unknown,False,Cash,1
+Motherson Sumi Wiring India Limited,Automobile and Auto Components,MSUMI,EQ,INE0FS801015,MSUMI.NS,Unknown,Unknown,False,Cash,1
+Mtar Technologies Limited,Capital Goods,MTARTECH,EQ,INE864I01014,MTARTECH.NS,Unknown,Unknown,False,Cash,1
+Muthoot Finance Limited,Financial Services,MUTHOOTFIN,EQ,INE414G01012,MUTHOOTFIN.NS,Unknown,Unknown,True,F&O,1
+Nippon Life India Asset Management Limited,Financial Services,NAM-INDIA,EQ,INE298J01013,NAM-INDIA.NS,Unknown,Unknown,True,F&O,1
+Natco Pharma Limited,Healthcare,NATCOPHARM,EQ,INE987B01026,NATCOPHARM.NS,Unknown,Unknown,False,Cash,1
+National Aluminium Company Limited,Metals & Mining,NATIONALUM,EQ,INE139A01034,NATIONALUM.NS,Unknown,Unknown,True,F&O,1
+Info Edge (India) Limited,Consumer Services,NAUKRI,EQ,INE663F01024,NAUKRI.NS,Unknown,Unknown,True,F&O,1
+NAVA LIMITED,Power,NAVA,EQ,INE725A01022,NAVA.NS,Unknown,Unknown,False,Cash,1
+Navin Fluorine International Limited,Chemicals,NAVINFLUOR,EQ,INE048G01026,NAVINFLUOR.NS,Unknown,Unknown,False,Cash,1
+Navneet Education Limited,"Media, Entertainment & Publication",NAVNETEDUL,EQ,INE060A01024,NAVNETEDUL.NS,Unknown,Unknown,False,Cash,1
+Nazara Technologies Limited,"Media, Entertainment & Publication",NAZARA,EQ,INE418L01021,NAZARA.NS,Unknown,Unknown,False,Cash,1
+NBCC (India) Ltd.,Construction,NBCC,EQ,INE095N01031,NBCC.NS,Unknown,Unknown,True,F&O,1
+NCC Limited,Construction,NCC,EQ,INE868B01028,NCC.NS,Unknown,Unknown,False,Cash,1
+Neogen Chemicals Limited,Chemicals,NEOGEN,EQ,INE136S01016,NEOGEN.NS,Unknown,Unknown,False,Cash,1
+Nesco Limited,Services,NESCO,EQ,INE317F01035,NESCO.NS,Unknown,Unknown,False,Cash,1
+Nestle India Limited,Fast Moving Consumer Goods,NESTLEIND,EQ,INE239A01016,NESTLEIND.NS,Unknown,Unknown,True,F&O,1
+Netweb Technologies India Limited,Information Technology,NETWEB,EQ,INE0NT901020,NETWEB.NS,Unknown,Unknown,False,Cash,1
+Network18 Media & Investments Limited,"Media, Entertainment & Publication",NETWORK18,EQ,INE870H01013,NETWORK18.NS,Unknown,Unknown,False,Cash,1
+Neuland Laboratories Limited,Healthcare,NEULANDLAB,EQ,INE794A01010,NEULANDLAB.NS,Unknown,Unknown,False,Cash,1
+Newgen Software Technologies Limited,Information Technology,NEWGEN,EQ,INE619B01017,NEWGEN.NS,Unknown,Unknown,False,Cash,1
+National Fertilizers Limited,Chemicals,NFL,EQ,INE870D01012,NFL.NS,Unknown,Unknown,False,Cash,1
+Narayana Hrudayalaya Ltd.,Healthcare,NH,EQ,INE410P01011,NH.NS,Unknown,Unknown,False,Cash,1
+NHPC Limited,Power,NHPC,EQ,INE848E01016,NHPC.NS,Unknown,Unknown,True,F&O,1
+The New India Assurance Company Limited,Financial Services,NIACL,EQ,INE470Y01017,NIACL.NS,Unknown,Unknown,False,Cash,1
+NIIT Learning Systems Limited,Consumer Services,NIITMTS,EQ,INE342G01023,NIITMTS.NS,Unknown,Unknown,False,Cash,1
+Niva Bupa Health Insurance Company Ltd.,Financial Services,NIVABUPA,EQ,INE995S01015,NIVABUPA.NS,Unknown,Unknown,False,Cash,1
+NLC India Ltd.,Power,NLCINDIA,EQ,INE589A01014,NLCINDIA.NS,Unknown,Unknown,False,Cash,1
+NMDC Limited,Metals & Mining,NMDC,EQ,INE584A01023,NMDC.NS,Unknown,Unknown,True,F&O,1
+NOCIL Limited,Chemicals,NOCIL,EQ,INE163A01018,NOCIL.NS,Unknown,Unknown,False,Cash,1
+NMDC Steel Limited,Metals & Mining,NSLNISP,EQ,INE0NNS01018,NSLNISP.NS,Unknown,Unknown,False,Cash,1
+NTPC Limited,Power,NTPC,EQ,INE733E01010,NTPC.NS,Unknown,Unknown,True,F&O,1
+NTPC Green Energy Ltd.,Power,NTPCGREEN,EQ,INE0ONG01011,NTPCGREEN.NS,Unknown,Unknown,False,Cash,1
+Nucleus Software Exports Limited,Information Technology,NUCLEUS,EQ,INE096B01018,NUCLEUS.NS,Unknown,Unknown,False,Cash,1
+Nuvama Wealth Management Ltd.,Financial Services,NUVAMA,EQ,INE531F01023,NUVAMA.NS,Unknown,Unknown,True,F&O,1
+Nuvoco Vistas Corporation Limited,Construction Materials,NUVOCO,EQ,INE118D01016,NUVOCO.NS,Unknown,Unknown,False,Cash,1
+FSN E-Commerce Ventures Limited,Consumer Services,NYKAA,EQ,INE388Y01029,NYKAA.NS,Unknown,Unknown,True,F&O,1
+Oberoi Realty Limited,Realty,OBEROIRLTY,EQ,INE093I01010,OBEROIRLTY.NS,Unknown,Unknown,True,F&O,1
+Oracle Financial Services Software Limited,Information Technology,OFSS,EQ,INE881D01027,OFSS.NS,Unknown,Unknown,True,F&O,1
+Oil India Limited,"Oil, Gas & Consumable Fuels",OIL,EQ,INE274J01014,OIL.NS,Unknown,Unknown,True,F&O,1
+Ola Electric Mobility Ltd.,Automobile and Auto Components,OLAELEC,EQ,INE0LXG01040,OLAELEC.NS,Unknown,Unknown,False,Cash,1
+Olectra Greentech Limited,Automobile and Auto Components,OLECTRA,EQ,INE260D01016,OLECTRA.NS,Unknown,Unknown,False,Cash,1
+Onesource Specialty Pharma Ltd.,Healthcare,ONESOURCE,EQ,INE013P01021,ONESOURCE.NS,Unknown,Unknown,False,Cash,1
+Oil & Natural Gas Corporation Limited,"Oil, Gas & Consumable Fuels",ONGC,EQ,INE213A01029,ONGC.NS,Unknown,Unknown,True,F&O,1
+Orient Electric Limited,Consumer Durables,ORIENTELEC,EQ,INE142Z01019,ORIENTELEC.NS,Unknown,Unknown,False,Cash,1
+The Orissa Minerals Development Company Limited,Metals & Mining,ORISSAMINE,EQ,INE725E01024,ORISSAMINE.NS,Unknown,Unknown,False,Cash,1
+Page Industries Limited,Textiles,PAGEIND,EQ,INE761H01022,PAGEIND.NS,Unknown,Unknown,True,F&O,1
+Paisalo Digital Limited,Financial Services,PAISALO,EQ,INE420C01059,PAISALO.NS,Unknown,Unknown,False,Cash,1
+Paradeep Phosphates Limited,Chemicals,PARADEEP,EQ,INE088F01024,PARADEEP.NS,Unknown,Unknown,False,Cash,1
+Patanjali Foods Ltd.,Fast Moving Consumer Goods,PATANJALI,EQ,INE619A01035,PATANJALI.NS,Unknown,Unknown,True,F&O,1
+Patel Engineering Limited,Construction,PATELENG,EQ,INE244B01030,PATELENG.NS,Unknown,Unknown,False,Cash,1
+One 97 Communications Limited,Financial Services,PAYTM,EQ,INE982J01020,PAYTM.NS,Unknown,Unknown,True,F&O,1
+PCBL LIMITED,Chemicals,PCBL,EQ,INE602A01031,PCBL.NS,Unknown,Unknown,False,Cash,1
+PDS Limited,Textiles,PDSL,EQ,INE111Q01021,PDSL.NS,Unknown,Unknown,False,Cash,1
+Persistent Systems Limited,Information Technology,PERSISTENT,EQ,INE262H01013,PERSISTENT.NS,Unknown,Unknown,True,F&O,1
+Petronet LNG Limited,"Oil, Gas & Consumable Fuels",PETRONET,EQ,INE347G01014,PETRONET.NS,Unknown,Unknown,True,F&O,1
+Power Finance Corporation Limited,Financial Services,PFC,EQ,INE134E01011,PFC.NS,Unknown,Unknown,True,F&O,1
+Pfizer Limited,Healthcare,PFIZER,EQ,INE182A01018,PFIZER.NS,Unknown,Unknown,False,Cash,1
+PG Electroplast Limited,Consumer Durables,PGEL,EQ,INE457L01011,PGEL.NS,Unknown,Unknown,True,F&O,1
+Procter & Gamble Hygiene and Health Care Limited,Fast Moving Consumer Goods,PGHH,EQ,INE179A01014,PGHH.NS,Unknown,Unknown,False,Cash,1
+The Phoenix Mills Limited,Realty,PHOENIXLTD,EQ,INE211B01039,PHOENIXLTD.NS,Unknown,Unknown,True,F&O,1
+Pidilite Industries Limited,Chemicals,PIDILITIND,EQ,INE318A01026,PIDILITIND.NS,Unknown,Unknown,True,F&O,1
+PI Industries Limited,Chemicals,PIIND,EQ,INE603J01030,PIIND.NS,Unknown,Unknown,True,F&O,1
+Pilani Investment and Industries Corporation Limited,Financial Services,PILANIINVS,EQ,INE417C01014,PILANIINVS.NS,Unknown,Unknown,False,Cash,1
+Punjab National Bank,Financial Services,PNB,EQ,INE160A01022,PNB.NS,Unknown,Unknown,True,F&O,1
+PNB Housing Finance Limited,Financial Services,PNBHOUSING,EQ,INE572E01012,PNBHOUSING.NS,Unknown,Unknown,True,F&O,1
+Pritish Nandy Communications Limited,"Media, Entertainment & Publication",PNC,EQ,INE392B01011,PNC.NS,Unknown,Unknown,False,Cash,1
+PNC Infratech Limited,Construction,PNCINFRA,EQ,INE195J01029,PNCINFRA.NS,Unknown,Unknown,False,Cash,1
+PB Fintech Limited,Financial Services,POLICYBZR,EQ,INE417T01026,POLICYBZR.NS,Unknown,Unknown,True,F&O,1
+Polycab India Limited,Capital Goods,POLYCAB,EQ,INE455K01017,POLYCAB.NS,Unknown,Unknown,True,F&O,1
+Poly Medicure Limited,Healthcare,POLYMED,EQ,INE205C01021,POLYMED.NS,Unknown,Unknown,False,Cash,1
+Poonawalla Fincorp Limited,Financial Services,POONAWALLA,EQ,INE511C01022,POONAWALLA.NS,Unknown,Unknown,False,Cash,1
+Power Grid Corporation of India Limited,Power,POWERGRID,EQ,INE752E01010,POWERGRID.NS,Unknown,Unknown,True,F&O,1
+Hitachi Energy India Limited,Capital Goods,POWERINDIA,EQ,INE07Y701011,POWERINDIA.NS,Unknown,Unknown,True,F&O,1
+Power Mech Projects Limited,Construction,POWERMECH,EQ,INE211R01019,POWERMECH.NS,Unknown,Unknown,False,Cash,1
+Piramal Pharma Ltd.,Healthcare,PPLPHARMA,EQ,INE0DK501011,PPLPHARMA.NS,Unknown,Unknown,False,Cash,1
+Praj Industries Limited,Capital Goods,PRAJIND,EQ,INE074A01025,PRAJIND.NS,Unknown,Unknown,False,Cash,1
+Premier Energies Ltd.,Capital Goods,PREMIERENE,EQ,INE0BS701011,PREMIERENE.NS,Unknown,Unknown,True,F&O,1
+Prestige Estates Projects Ltd.,Realty,PRESTIGE,EQ,INE811K01011,PRESTIGE.NS,Unknown,Unknown,True,F&O,1
+Pricol Limited,Automobile and Auto Components,PRICOLLTD,EQ,INE726V01018,PRICOLLTD.NS,Unknown,Unknown,False,Cash,1
+Prince Pipes And Fittings Limited,Capital Goods,PRINCEPIPE,EQ,INE689W01016,PRINCEPIPE.NS,Unknown,Unknown,False,Cash,1
+Privi Speciality Chemicals Limited,Chemicals,PRIVISCL,EQ,INE959A01019,PRIVISCL.NS,Unknown,Unknown,False,Cash,1
+Prism Johnson Limited,Construction Materials,PRSMJOHNSN,EQ,INE010A01011,PRSMJOHNSN.NS,Unknown,Unknown,False,Cash,1
+Prudent Corporate Advisory Services Limited,Financial Services,PRUDENT,EQ,INE00F201020,PRUDENT.NS,Unknown,Unknown,False,Cash,1
+Punjab & Sind Bank,Financial Services,PSB,EQ,INE608A01012,PSB.NS,Unknown,Unknown,False,Cash,1
+PTC Industries Limited,Capital Goods,PTCIL,EQ,INE596F01018,PTCIL.NS,Unknown,Unknown,False,Cash,1
+Puravankara Limited,Realty,PURVA,EQ,INE323I01011,PURVA.NS,Unknown,Unknown,False,Cash,1
+PVR INOX Limited,"Media, Entertainment & Publication",PVRINOX,EQ,INE191H01014,PVRINOX.NS,Unknown,Unknown,False,Cash,1
+Quess Corp Limited,Services,QUESS,EQ,INE615P01015,QUESS.NS,Unknown,Unknown,False,Cash,1
+Race Eco Chain Limited,Utilities,RACE,EQ,INE084Q01012,RACE.NS,Unknown,Unknown,False,Cash,1
+Radico Khaitan Limited,Fast Moving Consumer Goods,RADICO,EQ,INE944F01028,RADICO.NS,Unknown,Unknown,False,Cash,1
+Railtel Corporation Of India Limited,Telecommunication,RAILTEL,EQ,INE0DD101019,RAILTEL.NS,Unknown,Unknown,False,Cash,1
+Rain Industries Limited,Chemicals,RAIN,EQ,INE855B01025,RAIN.NS,Unknown,Unknown,False,Cash,1
+Rainbow Childrens Medicare Limited,Healthcare,RAINBOW,EQ,INE961O01016,RAINBOW.NS,Unknown,Unknown,False,Cash,1
+Rajesh Exports Limited,Consumer Durables,RAJESHEXPO,EQ,INE343B01030,RAJESHEXPO.NS,Unknown,Unknown,False,Cash,1
+Rajratan Global Wire Limited,Automobile and Auto Components,RAJRATAN,EQ,INE451D01029,RAJRATAN.NS,Unknown,Unknown,False,Cash,1
+Rallis India Limited,Chemicals,RALLIS,EQ,INE613A01020,RALLIS.NS,Unknown,Unknown,False,Cash,1
+The Ramco Cements Limited,Construction Materials,RAMCOCEM,EQ,INE331A01037,RAMCOCEM.NS,Unknown,Unknown,False,Cash,1
+Ramky Infrastructure Limited,Construction,RAMKY,EQ,INE874I01013,RAMKY.NS,Unknown,Unknown,False,Cash,1
+Rategain Travel Technologies Limited,Information Technology,RATEGAIN,EQ,INE0CLI01024,RATEGAIN.NS,Unknown,Unknown,False,Cash,1
+Ratnamani Metals & Tubes Limited,Capital Goods,RATNAMANI,EQ,INE703B01027,RATNAMANI.NS,Unknown,Unknown,False,Cash,1
+Raymond Limited,Textiles,RAYMOND,EQ,INE301A01014,RAYMOND.NS,Unknown,Unknown,False,Cash,1
+Restaurant Brands Asia Limited,Consumer Services,RBA,EQ,INE07T201019,RBA.NS,Unknown,Unknown,False,Cash,1
+RBL Bank Limited,Financial Services,RBLBANK,EQ,INE976G01028,RBLBANK.NS,Unknown,Unknown,True,F&O,1
+Rashtriya Chemicals and Fertilizers Limited,Chemicals,RCF,EQ,INE027A01015,RCF.NS,Unknown,Unknown,False,Cash,1
+REC Limited,Financial Services,RECLTD,EQ,INE020B01018,RECLTD.NS,Unknown,Unknown,True,F&O,1
+Redington Limited,Services,REDINGTON,EQ,INE891D01026,REDINGTON.NS,Unknown,Unknown,False,Cash,1
+Redtape Limited,Consumer Durables,REDTAPE,EQ,INE0LXT01019,REDTAPE.NS,Unknown,Unknown,False,Cash,1
+Relaxo Footwears Limited,Consumer Durables,RELAXO,EQ,INE131B01039,RELAXO.NS,Unknown,Unknown,False,Cash,1
+Reliance Industries Limited,"Oil, Gas & Consumable Fuels",RELIANCE,EQ,INE002A01018,RELIANCE.NS,Unknown,Unknown,True,F&O,1
+Religare Enterprises Limited,Financial Services,RELIGARE,EQ,INE621H01010,RELIGARE.NS,Unknown,Unknown,False,Cash,1
+Shree Renuka Sugars Limited,Fast Moving Consumer Goods,RENUKA,EQ,INE087H01022,RENUKA.NS,Unknown,Unknown,False,Cash,1
+Responsive Industries Limited,Consumer Durables,RESPONIND,EQ,INE688D01026,RESPONIND.NS,Unknown,Unknown,False,Cash,1
+RHI MAGNESITA INDIA LIMITED,Capital Goods,RHIM,EQ,INE743M01012,RHIM.NS,Unknown,Unknown,False,Cash,1
+RITES Limited,Construction,RITES,EQ,INE320J01015,RITES.NS,Unknown,Unknown,False,Cash,1
+Ramkrishna Forgings Limited,Capital Goods,RKFORGE,EQ,INE399G01023,RKFORGE.NS,Unknown,Unknown,False,Cash,1
+Rolex Rings Limited,Automobile and Auto Components,ROLEXRINGS,EQ,INE645S01016,ROLEXRINGS.NS,Unknown,Unknown,False,Cash,1
+Rossari Biotech Limited,Chemicals,ROSSARI,EQ,INE02A801020,ROSSARI.NS,Unknown,Unknown,False,Cash,1
+ROUTE MOBILE LIMITED,Telecommunication,ROUTE,EQ,INE450U01017,ROUTE.NS,Unknown,Unknown,False,Cash,1
+Reliance Power Limited,Power,RPOWER,EQ,INE614G01033,RPOWER.NS,Unknown,Unknown,False,Cash,1
+R R Kabel Limited,Capital Goods,RRKABEL,EQ,INE777K01022,RRKABEL.NS,Unknown,Unknown,False,Cash,1
+R Systems International Limited,Information Technology,RSYSTEMS,EQ,INE411H01032,RSYSTEMS.NS,Unknown,Unknown,False,Cash,1
+RattanIndia Enterprises Limited,Services,RTNINDIA,EQ,INE834M01019,RTNINDIA.NS,Unknown,Unknown,False,Cash,1
+RattanIndia Power Limited,Power,RTNPOWER,EQ,INE399K01017,RTNPOWER.NS,Unknown,Unknown,False,Cash,1
+Keystone Realtors Limited,Realty,RUSTOMJEE,EQ,INE263M01029,RUSTOMJEE.NS,Unknown,Unknown,False,Cash,1
+Rail Vikas Nigam Limited,Construction,RVNL,EQ,INE415G01027,RVNL.NS,Unknown,Unknown,True,F&O,1
+Safari Industries (India) Limited,Consumer Durables,SAFARI,EQ,INE429E01023,SAFARI.NS,Unknown,Unknown,False,Cash,1
+Sagility Ltd.,Information Technology,SAGILITY,EQ,INE0W2G01015,SAGILITY.NS,Unknown,Unknown,False,Cash,1
+Steel Authority of India Limited,Metals & Mining,SAIL,EQ,INE114A01011,SAIL.NS,Unknown,Unknown,True,F&O,1
+Sai Life Sciences Ltd.,Healthcare,SAILIFE,EQ,INE570L01029,SAILIFE.NS,Unknown,Unknown,False,Cash,1
+Saksoft Limited,Information Technology,SAKSOFT,EQ,INE667G01023,SAKSOFT.NS,Unknown,Unknown,False,Cash,1
+Salasar Techno Engineering Limited,Capital Goods,SALASAR,EQ,INE170V01027,SALASAR.NS,Unknown,Unknown,False,Cash,1
+Samhi Hotels Limited,Consumer Services,SAMHI,EQ,INE08U801020,SAMHI.NS,Unknown,Unknown,False,Cash,1
+Sammaan Capital Ltd.,Financial Services,SAMMAANCAP,EQ,INE148I01020,SAMMAANCAP.NS,Unknown,Unknown,True,F&O,1
+Sandur Manganese & Iron Ores Limited,"Oil, Gas & Consumable Fuels",SANDUMA,EQ,INE149K01016,SANDUMA.NS,Unknown,Unknown,False,Cash,1
+Sanghvi Movers Limited,Capital Goods,SANGHVIMOV,EQ,INE989A01024,SANGHVIMOV.NS,Unknown,Unknown,False,Cash,1
+Sanofi India Limited,Healthcare,SANOFI,EQ,INE058A01010,SANOFI.NS,Unknown,Unknown,False,Cash,1
+Sansera Engineering Limited,Automobile and Auto Components,SANSERA,EQ,INE953O01021,SANSERA.NS,Unknown,Unknown,False,Cash,1
+Sapphire Foods India Limited,Consumer Services,SAPPHIRE,EQ,INE806T01012,SAPPHIRE.NS,Unknown,Unknown,False,Cash,1
+Sarda Energy & Minerals Limited,Metals & Mining,SARDAEN,EQ,INE385C01021,SARDAEN.NS,Unknown,Unknown,False,Cash,1
+Saregama India Limited,"Media, Entertainment & Publication",SAREGAMA,EQ,INE979A01025,SAREGAMA.NS,Unknown,Unknown,False,Cash,1
+SBFC Finance Limited,Financial Services,SBFC,EQ,INE423Y01016,SBFC.NS,Unknown,Unknown,False,Cash,1
+SBI Cards and Payment Services Limited,Financial Services,SBICARD,EQ,INE018E01016,SBICARD.NS,Unknown,Unknown,True,F&O,1
+SBI Life Insurance Company Limited,Financial Services,SBILIFE,EQ,INE123W01016,SBILIFE.NS,Unknown,Unknown,True,F&O,1
+State Bank of India,Financial Services,SBIN,EQ,INE062A01020,SBIN.NS,Unknown,Unknown,True,F&O,1
+Schaeffler India Limited,Automobile and Auto Components,SCHAEFFLER,EQ,INE513A01022,SCHAEFFLER.NS,Unknown,Unknown,False,Cash,1
+Schneider Electric Infrastructure Limited,Capital Goods,SCHNEIDER,EQ,INE839M01018,SCHNEIDER.NS,Unknown,Unknown,False,Cash,1
+Shipping Corporation Of India Limited,Services,SCI,EQ,INE109A01011,SCI.NS,Unknown,Unknown,False,Cash,1
+Senco Gold Limited,Consumer Durables,SENCO,EQ,INE602W01019,SENCO.NS,Unknown,Unknown,False,Cash,1
+Sheela Foam Limited,Consumer Durables,SFL,EQ,INE916U01025,SFL.NS,Unknown,Unknown,False,Cash,1
+Shanthi Gears Limited,Capital Goods,SHANTIGEAR,EQ,INE631A01022,SHANTIGEAR.NS,Unknown,Unknown,False,Cash,1
+Sharda Cropchem Limited,Chemicals,SHARDACROP,EQ,INE221J01015,SHARDACROP.NS,Unknown,Unknown,False,Cash,1
+Sharda Motor Industries Limited,Automobile and Auto Components,SHARDAMOTR,EQ,INE597I01028,SHARDAMOTR.NS,Unknown,Unknown,False,Cash,1
+Share India Securities Limited,Financial Services,SHAREINDIA,EQ,INE932X01018,SHAREINDIA.NS,Unknown,Unknown,False,Cash,1
+Shilpa Medicare Limited,Healthcare,SHILPAMED,EQ,INE790G01031,SHILPAMED.NS,Unknown,Unknown,False,Cash,1
+Shoppers Stop Limited,Consumer Services,SHOPERSTOP,EQ,INE498B01024,SHOPERSTOP.NS,Unknown,Unknown,False,Cash,1
+SHREE CEMENT LIMITED,Construction Materials,SHREECEM,EQ,INE070A01015,SHREECEM.NS,Unknown,Unknown,True,F&O,1
+Shriram Finance Ltd.,Financial Services,SHRIRAMFIN,EQ,INE721A01047,SHRIRAMFIN.NS,Unknown,Unknown,True,F&O,1
+Shyam Metalics and Energy Limited,Metals & Mining,SHYAMMETL,EQ,INE810G01011,SHYAMMETL.NS,Unknown,Unknown,False,Cash,1
+Siemens Ltd.,Capital Goods,SIEMENS,EQ,INE003A01024,SIEMENS.NS,Unknown,Unknown,True,F&O,1
+Signatureglobal (India) Ltd.,Realty,SIGNATURE,EQ,INE903U01023,SIGNATURE.NS,Unknown,Unknown,False,Cash,1
+SIS LIMITED,Services,SIS,EQ,INE285J01028,SIS.NS,Unknown,Unknown,False,Cash,1
+SJVN Limited,Power,SJVN,EQ,INE002L01015,SJVN.NS,Unknown,Unknown,False,Cash,1
+SKF India Limited,Capital Goods,SKFINDIA,EQ,INE640A01023,SKFINDIA.NS,Unknown,Unknown,False,Cash,1
+Skipper Limited,Capital Goods,SKIPPER,EQ,INE439E01022,SKIPPER.NS,Unknown,Unknown,False,Cash,1
+Sobha Limited,Realty,SOBHA,EQ,INE671H01015,SOBHA.NS,Unknown,Unknown,False,Cash,1
+Solar Industries India Limited,Chemicals,SOLARINDS,EQ,INE343H01029,SOLARINDS.NS,Unknown,Unknown,True,F&O,1
+Sona BLW Precision Forgings Limited,Automobile and Auto Components,SONACOMS,EQ,INE073K01018,SONACOMS.NS,Unknown,Unknown,True,F&O,1
+Sonata Software Limited,Information Technology,SONATSOFTW,EQ,INE269A01021,SONATSOFTW.NS,Unknown,Unknown,False,Cash,1
+The South Indian Bank Limited,Financial Services,SOUTHBANK,EQ,INE683A01023,SOUTHBANK.NS,Unknown,Unknown,False,Cash,1
+Spandana Sphoorty Financial Limited,Financial Services,SPANDANA,EQ,INE572J01011,SPANDANA.NS,Unknown,Unknown,False,Cash,1
+Sun Pharma Advanced Research Company Limited,Healthcare,SPARC,EQ,INE232I01014,SPARC.NS,Unknown,Unknown,False,Cash,1
+Supreme Petrochem Limited,Chemicals,SPLPETRO,EQ,INE663A01033,SPLPETRO.NS,Unknown,Unknown,False,Cash,1
+SRF Limited,Chemicals,SRF,EQ,INE647A01010,SRF.NS,Unknown,Unknown,True,F&O,1
+Steel Strips Wheels Limited,Automobile and Auto Components,SSWL,EQ,INE802C01033,SSWL.NS,Unknown,Unknown,False,Cash,1
+Strides Pharma Science Limited,Healthcare,STAR,EQ,INE939A01011,STAR.NS,Unknown,Unknown,False,Cash,1
+Star Cement Limited,Construction Materials,STARCEMENT,EQ,INE460H01021,STARCEMENT.NS,Unknown,Unknown,False,Cash,1
+Star Health and Allied Insurance Company Limited,Financial Services,STARHEALTH,EQ,INE575P01011,STARHEALTH.NS,Unknown,Unknown,False,Cash,1
+Sterlite Technologies Limited,Telecommunication,STLTECH,EQ,INE089C01029,STLTECH.NS,Unknown,Unknown,False,Cash,1
+Subros Limited,Automobile and Auto Components,SUBROS,EQ,INE287B01021,SUBROS.NS,Unknown,Unknown,False,Cash,1
+Sudarshan Chemical Industries Limited,Chemicals,SUDARSCHEM,EQ,INE659A01023,SUDARSCHEM.NS,Unknown,Unknown,False,Cash,1
+Sula Vineyards Limited,Fast Moving Consumer Goods,SULA,EQ,INE142Q01026,SULA.NS,Unknown,Unknown,False,Cash,1
+Sumitomo Chemical India Limited,Chemicals,SUMICHEM,EQ,INE258G01013,SUMICHEM.NS,Unknown,Unknown,False,Cash,1
+Sundaram Finance Limited,Financial Services,SUNDARMFIN,EQ,INE660A01013,SUNDARMFIN.NS,Unknown,Unknown,False,Cash,1
+Sundram Fasteners Limited,Automobile and Auto Components,SUNDRMFAST,EQ,INE387A01021,SUNDRMFAST.NS,Unknown,Unknown,False,Cash,1
+Sunflag Iron And Steel Company Limited,Metals & Mining,SUNFLAG,EQ,INE947A01014,SUNFLAG.NS,Unknown,Unknown,False,Cash,1
+Sun Pharmaceutical Industries Limited,Healthcare,SUNPHARMA,EQ,INE044A01036,SUNPHARMA.NS,Unknown,Unknown,True,F&O,1
+Sunteck Realty Limited,Realty,SUNTECK,EQ,INE805D01034,SUNTECK.NS,Unknown,Unknown,False,Cash,1
+Sun TV Network Limited,"Media, Entertainment & Publication",SUNTV,EQ,INE424H01027,SUNTV.NS,Unknown,Unknown,False,Cash,1
+Suprajit Engineering Limited,Automobile and Auto Components,SUPRAJIT,EQ,INE399C01030,SUPRAJIT.NS,Unknown,Unknown,False,Cash,1
+Supreme Industries Limited,Capital Goods,SUPREMEIND,EQ,INE195A01028,SUPREMEIND.NS,Unknown,Unknown,True,F&O,1
+Surya Roshni Limited,Capital Goods,SURYAROSNI,EQ,INE335A01012,SURYAROSNI.NS,Unknown,Unknown,False,Cash,1
+Suzlon Energy Limited,Capital Goods,SUZLON,EQ,INE040H01021,SUZLON.NS,Unknown,Unknown,True,F&O,1
+Swan Corp Ltd.,Chemicals,SWANCORP,EQ,INE665A01038,SWANCORP.NS,Unknown,Unknown,False,Cash,1
+Swiggy Ltd.,Consumer Services,SWIGGY,EQ,INE00H001014,SWIGGY.NS,Unknown,Unknown,True,F&O,1
+Symphony Limited,Consumer Durables,SYMPHONY,EQ,INE225D01027,SYMPHONY.NS,Unknown,Unknown,False,Cash,1
+Syngene International Limited,Healthcare,SYNGENE,EQ,INE398R01022,SYNGENE.NS,Unknown,Unknown,False,Cash,1
+Syrma SGS Technology Limited,Capital Goods,SYRMA,EQ,INE0DYJ01015,SYRMA.NS,Unknown,Unknown,False,Cash,1
+Tanla Platforms Limited,Information Technology,TANLA,EQ,INE483C01032,TANLA.NS,Unknown,Unknown,False,Cash,1
+TARC Limited,Realty,TARC,EQ,INE0EK901012,TARC.NS,Unknown,Unknown,False,Cash,1
+Transformers And Rectifiers (India) Ltd.,Capital Goods,TARIL,EQ,INE763I01026,TARIL.NS,Unknown,Unknown,False,Cash,1
+Tasty Bite Eatables Limited,Fast Moving Consumer Goods,TASTYBITE,EQ,INE488B01017,TASTYBITE.NS,Unknown,Unknown,False,Cash,1
+Tata Chemicals Limited,Chemicals,TATACHEM,EQ,INE092A01019,TATACHEM.NS,Unknown,Unknown,False,Cash,1
+Tata Communications Limited,Telecommunication,TATACOMM,EQ,INE151A01013,TATACOMM.NS,Unknown,Unknown,False,Cash,1
+TATA CONSUMER PRODUCTS LIMITED,Fast Moving Consumer Goods,TATACONSUM,EQ,INE192A01025,TATACONSUM.NS,Unknown,Unknown,True,F&O,1
+Tata Elxsi Limited,Information Technology,TATAELXSI,EQ,INE670A01012,TATAELXSI.NS,Unknown,Unknown,True,F&O,1
+Tata Investment Corporation Ltd.,Financial Services,TATAINVEST,EQ,INE672A01026,TATAINVEST.NS,Unknown,Unknown,False,Cash,1
+Tata Power Company Limited,Power,TATAPOWER,EQ,INE245A01021,TATAPOWER.NS,Unknown,Unknown,True,F&O,1
+Tata Steel Limited,Metals & Mining,TATASTEEL,EQ,INE081A01020,TATASTEEL.NS,Unknown,Unknown,True,F&O,1
+Tata Technologies Ltd.,Information Technology,TATATECH,EQ,INE142M01025,TATATECH.NS,Unknown,Unknown,False,Cash,1
+Tatva Chintan Pharma Chem Limited,Chemicals,TATVA,EQ,INE0GK401011,TATVA.NS,Unknown,Unknown,False,Cash,1
+TBO Tek Ltd.,Consumer Services,TBOTEK,EQ,INE673O01025,TBOTEK.NS,Unknown,Unknown,False,Cash,1
+Transport Corporation of India Limited,Services,TCI,EQ,INE688A01022,TCI.NS,Unknown,Unknown,False,Cash,1
+TCI Express Limited,Services,TCIEXP,EQ,INE586V01016,TCIEXP.NS,Unknown,Unknown,False,Cash,1
+Tata Consultancy Services Limited,Information Technology,TCS,EQ,INE467B01029,TCS.NS,Unknown,Unknown,True,F&O,1
+TD Power Systems Limited,Capital Goods,TDPOWERSYS,EQ,INE419M01027,TDPOWERSYS.NS,Unknown,Unknown,False,Cash,1
+Teamlease Services Limited,Services,TEAMLEASE,EQ,INE985S01024,TEAMLEASE.NS,Unknown,Unknown,False,Cash,1
+Tech Mahindra Limited,Information Technology,TECHM,EQ,INE669C01036,TECHM.NS,Unknown,Unknown,True,F&O,1
+Techno Electric & Engineering Company Limited,Construction,TECHNOE,EQ,INE285K01026,TECHNOE.NS,Unknown,Unknown,False,Cash,1
+Tega Industries Limited,Capital Goods,TEGA,EQ,INE011K01018,TEGA.NS,Unknown,Unknown,False,Cash,1
+Tejas Networks Limited,Telecommunication,TEJASNET,EQ,INE010J01012,TEJASNET.NS,Unknown,Unknown,False,Cash,1
+Texmaco Rail & Engineering Limited,Capital Goods,TEXRAIL,EQ,INE621L01012,TEXRAIL.NS,Unknown,Unknown,False,Cash,1
+Thangamayil Jewellery Limited,Consumer Durables,THANGAMAYL,EQ,INE085J01014,THANGAMAYL.NS,Unknown,Unknown,False,Cash,1
+Leela Palaces Hotels & Resorts Ltd.,Consumer Services,THELEELA,EQ,INE0AQ201015,THELEELA.NS,Unknown,Unknown,False,Cash,1
+Thermax Limited,Capital Goods,THERMAX,EQ,INE152A01029,THERMAX.NS,Unknown,Unknown,False,Cash,1
+Tilaknagar Industries Limited,Fast Moving Consumer Goods,TI,EQ,INE133E01013,TI.NS,Unknown,Unknown,False,Cash,1
+Technocraft Industries (India) Limited,Capital Goods,TIIL,EQ,INE545H01011,TIIL.NS,Unknown,Unknown,False,Cash,1
+Tube Investments of India Limited,Automobile and Auto Components,TIINDIA,EQ,INE974X01010,TIINDIA.NS,Unknown,Unknown,True,F&O,1
+Time Technoplast Limited,Capital Goods,TIMETECHNO,EQ,INE508G01029,TIMETECHNO.NS,Unknown,Unknown,False,Cash,1
+Timken India Limited,Capital Goods,TIMKEN,EQ,INE325A01013,TIMKEN.NS,Unknown,Unknown,False,Cash,1
+TITAGARH RAIL SYSTEMS LIMITED,Capital Goods,TITAGARH,EQ,INE615H01020,TITAGARH.NS,Unknown,Unknown,False,Cash,1
+Titan Company Limited,Consumer Durables,TITAN,EQ,INE280A01028,TITAN.NS,Unknown,Unknown,True,F&O,1
+Tamilnad Mercantile Bank Limited,Financial Services,TMB,EQ,INE668A01016,TMB.NS,Unknown,Unknown,False,Cash,1
+Tata Motors Passenger Vehicles Ltd.,Automobile and Auto Components,TMPV,EQ,INE155A01022,TMPV.NS,Unknown,Unknown,True,F&O,1
+Torrent Pharmaceuticals Limited,Healthcare,TORNTPHARM,EQ,INE685A01028,TORNTPHARM.NS,Unknown,Unknown,True,F&O,1
+Torrent Power Limited,Power,TORNTPOWER,EQ,INE813H01021,TORNTPOWER.NS,Unknown,Unknown,False,Cash,1
+Trent Limited,Consumer Services,TRENT,EQ,INE849A01020,TRENT.NS,Unknown,Unknown,True,F&O,1
+Trident Limited,Textiles,TRIDENT,EQ,INE064C01022,TRIDENT.NS,Unknown,Unknown,False,Cash,1
+Triveni Turbine Limited,Capital Goods,TRITURBINE,EQ,INE152M01016,TRITURBINE.NS,Unknown,Unknown,False,Cash,1
+Triveni Engineering & Industries Limited,Fast Moving Consumer Goods,TRIVENI,EQ,INE256C01024,TRIVENI.NS,Unknown,Unknown,False,Cash,1
+TTK Prestige Limited,Consumer Durables,TTKPRESTIG,EQ,INE690A01028,TTKPRESTIG.NS,Unknown,Unknown,False,Cash,1
+Tata Teleservices (Maharashtra) Limited,Telecommunication,TTML,EQ,INE517B01013,TTML.NS,Unknown,Unknown,False,Cash,1
+TVS Holdings Limited,Automobile and Auto Components,TVSHLTD,EQ,INE105A01035,TVSHLTD.NS,Unknown,Unknown,False,Cash,1
+TVS Motor Company Limited,Automobile and Auto Components,TVSMOTOR,EQ,INE494B01023,TVSMOTOR.NS,Unknown,Unknown,True,F&O,1
+TVS Supply Chain Solutions Limited,Services,TVSSCS,EQ,INE395N01027,TVSSCS.NS,Unknown,Unknown,False,Cash,1
+TVS Srichakra Limited,Automobile and Auto Components,TVSSRICHAK,EQ,INE421C01016,TVSSRICHAK.NS,Unknown,Unknown,False,Cash,1
+United Breweries Limited,Fast Moving Consumer Goods,UBL,EQ,INE686F01025,UBL.NS,Unknown,Unknown,False,Cash,1
+UCO Bank,Financial Services,UCOBANK,EQ,INE691A01018,UCOBANK.NS,Unknown,Unknown,False,Cash,1
+Ujjivan Small Finance Bank Limited,Financial Services,UJJIVANSFB,EQ,INE551W01018,UJJIVANSFB.NS,Unknown,Unknown,False,Cash,1
+UltraTech Cement Limited,Construction Materials,ULTRACEMCO,EQ,INE481G01011,ULTRACEMCO.NS,Unknown,Unknown,True,F&O,1
+Union Bank of India,Financial Services,UNIONBANK,EQ,INE692A01016,UNIONBANK.NS,Unknown,Unknown,True,F&O,1
+United Spirits Ltd.,Fast Moving Consumer Goods,UNITDSPR,EQ,INE854D01024,UNITDSPR.NS,Unknown,Unknown,True,F&O,1
+UNO Minda Limited,Automobile and Auto Components,UNOMINDA,EQ,INE405E01023,UNOMINDA.NS,Unknown,Unknown,True,F&O,1
+UPL Limited,Chemicals,UPL,EQ,INE628A01036,UPL.NS,Unknown,Unknown,True,F&O,1
+Usha Martin Limited,Capital Goods,USHAMART,EQ,INE228A01035,USHAMART.NS,Unknown,Unknown,False,Cash,1
+UTI Asset Management Company Limited,Financial Services,UTIAMC,EQ,INE094J01016,UTIAMC.NS,Unknown,Unknown,False,Cash,1
+Utkarsh Small Finance Bank Limited,Financial Services,UTKARSHBNK,EQ,INE735W01017,UTKARSHBNK.NS,Unknown,Unknown,False,Cash,1
+Vaibhav Global Limited,Consumer Durables,VAIBHAVGBL,EQ,INE884A01027,VAIBHAVGBL.NS,Unknown,Unknown,False,Cash,1
+Varroc Engineering Limited,Automobile and Auto Components,VARROC,EQ,INE665L01035,VARROC.NS,Unknown,Unknown,False,Cash,1
+Varun Beverages Limited,Fast Moving Consumer Goods,VBL,EQ,INE200M01021,VBL.NS,Unknown,Unknown,True,F&O,1
+Vedanta Limited,Metals & Mining,VEDL,EQ,INE205A01025,VEDL.NS,Unknown,Unknown,True,F&O,1
+Ventive Hospitality Ltd.,Consumer Services,VENTIVE,EQ,INE781S01027,VENTIVE.NS,Unknown,Unknown,False,Cash,1
+Venus Pipes & Tubes Limited,Capital Goods,VENUSPIPES,EQ,INE0JA001018,VENUSPIPES.NS,Unknown,Unknown,False,Cash,1
+Vesuvius India Limited,Capital Goods,VESUVIUS,EQ,INE386A01015,VESUVIUS.NS,Unknown,Unknown,False,Cash,1
+V-Guard Industries Limited,Consumer Durables,VGUARD,EQ,INE951I01027,VGUARD.NS,Unknown,Unknown,False,Cash,1
+Vijaya Diagnostic Centre Limited,Healthcare,VIJAYA,EQ,INE043W01024,VIJAYA.NS,Unknown,Unknown,False,Cash,1
+Vinati Organics Limited,Chemicals,VINATIORGA,EQ,INE410B01037,VINATIORGA.NS,Unknown,Unknown,False,Cash,1
+VIP Industries Limited,Consumer Durables,VIPIND,EQ,INE054A01027,VIPIND.NS,Unknown,Unknown,False,Cash,1
+V-Mart Retail Limited,Consumer Services,VMART,EQ,INE665J01013,VMART.NS,Unknown,Unknown,False,Cash,1
+Vishal Mega Mart Ltd.,Consumer Services,VMM,EQ,INE01EA01019,VMM.NS,Unknown,Unknown,True,F&O,1
+Voltamp Transformers Limited,Capital Goods,VOLTAMP,EQ,INE540H01012,VOLTAMP.NS,Unknown,Unknown,False,Cash,1
+Voltas Limited,Consumer Durables,VOLTAS,EQ,INE226A01021,VOLTAS.NS,Unknown,Unknown,True,F&O,1
+VRL Logistics Limited,Services,VRLLOG,EQ,INE366I01010,VRLLOG.NS,Unknown,Unknown,False,Cash,1
+VST Industries Limited,Fast Moving Consumer Goods,VSTIND,EQ,INE710A01016,VSTIND.NS,Unknown,Unknown,False,Cash,1
+V.S.T Tillers Tractors Limited,Capital Goods,VSTTILLERS,EQ,INE764D01017,VSTTILLERS.NS,Unknown,Unknown,False,Cash,1
+Vardhman Textiles Limited,Textiles,VTL,EQ,INE825A01020,VTL.NS,Unknown,Unknown,False,Cash,1
+Waaree Energies Ltd.,Capital Goods,WAAREEENER,EQ,INE377N01017,WAAREEENER.NS,Unknown,Unknown,True,F&O,1
+VA Tech Wabag Limited,Utilities,WABAG,EQ,INE956G01038,WABAG.NS,Unknown,Unknown,False,Cash,1
+Welspun Corp Limited,Capital Goods,WELCORP,EQ,INE191B01025,WELCORP.NS,Unknown,Unknown,False,Cash,1
+Welspun Enterprises Limited,Construction,WELENT,EQ,INE625G01013,WELENT.NS,Unknown,Unknown,False,Cash,1
+Welspun Living Ltd.,Textiles,WELSPUNLIV,EQ,INE192B01031,WELSPUNLIV.NS,Unknown,Unknown,False,Cash,1
+WESTLIFE FOODWORLD LIMITED,Consumer Services,WESTLIFE,EQ,INE274F01020,WESTLIFE.NS,Unknown,Unknown,False,Cash,1
+Whirlpool of India Limited,Consumer Durables,WHIRLPOOL,EQ,INE716A01013,WHIRLPOOL.NS,Unknown,Unknown,False,Cash,1
+Wipro Limited,Information Technology,WIPRO,EQ,INE075A01022,WIPRO.NS,Unknown,Unknown,True,F&O,1
+Wockhardt Limited,Healthcare,WOCKPHARMA,EQ,INE049B01025,WOCKPHARMA.NS,Unknown,Unknown,False,Cash,1
+Wonderla Holidays Limited,Consumer Services,WONDERLA,EQ,INE066O01014,WONDERLA.NS,Unknown,Unknown,False,Cash,1
+West Coast Paper Mills Limited,Forest Materials,WSTCSTPAPR,EQ,INE976A01021,WSTCSTPAPR.NS,Unknown,Unknown,False,Cash,1
+Yatharth Hospital & Trauma Care Services Limited,Healthcare,YATHARTH,EQ,INE0JO301016,YATHARTH.NS,Unknown,Unknown,False,Cash,1
+Yes Bank Limited,Financial Services,YESBANK,EQ,INE528G01035,YESBANK.NS,Unknown,Unknown,True,F&O,1
+Zaggle Prepaid Ocean Services Limited,Information Technology,ZAGGLE,EQ,INE07K301024,ZAGGLE.NS,Unknown,Unknown,False,Cash,1
+Zee Entertainment Enterprises Limited,"Media, Entertainment & Publication",ZEEL,EQ,INE256A01028,ZEEL.NS,Unknown,Unknown,False,Cash,1
+Zensar Technologies Limited,Information Technology,ZENSARTECH,EQ,INE520A01027,ZENSARTECH.NS,Unknown,Unknown,False,Cash,1
+Zen Technologies Ltd.,Capital Goods,ZENTEC,EQ,INE251B01027,ZENTEC.NS,Unknown,Unknown,False,Cash,1
+ZF Commercial Vehicle Control Systems India Limited,Automobile and Auto Components,ZFCVINDIA,EQ,INE342J01019,ZFCVINDIA.NS,Unknown,Unknown,False,Cash,1
+Zydus Lifesciences Limited,Healthcare,ZYDUSLIFE,EQ,INE010B01027,ZYDUSLIFE.NS,Unknown,Unknown,True,F&O,1
+Zydus Wellness Limited,Fast Moving Consumer Goods,ZYDUSWELL,EQ,INE768C01010,ZYDUSWELL.NS,Unknown,Unknown,False,Cash,1
