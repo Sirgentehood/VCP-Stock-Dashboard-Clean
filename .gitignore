@@ -10,7 +10,7 @@ venv/
 charts/
 output_charts/
 exported_charts/
-outputs/
+outputs/*
 outputs_yahoo_prices/
 us_outputs_yahoo_prices/
 
@@ -28,3 +28,36 @@ us_outputs_yahoo_prices/
 
 .DS_Store
 Thumbs.db
+
+# Ignore everything in outputs by default
+outputs/*
+
+# Allow only required state/dashboard files
+!outputs/universe_used.csv
+!outputs/vcp_combined_ranked.csv
+!outputs/stock_changes.csv
+!outputs/stage_action_history.csv
+!outputs/stock_price_moves.csv
+!outputs/market_regime.csv
+!outputs/interesting20_latest.csv
+!outputs/industry_changes.csv
+!outputs/public_daily.json
+
+# Optional: allow only if dashboard reads them
+!outputs/vcp_daily_ranked.csv
+!outputs/vcp_weekly_ranked.csv
+
+# Never commit generated charts/images
+charts/
+output_charts/
+exported_charts/
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Never commit cache
+__pycache__/
+*.pyc
+.streamlit/cache/
+.cache/
