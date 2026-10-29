@@ -1,2 +1,2 @@
 index_symbol,last_close,ma20,ma50,ma200,slope20_pct,slope50_pct,slope200_pct,ret_1m_pct,ret_3m_pct,drawdown_52w_pct,above_20,above_50,above_200,breadth_above_20_pct,breadth_above_50_pct,breadth_above_200_pct,breadth_stage2_pct,trend_score,breadth_score,regime_label
-^NSEI,22698.85,22674.35,23303.8,24073.35,-0.001626,-0.001426,-0.000682,-0.36,-6.4,-13.79,True,False,False,22.56,15.04,33.03,17.83,-15.0,-2.5,strong_risk_off
+^NSEI,22936.75,22685.38,23276.78,24056.78,-0.001468,-0.001438,-0.000683,0.97,-5.68,-12.88,True,False,False,28.89,17.41,34.66,18.78,-15.0,-2.5,strong_risk_off
