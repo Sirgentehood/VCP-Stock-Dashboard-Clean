@@ -1,10 +1,10 @@
 from __future__ import annotations
 import argparse
 import json
+import os
 import shutil
 import time
-import gc
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from datetime import timedelta
 from collections import defaultdict
@@ -64,72 +64,9 @@ DEFAULT_CONFIG = {
     "stage_transition_confirm_days": 3,
     "stage2_entry_confirm_days": 3,
     # A stock cannot publicly move Stage 4 -> Stage 2 without first showing Stage 1/base repair.
-    "stage4_to_stage2_min_stage1_days": 3,
+    "stage4_to_stage2_min_stage1_days": 20,
     "enforce_no_stage_jumps": True,
 }
-
-
-def _safe_read_csv(path: Path, **kwargs) -> Optional[pd.DataFrame]:
-    """Read a CSV defensively.
-
-    Streamlit may read the output folder while the engine is running. If a
-    previous file is empty/corrupt/half-written, the engine should not crash;
-    it should treat the previous snapshot as unavailable.
-    """
-    try:
-        p = Path(path)
-        if not p.exists() or p.stat().st_size == 0:
-            return None
-        return pd.read_csv(p, **kwargs)
-    except Exception as exc:
-        print(f"Warning: could not read previous CSV {path}: {exc}")
-        return None
-
-
-def atomic_to_csv(df: pd.DataFrame, path: Path, *, index: bool = False) -> None:
-    """Write CSV atomically so the Streamlit app never sees a half-written file."""
-    p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_name(f".{p.name}.tmp")
-    df.to_csv(tmp, index=index)
-    tmp.replace(p)
-
-
-def atomic_write_text(path: Path, text: str, *, encoding: str = "utf-8") -> None:
-    """Write text atomically for small metadata files."""
-    p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_name(f".{p.name}.tmp")
-    tmp.write_text(text, encoding=encoding)
-    tmp.replace(p)
-
-
-def ensure_stage_classification_columns(df: Optional[pd.DataFrame]) -> pd.DataFrame:
-    """Add dashboard-friendly stage classification aliases.
-
-    `stage` stays the stable bucket used for counts and filters. `stage_variant`
-    carries the detailed classification such as Early Stage 2, Clean Stage 2,
-    Stage 1 - Base/Repair, and Failed Stage 2. `stage_classification` is an
-    alias for Streamlit/table display so older app code can remain simple.
-    """
-    if df is None or df.empty:
-        return pd.DataFrame() if df is None else df
-    out = df.copy()
-    if "stage" not in out.columns:
-        out["stage"] = "Not Sure"
-    out["stage"] = out["stage"].fillna("Not Sure").astype(str).replace({"": "Not Sure", "nan": "Not Sure", "None": "Not Sure"})
-    if "stage_variant" not in out.columns:
-        out["stage_variant"] = out["stage"]
-    out["stage_variant"] = out["stage_variant"].fillna(out["stage"]).astype(str)
-    bad_variant = out["stage_variant"].str.strip().isin(["", "nan", "None"])
-    out.loc[bad_variant, "stage_variant"] = out.loc[bad_variant, "stage"]
-    out["stage_classification"] = out["stage_variant"]
-    out["stage_display"] = np.where(
-        out["stage_classification"].astype(str).eq(out["stage"].astype(str)),
-        out["stage"].astype(str),
-        out["stage"].astype(str) + " • " + out["stage_classification"].astype(str),
-    )
-    return out
 
 @dataclass
 class MarketRegime:
@@ -194,6 +131,162 @@ class VCPScoreCard:
     volume_is_drying_up: bool
     weekly_volume_is_drying_up: bool
     notes: str
+
+    # Clean public hero-card fields. These are meant for public dashboards and
+    # avoid recommendation-style or defect-heavy language.
+    public_stage_label: str = ""
+    volume_pattern_display: str = ""
+    nifty_3m_outperformance_pct: float = np.nan
+    nifty_3m_outperformance_label: str = ""
+
+    # Public-safe structure fields. These are safe to expose in dashboards because
+    # they describe technical structure, not buy/sell/hold advice.
+    structure_score: float = 0.0
+    trend_template_pass: bool = False
+    setup_quality_label: str = "Not Rated"
+    relative_strength_label: str = "Unclear"
+    volume_pattern_label: str = "Unclear"
+    technical_flags: str = ""
+    risk_pct: float = np.nan
+
+    # Internal-only setup fields. Keep these out of public UI views if you are
+    # launching an educational/non-advisory product.
+    internal_leader_score: float = 0.0
+    internal_trend_score: float = 0.0
+    internal_setup_score: float = 0.0
+    internal_risk_score: float = 0.0
+    internal_quality_score: float = 0.0
+    internal_is_true_leader: bool = False
+    internal_is_proper_setup: bool = False
+    internal_is_low_risk: bool = False
+    internal_is_buyable_setup: bool = False
+    internal_failure_reasons: str = ""
+
+
+@dataclass
+class StockFeatures:
+    """Single evidence object for both public stage and internal setup analysis.
+
+    The important design rule is that this class stores facts, not labels.
+    Stage classification and setup/actionability scoring read from this object.
+    """
+    ticker: str
+    close_series: pd.Series = field(repr=False)
+    high_series: pd.Series = field(repr=False)
+    low_series: pd.Series = field(repr=False)
+    volume_series: pd.Series = field(repr=False)
+    weekly_df: pd.DataFrame = field(repr=False)
+
+    close: float = np.nan
+    high_52w: float = np.nan
+    low_52w: float = np.nan
+    dist_from_52w_high_pct: float = np.nan
+    advance_from_52w_low_pct: float = np.nan
+
+    ma50: float = np.nan
+    ma150: float = np.nan
+    ma200: float = np.nan
+    price_above_ma50: bool = False
+    price_above_ma150: bool = False
+    price_above_ma200: bool = False
+    ma_stack_bullish: bool = False
+    ma_stack_bearish: bool = False
+    ma50_slope_pct: float = np.nan
+    ma150_slope_pct: float = np.nan
+    ma200_slope_pct: float = np.nan
+    ma200_trend_1m_pct: float = np.nan
+
+    weekly_close: float = np.nan
+    weekly_ma10: float = np.nan
+    weekly_ma30: float = np.nan
+    price_above_weekly_ma10: bool = False
+    price_above_weekly_ma30: bool = False
+    weekly_ma10_slope_pct: float = np.nan
+    weekly_ma30_slope_pct: float = np.nan
+    weekly_ma30_trend_10w_pct: float = np.nan
+
+    ret_4w_pct: float = np.nan
+    ret_8w_pct: float = np.nan
+    ret_13w_pct: float = np.nan
+    ret_26w_pct: float = np.nan
+    rs_3m_pct: float = np.nan
+    rs_6m_pct: float = np.nan
+    rs_line_last: float = np.nan
+    rs_line_10w_ma: float = np.nan
+    rs_line_30w_ma: float = np.nan
+    rs_line_13w_slope_pct: float = np.nan
+    rs_line_26w_high: bool = False
+    rs_line_52w_high: bool = False
+    rs_line_above_10w: bool = False
+    rs_line_above_30w: bool = False
+
+    avg_turnover_inr: float = np.nan
+    median_turnover_inr: float = np.nan
+    liquidity_ok: bool = False
+    volume_dryup_ratio: float = np.nan
+    weekly_volume_dryup_ratio: float = np.nan
+    breakout_volume_ratio: float = np.nan
+    weekly_volume_ratio: float = np.nan
+    distribution_weeks_12: int = 0
+    accumulation_weeks_12: int = 0
+
+    daily_depths: List[float] = field(default_factory=list)
+    daily_durations: List[int] = field(default_factory=list)
+    daily_contraction_score: float = 0.0
+    daily_base_duration: float = 0.0
+    weekly_depths: List[float] = field(default_factory=list)
+    weekly_durations: List[int] = field(default_factory=list)
+    weekly_contraction_score: float = 0.0
+    weekly_base_duration: float = 0.0
+    weekly_quality: str = "weak"
+
+    daily_pivot: float = np.nan
+    daily_breakout_distance_pct: float = np.nan
+    weekly_pivot: float = np.nan
+    weekly_breakout_distance_pct: float = np.nan
+    recent_range_pct: float = np.nan
+    tight_range_ok: bool = False
+    weekly_range_12w_pct: float = np.nan
+    weekly_range_20w_pct: float = np.nan
+    recent_low_6w: float = np.nan
+    no_recent_breakdown: bool = False
+    logical_stop_price: float = np.nan
+    risk_pct: float = np.nan
+
+    upper_circuit_like_days_20: int = 0
+    lower_circuit_like_days_20: int = 0
+    abnormal_gap_days_60: int = 0
+    zero_volume_days_60: int = 0
+    corporate_action_suspected: bool = False
+    illiquidity_risk: bool = False
+
+
+@dataclass
+class StageResult:
+    stage: str
+    variant: str
+    confidence: float
+    reason: str
+
+
+@dataclass
+class SetupQualityResult:
+    leader_score: float
+    trend_score: float
+    setup_score: float
+    risk_score: float
+    quality_score: float
+    setup_quality_label: str
+    relative_strength_label: str
+    volume_pattern_label: str
+    trend_template_pass: bool
+    is_true_leader: bool
+    is_proper_setup: bool
+    is_low_risk: bool
+    is_buyable_setup_internal: bool
+    public_flags: List[str] = field(default_factory=list)
+    internal_flags: List[str] = field(default_factory=list)
+    failure_reasons: List[str] = field(default_factory=list)
 
 
 def normalize_yahoo_ticker(value: str, symbol: Optional[str] = None) -> str:
@@ -974,346 +1067,874 @@ def market_regime(
 
 
 def determine_stage(close: pd.Series, ma50: float, ma150: float, ma200: float) -> str:
+    """Backward-compatible stage wrapper used by breadth/history code.
+
+    The public stage engine is now weekly-first. This wrapper keeps older call
+    sites working while routing the decision through the newer weekly structure
+    classifier when only a close series is available.
     """
-    Stage classifier tuned for public structure scan.
-
-    Main design change:
-    - Stage 3 is no longer the default dustbin.
-    - Stage 2 has hard guards for near-52W-high advancing names.
-    - Stage 3 now requires actual deterioration/distribution evidence.
-    - Messy recoveries that are not clear Stage 2/4 become Stage 1 instead of Stage 3.
-    """
-    c = close.dropna().astype(float)
-    if len(c) < 260:
-        return "Not Sure"
-
-    def finite(x) -> bool:
-        return pd.notna(x) and np.isfinite(float(x))
-
-    last = float(c.iloc[-1])
-
-    ma50_series = c.rolling(50).mean()
-    ma150_series = c.rolling(150).mean()
-    ma200_series = c.rolling(200).mean()
-
-    ma50_now = float(ma50_series.iloc[-1]) if pd.notna(ma50_series.iloc[-1]) else float(ma50)
-    ma150_now = float(ma150_series.iloc[-1]) if pd.notna(ma150_series.iloc[-1]) else float(ma150)
-    ma200_now = float(ma200_series.iloc[-1]) if pd.notna(ma200_series.iloc[-1]) else float(ma200)
-
-    ma50_slope = slope_pct(ma50_series, 20)
-    ma150_slope = slope_pct(ma150_series, 20)
-    ma200_slope = slope_pct(ma200_series, 20)
-
-    weekly_close = c.resample("W-FRI").last().dropna()
-    weekly_ma10 = weekly_close.rolling(10).mean()
-    weekly_ma30 = weekly_close.rolling(30).mean()
-    weekly_ma10_now = float(weekly_ma10.iloc[-1]) if len(weekly_ma10) and pd.notna(weekly_ma10.iloc[-1]) else np.nan
-    weekly_ma30_now = float(weekly_ma30.iloc[-1]) if len(weekly_ma30) and pd.notna(weekly_ma30.iloc[-1]) else np.nan
-    weekly_ma10_slope = slope_pct(weekly_ma10, 6)
-    weekly_ma30_slope = slope_pct(weekly_ma30, 6)
-
-    high_52w = float(c.iloc[-252:].max())
-    low_52w = float(c.iloc[-252:].min())
-    dist_from_high = (last / high_52w - 1) * 100 if high_52w > 0 else np.nan
-    advance_from_low = (last / low_52w - 1) * 100 if low_52w > 0 else np.nan
-
-    ret_8w = pct_return(c, 42)
-    ret_13w = pct_return(c, 63)
-    ret_26w = pct_return(c, 126)
-
-    range_13w = ((c.iloc[-63:].max() / c.iloc[-63:].min()) - 1) * 100 if c.iloc[-63:].min() > 0 else np.nan
-
-    def _turning_points(series: pd.Series, order: int = 5) -> Tuple[List[int], List[int]]:
-        vals = series.values
-        peaks: List[int] = []
-        troughs: List[int] = []
-        for i in range(order, len(vals) - order):
-            window = vals[i - order:i + order + 1]
-            center = vals[i]
-            if not np.isfinite(center):
-                continue
-            if center == np.max(window) and np.sum(window == center) == 1:
-                peaks.append(i)
-            if center == np.min(window) and np.sum(window == center) == 1:
-                troughs.append(i)
-        return peaks, troughs
-
-    def _recent_structure(series: pd.Series, lookback: int = 90, order: int = 5) -> dict:
-        s = series.iloc[-lookback:].copy()
-        peaks, troughs = _turning_points(s, order=order)
-        recent_peaks = [float(s.iloc[i]) for i in peaks[-3:]]
-        recent_troughs = [float(s.iloc[i]) for i in troughs[-3:]]
-        return {
-            "lower_highs": len(recent_peaks) >= 2 and all(recent_peaks[i] < recent_peaks[i - 1] for i in range(1, len(recent_peaks))),
-            "higher_highs": len(recent_peaks) >= 2 and all(recent_peaks[i] > recent_peaks[i - 1] for i in range(1, len(recent_peaks))),
-            "lower_lows": len(recent_troughs) >= 2 and all(recent_troughs[i] < recent_troughs[i - 1] for i in range(1, len(recent_troughs))),
-            "higher_lows": len(recent_troughs) >= 2 and all(recent_troughs[i] > recent_troughs[i - 1] for i in range(1, len(recent_troughs))),
-        }
-
-    structure = _recent_structure(c)
-    lower_highs = structure["lower_highs"]
-    higher_highs = structure["higher_highs"]
-    lower_lows = structure["lower_lows"]
-    higher_lows = structure["higher_lows"]
-
-    above_50 = finite(ma50_now) and last > ma50_now
-    above_150 = finite(ma150_now) and last > ma150_now
-    above_200 = finite(ma200_now) and last > ma200_now
-    below_50 = finite(ma50_now) and last < ma50_now
-    below_150 = finite(ma150_now) and last < ma150_now
-    below_200 = finite(ma200_now) and last < ma200_now
-
-    ma_stack_bull = above_50 and above_150 and above_200 and ma50_now > ma150_now > ma200_now
-    ma_stack_bear = below_50 and below_150 and below_200 and ma50_now < ma150_now < ma200_now
-
-    ma50_rising = finite(ma50_slope) and ma50_slope > 0.00030
-    ma150_rising = finite(ma150_slope) and ma150_slope > 0.00003
-    ma200_rising = finite(ma200_slope) and ma200_slope > 0.00001
-    ma50_falling = finite(ma50_slope) and ma50_slope < -0.00030
-    ma150_falling = finite(ma150_slope) and ma150_slope < -0.00008
-    ma200_falling = finite(ma200_slope) and ma200_slope < -0.00004
-    ma200_flat_or_rising = finite(ma200_slope) and ma200_slope >= -0.00012
-    ma150_flat_or_rising = finite(ma150_slope) and ma150_slope >= -0.00008
-
-    weekly_bull = finite(weekly_ma10_now) and finite(weekly_ma30_now) and last > weekly_ma10_now > weekly_ma30_now
-    weekly_bear = finite(weekly_ma10_now) and finite(weekly_ma30_now) and last < weekly_ma10_now < weekly_ma30_now
-    weekly_10_rising = finite(weekly_ma10_slope) and weekly_ma10_slope > 0.00035
-    weekly_30_rising = finite(weekly_ma30_slope) and weekly_ma30_slope > 0.00005
-    weekly_30_falling = finite(weekly_ma30_slope) and weekly_ma30_slope < -0.00010
-
-    near_high = finite(dist_from_high) and dist_from_high >= -10
-    not_far_from_high = finite(dist_from_high) and dist_from_high >= -25
-    above_long_term = above_150 and above_200
-    positive_medium_momentum = (finite(ret_13w) and ret_13w >= 3) or (finite(ret_26w) and ret_26w >= 8)
-    strong_advance_from_low = finite(advance_from_low) and advance_from_low >= 25
-
-     # ---- Stage 2: advancing structure / breakout / continuation ----
-     # Hard guard: a stock near 52W high, above 50/200DMA, with rising 50DMA should not become Stage 3.
-    stage2_near_high_guard = (
-        near_high
-        and above_50 and above_200
-        and ma50_rising
-        and ma200_flat_or_rising
-        and (positive_medium_momentum or weekly_bull or weekly_10_rising)
-        and not (lower_highs and lower_lows and below_50)
-    )
-
-    stage2_breakout_or_recovery = (
-        above_long_term
-        and ma150_flat_or_rising
-        and ma200_flat_or_rising
-        and not_far_from_high
-        and positive_medium_momentum
-        and (ma50_rising or weekly_10_rising or higher_highs or higher_lows)
-        and not (lower_highs and lower_lows and finite(ret_13w) and ret_13w < 0)
-    )
-
-    stage2_continuation = (
-        above_long_term
-        and (ma_stack_bull or weekly_bull or (above_50 and ma50_rising))
-        and (ma150_rising or weekly_30_rising or ma200_rising)
-        and not_far_from_high
-        and (positive_medium_momentum or strong_advance_from_low)
-        and not lower_lows
-    )
-
-    if stage2_near_high_guard or stage2_breakout_or_recovery or stage2_continuation:
-        return "Stage 2"
-
-     # ---- Stage 4: persistent downtrend ----
-    persistent_decline = (
-        below_150 and below_200
-        and (ma150_falling or ma200_falling or weekly_30_falling)
-        and (lower_highs or lower_lows or weekly_bear)
-        and finite(dist_from_high) and dist_from_high <= -22
-        and finite(ret_13w) and ret_13w <= -6
-    )
-    failed_rally_decline = (
-        below_150
-        and (below_200 or ma200_falling or weekly_30_falling)
-        and lower_highs
-        and finite(ret_8w) and ret_8w <= 0
-        and finite(dist_from_high) and dist_from_high <= -18
-        and not higher_lows
-    )
-    deep_decline = (
-        ma_stack_bear
-        and (ma50_falling or weekly_bear)
-        and finite(ret_26w) and ret_26w <= -12
-    )
-
-    if persistent_decline or failed_rally_decline or deep_decline:
-        return "Stage 4"
-
-     # ---- Stage 3: true top / distribution / damaged uptrend ----
-     # Stage 3 should be a narrow bucket: prior strength + visible deterioration.
-    prior_strength = (
-        above_200
-        and finite(dist_from_high) and dist_from_high >= -30
-        and ((finite(ret_26w) and ret_26w >= 0) or strong_advance_from_low)
-    )
-    distribution_damage = (
-        (below_50 or ma50_falling)
-        and (lower_highs or lower_lows)
-        and finite(ret_8w) and ret_8w <= 0
-    )
-    weekly_damage = (
-        above_200
-        and below_50
-        and (weekly_bear or weekly_30_falling)
-        and finite(dist_from_high) and -30 <= dist_from_high <= -8
-    )
-    wide_churn_after_advance = (
-        prior_strength
-        and finite(range_13w) and range_13w >= 22
-        and finite(ret_13w) and ret_13w <= 4
-        and (lower_highs or lower_lows)
-    )
-
-    if prior_strength and (distribution_damage or weekly_damage or wide_churn_after_advance):
-        return "Stage 3"
-
-     # ---- Stage 1: repair / base / early turn ----
-     # Most non-declining, non-advancing structures should be Stage 1, not Stage 3.
-    near_ma150 = finite(ma150_now) and 0.90 * ma150_now <= last <= 1.12 * ma150_now
-    near_ma200 = finite(ma200_now) and 0.90 * ma200_now <= last <= 1.12 * ma200_now
-    long_ma_not_collapsing = ma200_flat_or_rising or not ma200_falling
-    basing_or_repair = (
-        (near_ma150 or near_ma200 or above_200)
-        and long_ma_not_collapsing
-        and not (lower_highs and lower_lows and finite(ret_13w) and ret_13w < -6)
-    )
-    early_recovery = (
-        above_50
-        and (above_150 or above_200)
-        and (ma50_rising or higher_lows)
-        and finite(ret_13w) and ret_13w > 0
-        and not (below_150 and below_200)
-    )
-
-    if basing_or_repair or early_recovery:
-        return "Stage 1"
-
-     # Conservative fallback.
-    if below_200 and (ma200_falling or weekly_bear):
-        return "Stage 4"
-    return "Not Sure"
+    return classify_stage_from_close_only(close).stage
 
 
 def determine_stage_details(close: pd.Series, ma50: float, ma150: float, ma200: float) -> Tuple[str, str, float, str]:
-    """Return the main Weinstein-style stage plus a human-friendly variant.
-
-    The main `stage` column intentionally remains one of Stage 1/2/3/4/Unknown.
-    `stage_variant` adds nuance for the dashboard without breaking filters,
-    history, or stage counts.
-    """
-    stage = determine_stage(close, ma50, ma150, ma200)
-    c = close.dropna().astype(float)
-    if len(c) < 260 or stage in {"Unknown", "Not Sure"}:
-        return "Not Sure", "Not Sure", 0.0, "Not enough price history for reliable stage classification."
-
-    def finite(x) -> bool:
-        return pd.notna(x) and np.isfinite(float(x))
-
-    last = float(c.iloc[-1])
-    ma50_series = c.rolling(50).mean()
-    ma150_series = c.rolling(150).mean()
-    ma200_series = c.rolling(200).mean()
-
-    ma50_now = float(ma50_series.iloc[-1]) if finite(ma50_series.iloc[-1]) else float(ma50)
-    ma150_now = float(ma150_series.iloc[-1]) if finite(ma150_series.iloc[-1]) else float(ma150)
-    ma200_now = float(ma200_series.iloc[-1]) if finite(ma200_series.iloc[-1]) else float(ma200)
-
-    ma50_slope = slope_pct(ma50_series, 20)
-    ma150_slope = slope_pct(ma150_series, 20)
-    ma200_slope = slope_pct(ma200_series, 20)
-
-    weekly_close = c.resample("W-FRI").last().dropna()
-    weekly_ma10 = weekly_close.rolling(10).mean()
-    weekly_ma30 = weekly_close.rolling(30).mean()
-    weekly_ma10_now = float(weekly_ma10.iloc[-1]) if len(weekly_ma10) and finite(weekly_ma10.iloc[-1]) else np.nan
-    weekly_ma30_now = float(weekly_ma30.iloc[-1]) if len(weekly_ma30) and finite(weekly_ma30.iloc[-1]) else np.nan
-    weekly_ma10_slope = slope_pct(weekly_ma10, 6)
-    weekly_ma30_slope = slope_pct(weekly_ma30, 6)
-
-    high_52w = float(c.iloc[-252:].max())
-    low_52w = float(c.iloc[-252:].min())
-    dist_from_high = (last / high_52w - 1) * 100 if high_52w > 0 else np.nan
-    advance_from_low = (last / low_52w - 1) * 100 if low_52w > 0 else np.nan
-    ret_4w = pct_return(c, 21)
-    ret_8w = pct_return(c, 42)
-    ret_13w = pct_return(c, 63)
-    ret_26w = pct_return(c, 126)
-
-    above_50 = finite(ma50_now) and last > ma50_now
-    above_150 = finite(ma150_now) and last > ma150_now
-    above_200 = finite(ma200_now) and last > ma200_now
-    below_50 = finite(ma50_now) and last < ma50_now
-    below_150 = finite(ma150_now) and last < ma150_now
-    below_200 = finite(ma200_now) and last < ma200_now
-    ma_stack_bull = above_50 and above_150 and above_200 and ma50_now > ma150_now > ma200_now
-    ma_stack_bear = below_50 and below_150 and below_200 and ma50_now < ma150_now < ma200_now
-
-    ma50_rising = finite(ma50_slope) and ma50_slope > 0.00030
-    ma150_rising = finite(ma150_slope) and ma150_slope > 0.00003
-    ma200_rising = finite(ma200_slope) and ma200_slope > 0.00001
-    ma50_falling = finite(ma50_slope) and ma50_slope < -0.00030
-    ma150_falling = finite(ma150_slope) and ma150_slope < -0.00008
-    ma200_falling = finite(ma200_slope) and ma200_slope < -0.00004
-    weekly_bull = finite(weekly_ma10_now) and finite(weekly_ma30_now) and last > weekly_ma10_now > weekly_ma30_now
-    weekly_bear = finite(weekly_ma10_now) and finite(weekly_ma30_now) and last < weekly_ma10_now < weekly_ma30_now
-    weekly_10_rising = finite(weekly_ma10_slope) and weekly_ma10_slope > 0.00035
-    weekly_30_rising = finite(weekly_ma30_slope) and weekly_ma30_slope > 0.00005
-    weekly_30_falling = finite(weekly_ma30_slope) and weekly_ma30_slope < -0.00010
-
-    near_high = finite(dist_from_high) and dist_from_high >= -10
-    far_above_50 = finite(ma50_now) and last >= ma50_now * 1.18
-    far_above_200 = finite(ma200_now) and last >= ma200_now * 1.45
-    near_long_ma = (finite(ma150_now) and 0.94 * ma150_now <= last <= 1.10 * ma150_now) or (finite(ma200_now) and 0.94 * ma200_now <= last <= 1.10 * ma200_now)
-
-     # Stage 2 variants
-    if stage == "Stage 2":
-        if far_above_50 or far_above_200 or (finite(advance_from_low) and advance_from_low >= 120 and finite(ret_13w) and ret_13w >= 25):
-            return stage, "Extended Stage 2", 0.78, "Advancing structure remains intact, but price is stretched versus key moving averages or far above the 52-week low."
-        if ma_stack_bull and weekly_bull and ma50_rising and (ma150_rising or weekly_30_rising) and near_high:
-            return stage, "Clean Stage 2", 0.90, "Price is above rising key averages, weekly structure is supportive, and the stock is near its 52-week high."
-        if above_150 and above_200 and (ma50_rising or weekly_10_rising) and not ma_stack_bull:
-            return stage, "Early Stage 2", 0.72, "Price has moved above long-term structure, but the full moving-average stack is not clean yet."
-        if (below_50 or not weekly_bull) and above_150 and above_200:
-            return stage, "Messy Stage 2", 0.64, "Long-term structure is still constructive, but the short-term/weekly structure is not clean."
-        if below_50 and above_150 and above_200 and not ma150_falling and not ma200_falling:
-            return stage, "Stage 2 Pullback", 0.68, "Prior advancing structure is pulling back, but long-term moving averages are still supportive."
-        return stage, "Stage 2", 0.76, "Advancing structure detected."
-
-     # Stage 1 variants
-    if stage == "Stage 1":
-        if above_50 and (above_150 or above_200) and (ma50_rising or weekly_10_rising) and finite(ret_13w) and ret_13w > 0:
-            return stage, "Stage 1 - Early Turn", 0.66, "The stock is improving from a repair/base area but has not confirmed a clean Stage 2 yet."
-        if near_long_ma and not ma200_falling:
-            return stage, "Stage 1 - Base/Repair", 0.70, "Price is near long-term moving averages with no strong long-term downtrend signal."
-        return stage, "Stage 1 - Unclear/Repair", 0.58, "Not enough evidence for Stage 2 or Stage 4; classified as repair/unclear structure."
-
-     # Stage 3 variants
-    if stage == "Stage 3":
-        if above_200 and below_50 and (ma50_falling or weekly_bear or weekly_30_falling):
-            return stage, "Stage 3 - Distribution/Damage", 0.76, "Prior strength exists, but short-term and/or weekly structure is deteriorating."
-        return stage, "Stage 3 - Transition", 0.62, "The structure is transitioning after prior strength, but it is not yet a confirmed Stage 4 decline."
-
-     # Stage 4 variants
-    if stage == "Stage 4":
-        if ma_stack_bear and ma50_falling and (ma150_falling or ma200_falling or weekly_30_falling):
-            return stage, "Stage 4 - Confirmed Downtrend", 0.86, "Price is below a bearish moving-average stack with falling trend signals."
-        if below_200 and (ma200_falling or weekly_bear):
-            return stage, "Stage 4 - Weak/Declining", 0.72, "Price is below long-term support with weak trend evidence."
-        return stage, "Stage 4", 0.66, "Declining structure detected."
-
-    return stage, stage, 0.50, "Stage variant not classified."
+    """Backward-compatible details wrapper for close-only callers."""
+    result = classify_stage_from_close_only(close)
+    return result.stage, result.variant, result.confidence, result.reason
 
 
 def vcp_quality_label(score: float, base_bars: float, depths: List[float], min_base_bars: int) -> str:
     if len(depths) < 2 or base_bars < min_base_bars:
         return "weak"
     return "strong" if score >= 0.66 else ("moderate" if score >= 0.5 else "weak")
+
+
+def _finite(value) -> bool:
+    try:
+        return pd.notna(value) and np.isfinite(float(value))
+    except Exception:
+        return False
+
+
+def _safe_float(value, default: float = np.nan) -> float:
+    try:
+        if pd.isna(value):
+            return default
+        out = float(value)
+        return out if np.isfinite(out) else default
+    except Exception:
+        return default
+
+
+def pct_change_over_bars(series: pd.Series, bars: int) -> float:
+    s = series.dropna().astype(float)
+    if len(s) <= bars:
+        return np.nan
+    prev = float(s.iloc[-bars - 1])
+    curr = float(s.iloc[-1])
+    if prev == 0:
+        return np.nan
+    return float((curr / prev - 1) * 100)
+
+
+def classify_stage_from_close_only(close: pd.Series) -> StageResult:
+    """Weekly-first stage classification when only a close series is available.
+
+    Used by legacy breadth/history callers. The full per-stock analysis uses
+    `classify_public_stage(features)` because it has volume, RS and VCP evidence.
+    """
+    c = close.dropna().astype(float)
+    if len(c) < 260:
+        return StageResult("Not Sure", "Unclear", 0.0, "Not enough price history for reliable weekly stage classification.")
+
+    weekly = c.resample("W-FRI").last().dropna()
+    if len(weekly) < 60:
+        return StageResult("Not Sure", "Unclear", 0.0, "Not enough weekly history for reliable stage classification.")
+
+    last = float(c.iloc[-1])
+    ma50 = float(c.rolling(50).mean().iloc[-1])
+    ma150 = float(c.rolling(150).mean().iloc[-1])
+    ma200 = float(c.rolling(200).mean().iloc[-1])
+    ma50_slope = pct_change_over_bars(c.rolling(50).mean(), 21)
+    ma200_slope = pct_change_over_bars(c.rolling(200).mean(), 21)
+
+    weekly_ma10 = weekly.rolling(10).mean()
+    weekly_ma30 = weekly.rolling(30).mean()
+    w10 = _safe_float(weekly_ma10.iloc[-1])
+    w30 = _safe_float(weekly_ma30.iloc[-1])
+    w30_trend = pct_change_over_bars(weekly_ma30, 10)
+
+    high_52w = float(c.iloc[-252:].max())
+    low_52w = float(c.iloc[-252:].min())
+    dist_high = (last / high_52w - 1) * 100 if high_52w > 0 else np.nan
+    advance_low = (last / low_52w - 1) * 100 if low_52w > 0 else np.nan
+    ret_13w = pct_return(c, 63)
+    ret_26w = pct_return(c, 126)
+
+    above_w30 = _finite(w30) and last > w30
+    below_w30 = _finite(w30) and last < w30
+    above_200 = _finite(ma200) and last > ma200
+    below_200 = _finite(ma200) and last < ma200
+    above_150 = _finite(ma150) and last > ma150
+    above_50 = _finite(ma50) and last > ma50
+    below_50 = _finite(ma50) and last < ma50
+
+    stage4 = (
+        below_w30 and below_200
+        and _finite(w30_trend) and w30_trend <= -2.0
+        and _finite(ma200_slope) and ma200_slope <= -1.0
+        and _finite(dist_high) and dist_high <= -25
+        and (_finite(ret_13w) and ret_13w <= -5)
+    )
+    if stage4:
+        return StageResult("Stage 4", "Stage 4", 0.82, "Price is below the 30-week average and below long-term structure.")
+
+    prior_strength = (
+        (_finite(advance_low) and advance_low >= 60)
+        or (_finite(ret_26w) and ret_26w >= 20)
+    ) and (_finite(dist_high) and dist_high >= -35)
+    stage3 = (
+        prior_strength
+        and (below_50 or not above_w30)
+        and _finite(w30_trend) and w30_trend <= 1.0
+        and ((_finite(ret_13w) and ret_13w <= 0) or (_finite(ma50_slope) and ma50_slope < 0))
+    )
+    if stage3:
+        return StageResult("Stage 3", "Early", 0.68, "Prior strength has shifted into an early Stage 3 transition around the weekly trend area.")
+
+    stage2 = (
+        above_w30 and above_150 and above_200
+        and _finite(w30_trend) and w30_trend >= -0.5
+        and _finite(dist_high) and dist_high >= -25
+        and _finite(advance_low) and advance_low >= 25
+        and ((_finite(ret_13w) and ret_13w >= 0) or above_50)
+    )
+    if stage2:
+        extended = (
+            (_finite(ma50) and last >= ma50 * 1.18)
+            or (_finite(ma200) and last >= ma200 * 1.45)
+            or (_finite(advance_low) and advance_low >= 120 and _finite(ret_13w) and ret_13w >= 25)
+        )
+        if extended:
+            return StageResult("Stage 2", "Extended", 0.74, "Weekly advancing structure remains intact, but price is stretched versus key averages.")
+        return StageResult("Stage 2", "Advancing", 0.82, "Price is above long-term structure and the 30-week trend is constructive.")
+
+    near_w30 = _finite(w30) and 0.88 * w30 <= last <= 1.12 * w30
+    near_200 = _finite(ma200) and 0.88 * ma200 <= last <= 1.12 * ma200
+    stage1 = (
+        (near_w30 or near_200 or above_200)
+        and (not _finite(w30_trend) or w30_trend >= -2.5)
+        and not (_finite(ret_13w) and ret_13w <= -8 and below_200)
+    )
+    if stage1:
+        variant = "Early Turn" if above_w30 and above_50 and _finite(ret_13w) and ret_13w > 0 else "Base Building"
+        return StageResult("Stage 1", "Stage 1", 0.64, "Price is building a base around long-term weekly structure without a confirmed advancing phase.")
+
+    if below_w30 and (_finite(w30_trend) and w30_trend < -1.0):
+        return StageResult("Stage 4", "Stage 4", 0.64, "Price is below the 30-week trend.")
+    return StageResult("Not Sure", "Unclear", 0.0, "Weekly structure does not meet reliable Stage 1/2/3/4 rules.")
+
+
+def _compute_rs_line_features(close: pd.Series, benchmark_close: pd.Series) -> Dict[str, object]:
+    aligned = pd.concat([close.rename("stock"), benchmark_close.rename("benchmark")], axis=1).dropna()
+    if len(aligned) < 160:
+        return {
+            "rs_line_last": np.nan,
+            "rs_line_10w_ma": np.nan,
+            "rs_line_30w_ma": np.nan,
+            "rs_line_13w_slope_pct": np.nan,
+            "rs_line_26w_high": False,
+            "rs_line_52w_high": False,
+            "rs_line_above_10w": False,
+            "rs_line_above_30w": False,
+        }
+    rs = aligned["stock"].astype(float) / aligned["benchmark"].astype(float)
+    rs = rs.replace([np.inf, -np.inf], np.nan).dropna()
+    if rs.empty:
+        return {
+            "rs_line_last": np.nan,
+            "rs_line_10w_ma": np.nan,
+            "rs_line_30w_ma": np.nan,
+            "rs_line_13w_slope_pct": np.nan,
+            "rs_line_26w_high": False,
+            "rs_line_52w_high": False,
+            "rs_line_above_10w": False,
+            "rs_line_above_30w": False,
+        }
+    rs_w = rs.resample("W-FRI").last().dropna()
+    rs10 = rs_w.rolling(10).mean()
+    rs30 = rs_w.rolling(30).mean()
+    last = _safe_float(rs_w.iloc[-1])
+    ma10 = _safe_float(rs10.iloc[-1])
+    ma30 = _safe_float(rs30.iloc[-1])
+    return {
+        "rs_line_last": last,
+        "rs_line_10w_ma": ma10,
+        "rs_line_30w_ma": ma30,
+        "rs_line_13w_slope_pct": pct_change_over_bars(rs_w, 13),
+        "rs_line_26w_high": bool(len(rs_w) >= 26 and _finite(last) and last >= float(rs_w.iloc[-26:].max()) * 0.995),
+        "rs_line_52w_high": bool(len(rs_w) >= 52 and _finite(last) and last >= float(rs_w.iloc[-52:].max()) * 0.995),
+        "rs_line_above_10w": bool(_finite(last) and _finite(ma10) and last > ma10),
+        "rs_line_above_30w": bool(_finite(last) and _finite(ma30) and last > ma30),
+    }
+
+
+def _count_weekly_accumulation_distribution(weekly_df: pd.DataFrame, window: int = 12) -> Tuple[int, int]:
+    if weekly_df is None or weekly_df.empty or len(weekly_df) < window + 10:
+        return 0, 0
+    close = weekly_df["Close"].astype(float)
+    volume = weekly_df["Volume"].astype(float)
+    ret = close.pct_change() * 100
+    vol_ma = volume.rolling(10).mean()
+    recent = pd.DataFrame({"ret": ret, "volume": volume, "vol_ma": vol_ma}).dropna().tail(window)
+    if recent.empty:
+        return 0, 0
+    distribution = int(((recent["ret"] <= -2.0) & (recent["volume"] > recent["vol_ma"] * 1.05)).sum())
+    accumulation = int(((recent["ret"] >= 2.0) & (recent["volume"] > recent["vol_ma"] * 1.05)).sum())
+    return accumulation, distribution
+
+
+def _count_indian_market_trap_flags(df: pd.DataFrame) -> Dict[str, object]:
+    out = {
+        "upper_circuit_like_days_20": 0,
+        "lower_circuit_like_days_20": 0,
+        "abnormal_gap_days_60": 0,
+        "zero_volume_days_60": 0,
+        "corporate_action_suspected": False,
+    }
+    if df is None or df.empty or not {"Open", "High", "Low", "Close", "Volume"}.issubset(df.columns):
+        return out
+    d = df.dropna(subset=["Open", "High", "Low", "Close", "Volume"]).copy()
+    if len(d) < 2:
+        return out
+    close = d["Close"].astype(float)
+    high = d["High"].astype(float)
+    low = d["Low"].astype(float)
+    open_ = d["Open"].astype(float)
+    volume = d["Volume"].astype(float)
+    ret = close.pct_change() * 100
+    close_near_high = close >= high * 0.995
+    close_near_low = close <= low * 1.005
+    out["upper_circuit_like_days_20"] = int(((ret.tail(20) >= 4.8) & close_near_high.tail(20)).sum())
+    out["lower_circuit_like_days_20"] = int(((ret.tail(20) <= -4.8) & close_near_low.tail(20)).sum())
+    prev_close = close.shift(1)
+    gap = (open_ / prev_close - 1) * 100
+    out["abnormal_gap_days_60"] = int((gap.abs().tail(60) >= 25).sum())
+    out["zero_volume_days_60"] = int((volume.tail(60) <= 0).sum())
+    out["corporate_action_suspected"] = bool((ret.abs().tail(90) >= 35).any() or out["abnormal_gap_days_60"] > 0)
+    return out
+
+
+def compute_stock_features(
+    ticker: str,
+    df: pd.DataFrame,
+    benchmark_df: pd.DataFrame,
+    config: dict,
+) -> Optional[StockFeatures]:
+    """Compute the single evidence layer used by stage + setup engines."""
+    required = {"Open", "High", "Low", "Close", "Volume"}
+    if not required.issubset(df.columns):
+        return None
+
+    df = df.dropna(subset=["Open", "High", "Low", "Close", "Volume"]).copy().sort_index()
+    if len(df) < int(config.get("min_history", 260)):
+        return None
+
+    close = df["Close"].astype(float)
+    high = df["High"].astype(float)
+    low = df["Low"].astype(float)
+    volume = df["Volume"].astype(float)
+    weekly_df = resample_weekly(df)
+    if len(weekly_df) < 60:
+        return None
+
+    weekly_close = weekly_df["Close"].astype(float)
+    weekly_high = weekly_df["High"].astype(float)
+    weekly_low = weekly_df["Low"].astype(float)
+
+    close_now = float(close.iloc[-1])
+    ma50_series = close.rolling(50).mean()
+    ma150_series = close.rolling(150).mean()
+    ma200_series = close.rolling(200).mean()
+    ma50 = _safe_float(ma50_series.iloc[-1])
+    ma150 = _safe_float(ma150_series.iloc[-1])
+    ma200 = _safe_float(ma200_series.iloc[-1])
+
+    weekly_ma10_series = weekly_close.rolling(10).mean()
+    weekly_ma30_series = weekly_close.rolling(30).mean()
+    weekly_ma10 = _safe_float(weekly_ma10_series.iloc[-1])
+    weekly_ma30 = _safe_float(weekly_ma30_series.iloc[-1])
+    weekly_close_now = float(weekly_close.iloc[-1])
+
+    high_52w = float(close.iloc[-252:].max())
+    low_52w = float(close.iloc[-252:].min())
+
+    stock_3m = pct_return(close, 63)
+    stock_6m = pct_return(close, 126)
+    bm_close = benchmark_df["Close"].dropna().astype(float)
+    bm_3m = pct_return(bm_close, 63)
+    bm_6m = pct_return(bm_close, 126)
+    rs_3m = stock_3m - bm_3m if pd.notna(stock_3m) and pd.notna(bm_3m) else np.nan
+    rs_6m = stock_6m - bm_6m if pd.notna(stock_6m) and pd.notna(bm_6m) else np.nan
+    rs_features = _compute_rs_line_features(close, bm_close)
+
+    daily_window = df.iloc[-140:]
+    daily_depths, daily_durations, daily_base_duration = detect_vcp_contractions(
+        daily_window["High"], daily_window["Low"], daily_window["Close"],
+        config["swing_order_daily"], config["max_contractions"],
+        config["min_contraction_days_daily"], config["min_contraction_depth_pct_daily"],
+    )
+    daily_contraction_score_val = contraction_score(daily_depths)
+
+    weekly_window = weekly_df.iloc[-52:]
+    weekly_depths, weekly_durations, weekly_base_duration = detect_vcp_contractions(
+        weekly_window["High"], weekly_window["Low"], weekly_window["Close"],
+        config["swing_order_weekly"], config["max_contractions"],
+        config["min_contraction_days_weekly"], config["min_contraction_depth_pct_weekly"],
+    )
+    weekly_contraction_score_val = contraction_score(weekly_depths)
+    weekly_quality = vcp_quality_label(
+        weekly_contraction_score_val, weekly_base_duration, weekly_depths, config["min_base_duration_weeks"]
+    )
+
+    daily_pivot = compute_pivot(high, config["pivot_lookback_daily"], daily_base_duration)
+    daily_breakout_distance = (close_now / daily_pivot - 1) * 100 if _finite(daily_pivot) and daily_pivot > 0 else np.nan
+    weekly_pivot = compute_pivot(weekly_high, config["pivot_lookback_weekly"], weekly_base_duration)
+    weekly_breakout_distance = (weekly_close_now / weekly_pivot - 1) * 100 if _finite(weekly_pivot) and weekly_pivot > 0 else np.nan
+
+    recent_range_pct = (
+        (close.iloc[-config["recent_range_days"]:].max() - close.iloc[-config["recent_range_days"]:].min()) /
+        close.iloc[-config["recent_range_days"]:].max() * 100
+    ) if len(close) >= config["recent_range_days"] and close.iloc[-config["recent_range_days"]:].max() > 0 else np.nan
+    tight_range_ok = _finite(recent_range_pct) and recent_range_pct <= config["recent_range_max_pct"]
+
+    weekly_range_12w = ((weekly_close.iloc[-12:].max() / weekly_close.iloc[-12:].min()) - 1) * 100 if len(weekly_close) >= 12 and weekly_close.iloc[-12:].min() > 0 else np.nan
+    weekly_range_20w = ((weekly_close.iloc[-20:].max() / weekly_close.iloc[-20:].min()) - 1) * 100 if len(weekly_close) >= 20 and weekly_close.iloc[-20:].min() > 0 else np.nan
+    recent_low_6w = float(low.iloc[-30:].min()) if len(low) >= 30 else np.nan
+    no_recent_breakdown = _finite(recent_low_6w) and close_now >= recent_low_6w * 1.03
+
+    volume_dryup_ratio_val = volume_ratio(volume, config["volume_short_window"], config["volume_long_window"])
+    weekly_volume_dryup_ratio = volume_ratio(weekly_df["Volume"].astype(float), 4, 12) if len(weekly_df) >= 12 else np.nan
+    breakout_volume_ratio_val = recent_breakout_volume_ratio(volume, 30)
+    weekly_volume_ratio_val = current_week_volume_ratio(volume, weekly_df["Volume"].astype(float), current_days=5, weekly_window=10)
+    avg_turnover_val = avg_turnover(close, volume, 20)
+    median_turnover_val = float((close.iloc[-20:] * volume.iloc[-20:]).median()) if len(close) >= 20 and len(volume) >= 20 else np.nan
+    min_turnover = float(config.get("min_avg_turnover_inr", 5e7) or 0)
+    liquidity_ok = bool(
+        _finite(avg_turnover_val) and avg_turnover_val >= min_turnover
+        and (_finite(median_turnover_val) and median_turnover_val >= min_turnover * 0.50)
+    )
+
+    accumulation_weeks, distribution_weeks = _count_weekly_accumulation_distribution(weekly_df, 12)
+    trap_flags = _count_indian_market_trap_flags(df)
+
+    recent_low_3w = float(low.iloc[-15:].min()) if len(low) >= 15 else np.nan
+    ma50_stop = ma50 * 0.97 if _finite(ma50) else np.nan
+    stop_candidates = [x for x in [recent_low_3w, ma50_stop] if _finite(x) and x < close_now]
+    logical_stop = max(stop_candidates) if stop_candidates else recent_low_3w
+    risk_pct = (daily_pivot - logical_stop) / daily_pivot * 100 if _finite(daily_pivot) and _finite(logical_stop) and daily_pivot > 0 and logical_stop < daily_pivot else np.nan
+
+    illiquidity_risk = bool(
+        not liquidity_ok
+        or int(trap_flags.get("zero_volume_days_60", 0)) > 0
+    )
+
+    return StockFeatures(
+        ticker=ticker,
+        close_series=close,
+        high_series=high,
+        low_series=low,
+        volume_series=volume,
+        weekly_df=weekly_df,
+        close=close_now,
+        high_52w=high_52w,
+        low_52w=low_52w,
+        dist_from_52w_high_pct=(close_now / high_52w - 1) * 100 if high_52w > 0 else np.nan,
+        advance_from_52w_low_pct=(close_now / low_52w - 1) * 100 if low_52w > 0 else np.nan,
+        ma50=ma50,
+        ma150=ma150,
+        ma200=ma200,
+        price_above_ma50=bool(_finite(ma50) and close_now > ma50),
+        price_above_ma150=bool(_finite(ma150) and close_now > ma150),
+        price_above_ma200=bool(_finite(ma200) and close_now > ma200),
+        ma_stack_bullish=bool(_finite(ma50) and _finite(ma150) and _finite(ma200) and close_now > ma50 > ma150 > ma200),
+        ma_stack_bearish=bool(_finite(ma50) and _finite(ma150) and _finite(ma200) and close_now < ma50 < ma150 < ma200),
+        ma50_slope_pct=slope_pct(ma50_series, 20),
+        ma150_slope_pct=slope_pct(ma150_series, 20),
+        ma200_slope_pct=slope_pct(ma200_series, 20),
+        ma200_trend_1m_pct=pct_change_over_bars(ma200_series, 21),
+        weekly_close=weekly_close_now,
+        weekly_ma10=weekly_ma10,
+        weekly_ma30=weekly_ma30,
+        price_above_weekly_ma10=bool(_finite(weekly_ma10) and weekly_close_now > weekly_ma10),
+        price_above_weekly_ma30=bool(_finite(weekly_ma30) and weekly_close_now > weekly_ma30),
+        weekly_ma10_slope_pct=slope_pct(weekly_ma10_series, 6),
+        weekly_ma30_slope_pct=slope_pct(weekly_ma30_series, 6),
+        weekly_ma30_trend_10w_pct=pct_change_over_bars(weekly_ma30_series, 10),
+        ret_4w_pct=pct_return(close, 21),
+        ret_8w_pct=pct_return(close, 42),
+        ret_13w_pct=pct_return(close, 63),
+        ret_26w_pct=pct_return(close, 126),
+        rs_3m_pct=rs_3m,
+        rs_6m_pct=rs_6m,
+        rs_line_last=_safe_float(rs_features["rs_line_last"]),
+        rs_line_10w_ma=_safe_float(rs_features["rs_line_10w_ma"]),
+        rs_line_30w_ma=_safe_float(rs_features["rs_line_30w_ma"]),
+        rs_line_13w_slope_pct=_safe_float(rs_features["rs_line_13w_slope_pct"]),
+        rs_line_26w_high=bool(rs_features["rs_line_26w_high"]),
+        rs_line_52w_high=bool(rs_features["rs_line_52w_high"]),
+        rs_line_above_10w=bool(rs_features["rs_line_above_10w"]),
+        rs_line_above_30w=bool(rs_features["rs_line_above_30w"]),
+        avg_turnover_inr=avg_turnover_val,
+        median_turnover_inr=median_turnover_val,
+        liquidity_ok=liquidity_ok,
+        volume_dryup_ratio=volume_dryup_ratio_val,
+        weekly_volume_dryup_ratio=weekly_volume_dryup_ratio,
+        breakout_volume_ratio=breakout_volume_ratio_val,
+        weekly_volume_ratio=weekly_volume_ratio_val,
+        distribution_weeks_12=distribution_weeks,
+        accumulation_weeks_12=accumulation_weeks,
+        daily_depths=daily_depths,
+        daily_durations=daily_durations,
+        daily_contraction_score=daily_contraction_score_val,
+        daily_base_duration=daily_base_duration,
+        weekly_depths=weekly_depths,
+        weekly_durations=weekly_durations,
+        weekly_contraction_score=weekly_contraction_score_val,
+        weekly_base_duration=weekly_base_duration,
+        weekly_quality=weekly_quality,
+        daily_pivot=daily_pivot,
+        daily_breakout_distance_pct=daily_breakout_distance,
+        weekly_pivot=weekly_pivot,
+        weekly_breakout_distance_pct=weekly_breakout_distance,
+        recent_range_pct=recent_range_pct,
+        tight_range_ok=tight_range_ok,
+        weekly_range_12w_pct=weekly_range_12w,
+        weekly_range_20w_pct=weekly_range_20w,
+        recent_low_6w=recent_low_6w,
+        no_recent_breakdown=no_recent_breakdown,
+        logical_stop_price=logical_stop,
+        risk_pct=risk_pct,
+        upper_circuit_like_days_20=int(trap_flags["upper_circuit_like_days_20"]),
+        lower_circuit_like_days_20=int(trap_flags["lower_circuit_like_days_20"]),
+        abnormal_gap_days_60=int(trap_flags["abnormal_gap_days_60"]),
+        zero_volume_days_60=int(trap_flags["zero_volume_days_60"]),
+        corporate_action_suspected=bool(trap_flags["corporate_action_suspected"]),
+        illiquidity_risk=illiquidity_risk,
+    )
+
+
+def classify_public_stage(features: StockFeatures, config: Optional[dict] = None) -> StageResult:
+    """Weekly-first public stage classifier.
+
+    The public stage answers only: which broad structure is this stock in?
+    It intentionally does not decide whether the setup is buyable/actionable.
+    """
+    f = features
+    rs_constructive = (
+        (_finite(f.rs_3m_pct) and f.rs_3m_pct >= 0)
+        or (_finite(f.rs_6m_pct) and f.rs_6m_pct >= 0)
+        or f.rs_line_above_30w
+        or f.rs_line_26w_high
+    )
+    rs_weakening = (
+        (_finite(f.rs_3m_pct) and f.rs_3m_pct <= -4)
+        or (_finite(f.rs_line_13w_slope_pct) and f.rs_line_13w_slope_pct <= -3)
+        or (not f.rs_line_above_30w and _finite(f.rs_line_30w_ma))
+    )
+    w30_rising_or_flat = _finite(f.weekly_ma30_trend_10w_pct) and f.weekly_ma30_trend_10w_pct >= -0.75
+    w30_rising = _finite(f.weekly_ma30_trend_10w_pct) and f.weekly_ma30_trend_10w_pct >= 0.75
+    w30_falling = _finite(f.weekly_ma30_trend_10w_pct) and f.weekly_ma30_trend_10w_pct <= -2.0
+    ma200_not_falling_hard = (not _finite(f.ma200_trend_1m_pct)) or f.ma200_trend_1m_pct >= -1.5
+
+    # Confirmed downtrend gets first priority because it is the clearest stage.
+    stage4_confirmed = (
+        not f.price_above_weekly_ma30
+        and not f.price_above_ma200
+        and (w30_falling or (_finite(f.ma200_trend_1m_pct) and f.ma200_trend_1m_pct <= -1.0))
+        and _finite(f.dist_from_52w_high_pct) and f.dist_from_52w_high_pct <= -25
+        and ((_finite(f.ret_13w_pct) and f.ret_13w_pct <= -5) or rs_weakening)
+    )
+    if stage4_confirmed:
+        return StageResult(
+            "Stage 4", "Stage 4", 0.86,
+            "Price is below the 30-week trend and below long-term support structure."
+        )
+
+    # Stage 3 is former strength that is now showing damage. This prevents weak
+    # daily pullbacks from being over-labelled as distribution.
+    prior_strength = (
+        _finite(f.dist_from_52w_high_pct) and f.dist_from_52w_high_pct >= -35
+        and (
+            (_finite(f.advance_from_52w_low_pct) and f.advance_from_52w_low_pct >= 60)
+            or (_finite(f.ret_26w_pct) and f.ret_26w_pct >= 18)
+            or (_finite(f.rs_6m_pct) and f.rs_6m_pct >= 5)
+            or f.rs_line_26w_high
+        )
+    )
+    distribution_damage_score = 0
+    if not f.price_above_ma50 or not f.price_above_weekly_ma10:
+        distribution_damage_score += 1
+    if rs_weakening:
+        distribution_damage_score += 1
+    if f.distribution_weeks_12 >= 2 and f.distribution_weeks_12 > f.accumulation_weeks_12:
+        distribution_damage_score += 1
+    if _finite(f.ret_8w_pct) and f.ret_8w_pct <= 0:
+        distribution_damage_score += 1
+    if _finite(f.weekly_ma30_trend_10w_pct) and f.weekly_ma30_trend_10w_pct <= 1.0:
+        distribution_damage_score += 1
+
+    if prior_strength and distribution_damage_score >= 3 and not stage4_confirmed:
+        variant = "Late" if f.distribution_weeks_12 >= 2 else "Early"
+        return StageResult(
+            "Stage 3", variant, 0.76 if variant == "Late" else 0.68,
+            "Prior strength has shifted into a Stage 3 transition based on trend, relative strength, and volume evidence."
+        )
+
+    # Advancing phase. Stage 2 must be weekly-supported; daily trend template is
+    # used for quality later, not as the sole stage source.
+    stage2_core = (
+        f.price_above_weekly_ma30
+        and f.price_above_ma150
+        and f.price_above_ma200
+        and w30_rising_or_flat
+        and ma200_not_falling_hard
+        and _finite(f.dist_from_52w_high_pct) and f.dist_from_52w_high_pct >= -25
+        and _finite(f.advance_from_52w_low_pct) and f.advance_from_52w_low_pct >= 25
+        and (rs_constructive or (_finite(f.ret_13w_pct) and f.ret_13w_pct >= 5))
+    )
+    if stage2_core:
+        extended = (
+            (_finite(f.ma50) and f.close >= f.ma50 * 1.18)
+            or (_finite(f.weekly_ma10) and f.weekly_close >= f.weekly_ma10 * 1.12)
+            or (_finite(f.ma200) and f.close >= f.ma200 * 1.45)
+            or (_finite(f.advance_from_52w_low_pct) and f.advance_from_52w_low_pct >= 120 and _finite(f.ret_13w_pct) and f.ret_13w_pct >= 25)
+        )
+        if extended:
+            return StageResult(
+                "Stage 2", "Extended", 0.78,
+                "Weekly advancing structure remains intact, but price is stretched versus key moving averages."
+            )
+        confidence = 0.90 if (f.ma_stack_bullish and w30_rising and rs_constructive) else 0.80
+        return StageResult(
+            "Stage 2", "Advancing", confidence,
+            "Price is above constructive weekly and long-term trend structure with improving relative strength."
+        )
+
+    # Base/repair. This should be a broad structural bucket, not an action label.
+    near_weekly_ma30 = _finite(f.weekly_ma30) and 0.88 * f.weekly_ma30 <= f.close <= 1.12 * f.weekly_ma30
+    near_ma200 = _finite(f.ma200) and 0.88 * f.ma200 <= f.close <= 1.12 * f.ma200
+    stage1_base = (
+        (near_weekly_ma30 or near_ma200 or f.price_above_ma200)
+        and not stage4_confirmed
+        and (not _finite(f.weekly_ma30_trend_10w_pct) or f.weekly_ma30_trend_10w_pct >= -2.5)
+        and not (_finite(f.ret_13w_pct) and f.ret_13w_pct <= -8 and not f.price_above_ma200)
+    )
+    if stage1_base:
+        early_turn = (
+            f.price_above_weekly_ma30
+            and f.price_above_ma50
+            and ((_finite(f.ret_13w_pct) and f.ret_13w_pct > 0) or f.rs_line_above_10w)
+            and not rs_weakening
+        )
+        return StageResult(
+            "Stage 1", "Stage 1", 0.68 if early_turn else 0.64,
+            "Price is building a base around long-term weekly structure without a confirmed advancing phase."
+        )
+
+    if (not f.price_above_weekly_ma30) and (w30_falling or not f.price_above_ma200):
+        return StageResult("Stage 4", "Stage 4", 0.66, "Price is below weekly structure.")
+    return StageResult("Not Sure", "Unclear", 0.0, "The weekly structure does not meet reliable stage criteria.")
+
+
+def public_stage_label(stage: str, variant: str = "") -> str:
+    """Clean public stage label for dashboard cards.
+
+    The canonical `stage` field remains useful for filters. This label is the
+    front-end friendly display value.
+    """
+    stg = str(stage or "").strip()
+    var = str(variant or "").strip()
+    if stg in {"Failed Stage 2", "Stage 2 Failed"}:
+        return "Failed Stage 2"
+    if stg == "Stage 1":
+        return "Stage 1"
+    if stg == "Stage 2":
+        return f"Stage 2 - {var}" if var in {"Advancing", "Extended"} else "Stage 2"
+    if stg == "Stage 3":
+        return f"Stage 3 {var}" if var in {"Early", "Late"} else "Stage 3"
+    if stg == "Stage 4":
+        return "Stage 4"
+    if stg == "Not Sure":
+        return "Not Sure - Unclear"
+    return stg or "Not Sure - Unclear"
+
+
+def _nifty_3m_outperformance_label(rs_3m_pct: float) -> str:
+    if not _finite(rs_3m_pct):
+        return "3M Nifty comparison unavailable"
+    value = round(float(abs(rs_3m_pct)), 2)
+    if rs_3m_pct >= 0:
+        return f"Outperformed Nifty by {value}% in 3 Months"
+    return f"Underperformed Nifty by {value}% in 3 Months"
+
+
+def _volume_pattern_display(features: StockFeatures) -> str:
+    """Neutral public volume wording with the actual ratio.
+
+    Prefer weekly current-volume ratio because the public card should read like:
+    "Volume Drying Up (0.40x vs 10W Avg)".
+    """
+    ratio = features.weekly_volume_ratio
+    basis = "10W Avg"
+    if not _finite(ratio):
+        ratio = features.weekly_volume_dryup_ratio
+        basis = "12W Avg"
+    if not _finite(ratio):
+        ratio = features.volume_dryup_ratio
+        basis = "50D Avg"
+    if not _finite(ratio):
+        return "Volume comparison unavailable"
+
+    ratio_text = f"{float(ratio):.2f}x vs {basis}"
+    if ratio <= 0.85:
+        return f"Volume Drying Up ({ratio_text})"
+    if ratio >= 1.50:
+        return f"Volume Expanding ({ratio_text})"
+    return f"Volume Normal ({ratio_text})"
+
+
+def _bounded_score(value: float, low: float = 0.0, high: float = 100.0) -> float:
+    if not _finite(value):
+        return 0.0
+    return float(max(low, min(high, value)))
+
+
+def _relative_strength_label(score: float) -> str:
+    if score >= 80:
+        return "Very Strong"
+    if score >= 60:
+        return "Strong"
+    if score >= 40:
+        return "Neutral"
+    return "Weak"
+
+
+def _setup_quality_label(score: float) -> str:
+    if score >= 78:
+        return "High"
+    if score >= 58:
+        return "Medium"
+    if score >= 38:
+        return "Low"
+    return "Not Rated"
+
+
+def _volume_pattern_label(features: StockFeatures) -> str:
+    # Public-neutral volume state. Selling/distribution diagnostics stay internal.
+    if _finite(features.weekly_volume_ratio):
+        if features.weekly_volume_ratio <= 0.85:
+            return "Volume Drying Up"
+        if features.weekly_volume_ratio >= 1.50:
+            return "Volume Expanding"
+    if _finite(features.volume_dryup_ratio) and features.volume_dryup_ratio <= 0.85:
+        return "Volume Drying Up"
+    if _finite(features.breakout_volume_ratio) and features.breakout_volume_ratio >= 1.8:
+        return "Volume Expanding"
+    return "Volume Normal"
+
+
+def evaluate_internal_setup_quality(
+    features: StockFeatures,
+    stage_result: StageResult,
+    regime: Optional[MarketRegime],
+    config: dict,
+) -> SetupQualityResult:
+    """Internal Minervini-style setup-quality engine.
+
+    It deliberately returns internal booleans such as `is_buyable_setup_internal`,
+    but public UIs should expose only setup_quality_label, structure score and flags.
+    """
+    f = features
+    internal_flags: List[str] = []
+    public_flags: List[str] = []
+    failure_reasons: List[str] = []
+
+    # Trend template / leadership scores.
+    trend_conditions = [
+        f.price_above_ma50,
+        f.price_above_ma150,
+        f.price_above_ma200,
+        f.ma_stack_bullish,
+        _finite(f.ma200_trend_1m_pct) and f.ma200_trend_1m_pct >= -0.5,
+        _finite(f.dist_from_52w_high_pct) and f.dist_from_52w_high_pct >= -25,
+        _finite(f.advance_from_52w_low_pct) and f.advance_from_52w_low_pct >= 30,
+        f.price_above_weekly_ma30,
+    ]
+    trend_score = round(sum(bool(x) for x in trend_conditions) / len(trend_conditions) * 100, 2)
+    trend_template_pass = bool(trend_score >= 75 and stage_result.stage == "Stage 2")
+
+    leader_points = 0.0
+    if _finite(f.rs_3m_pct):
+        leader_points += max(0.0, min(20.0, 10.0 + f.rs_3m_pct * 0.9))
+    if _finite(f.rs_6m_pct):
+        leader_points += max(0.0, min(20.0, 10.0 + f.rs_6m_pct * 0.7))
+    if f.rs_line_above_10w:
+        leader_points += 15
+    if f.rs_line_above_30w:
+        leader_points += 15
+    if f.rs_line_26w_high:
+        leader_points += 15
+    if f.rs_line_52w_high:
+        leader_points += 15
+    if _finite(f.rs_line_13w_slope_pct) and f.rs_line_13w_slope_pct > 0:
+        leader_points += 10
+    leader_score = round(_bounded_score(leader_points), 2)
+
+    # Proper setup score: VCP/base quality, pivot proximity, volume dry-up.
+    setup_score = 0.0
+    if len(f.daily_depths) >= 2:
+        setup_score += min(20.0, f.daily_contraction_score * 20.0)
+    if len(f.weekly_depths) >= 2:
+        setup_score += min(18.0, f.weekly_contraction_score * 18.0)
+    if f.daily_base_duration >= config["min_base_duration_days"]:
+        setup_score += 10
+    if f.weekly_base_duration >= config["min_base_duration_weeks"]:
+        setup_score += 10
+    if _finite(f.daily_breakout_distance_pct) and -5.0 <= f.daily_breakout_distance_pct <= 1.5:
+        setup_score += 14
+    elif _finite(f.daily_breakout_distance_pct) and 1.5 < f.daily_breakout_distance_pct <= 5.0:
+        setup_score += 5
+        internal_flags.append("slightly_extended_from_pivot")
+    if _finite(f.volume_dryup_ratio) and f.volume_dryup_ratio <= 0.85:
+        setup_score += 12
+    elif _finite(f.volume_dryup_ratio) and f.volume_dryup_ratio > 1.05:
+        internal_flags.append("no_volume_dryup")
+    if f.tight_range_ok:
+        setup_score += 8
+    if f.weekly_quality == "strong":
+        setup_score += 8
+    elif f.weekly_quality == "moderate":
+        setup_score += 4
+
+    # Fault detection. These reduce setup quality but do not necessarily change stage.
+    if f.daily_depths and max(f.daily_depths) > 30:
+        setup_score -= 12
+        internal_flags.append("base_too_deep_daily")
+        public_flags.append("Wide Base")
+    if f.weekly_depths and max(f.weekly_depths) > 35:
+        setup_score -= 14
+        internal_flags.append("base_too_deep_weekly")
+        public_flags.append("Wide Weekly Base")
+    if _finite(f.weekly_range_12w_pct) and f.weekly_range_12w_pct > 28:
+        setup_score -= 8
+        internal_flags.append("weekly_structure_loose")
+        public_flags.append("Loose Structure")
+    if stage_result.stage == "Stage 2" and stage_result.variant == "Extended":
+        setup_score -= 10
+        internal_flags.append("extended_stage2")
+        public_flags.append("Extended")
+    if f.distribution_weeks_12 >= 2 and f.distribution_weeks_12 > f.accumulation_weeks_12:
+        setup_score -= 14
+        internal_flags.append("distribution_volume")
+    setup_score = round(_bounded_score(setup_score), 2)
+
+    # Low-risk score based on distance from pivot to logical stop. This is internal
+    # setup quality; the public UI may show only a generic "wide risk" flag.
+    if _finite(f.risk_pct):
+        if f.risk_pct <= 5:
+            risk_score = 100.0
+        elif f.risk_pct <= 8:
+            risk_score = 82.0
+        elif f.risk_pct <= 12:
+            risk_score = 58.0
+            public_flags.append("Wider Risk")
+        elif f.risk_pct <= 15:
+            risk_score = 35.0
+            public_flags.append("Wide Risk")
+        else:
+            risk_score = 15.0
+            public_flags.append("Wide Risk")
+            internal_flags.append("risk_too_wide")
+    else:
+        risk_score = 35.0
+        internal_flags.append("risk_not_measurable")
+
+    # Indian-market technical-trap flags.
+    if f.upper_circuit_like_days_20 >= 3:
+        public_flags.append("Circuit Risk")
+        internal_flags.append("upper_circuit_risk")
+    if f.lower_circuit_like_days_20 >= 2:
+        public_flags.append("Circuit Risk")
+        internal_flags.append("lower_circuit_risk")
+    if f.corporate_action_suspected:
+        public_flags.append("Corporate Action Check")
+        internal_flags.append("corporate_action_suspected")
+    if f.illiquidity_risk:
+        public_flags.append("Low Liquidity")
+        internal_flags.append("illiquidity_risk")
+
+    # Market regime is a quality modifier, not a stage input.
+    market_score = 50.0
+    if regime is not None:
+        market_score = {
+            "strong_risk_on": 100.0,
+            "risk_on": 82.0,
+            "mixed": 60.0,
+            "risk_off": 35.0,
+            "strong_risk_off": 15.0,
+        }.get(regime.regime_label, 50.0)
+
+    trap_penalty = 0.0
+    for flag in {str(x) for x in internal_flags}:
+        if flag in {"upper_circuit_risk", "lower_circuit_risk", "corporate_action_suspected", "illiquidity_risk"}:
+            trap_penalty += 10.0
+        elif flag in {"risk_too_wide", "distribution_volume"}:
+            trap_penalty += 8.0
+        elif flag in {"base_too_deep_daily", "base_too_deep_weekly", "weekly_structure_loose"}:
+            trap_penalty += 6.0
+
+    quality_score = (
+        0.24 * leader_score
+        + 0.24 * trend_score
+        + 0.24 * setup_score
+        + 0.16 * risk_score
+        + 0.12 * market_score
+        - trap_penalty
+    )
+    quality_score = round(_bounded_score(quality_score), 2)
+
+    is_true_leader = bool(leader_score >= 70 and (f.rs_line_26w_high or f.rs_line_above_30w or _finite(f.rs_6m_pct) and f.rs_6m_pct >= 8))
+    is_proper_setup = bool(setup_score >= 65 and stage_result.stage in {"Stage 1", "Stage 2"} and "distribution_volume" not in internal_flags)
+    is_low_risk = bool(risk_score >= 75 and "risk_too_wide" not in internal_flags)
+    is_buyable_internal = bool(
+        stage_result.stage == "Stage 2"
+        and stage_result.variant != "Extended"
+        and trend_template_pass
+        and is_true_leader
+        and is_proper_setup
+        and is_low_risk
+        and quality_score >= 78
+        and not any(flag in internal_flags for flag in ["upper_circuit_risk", "lower_circuit_risk", "corporate_action_suspected", "illiquidity_risk"])
+    )
+
+    if not is_true_leader:
+        failure_reasons.append("not_true_leader")
+    if not is_proper_setup:
+        failure_reasons.append("setup_not_proper_or_not_tight")
+    if not is_low_risk:
+        failure_reasons.append("risk_not_low")
+    if stage_result.stage != "Stage 2":
+        failure_reasons.append("not_confirmed_stage2")
+    if stage_result.variant == "Extended":
+        failure_reasons.append("extended_structure")
+
+    # De-duplicate public flags while preserving order.
+    seen = set()
+    public_flags_clean = []
+    for flag in public_flags:
+        if flag and flag not in seen:
+            seen.add(flag)
+            public_flags_clean.append(flag)
+
+    return SetupQualityResult(
+        leader_score=round(float(leader_score), 2),
+        trend_score=round(float(trend_score), 2),
+        setup_score=round(float(setup_score), 2),
+        risk_score=round(float(risk_score), 2),
+        quality_score=quality_score,
+        setup_quality_label=_setup_quality_label(quality_score),
+        relative_strength_label=_relative_strength_label(leader_score),
+        volume_pattern_label=_volume_pattern_label(f),
+        trend_template_pass=trend_template_pass,
+        is_true_leader=is_true_leader,
+        is_proper_setup=is_proper_setup,
+        is_low_risk=is_low_risk,
+        is_buyable_setup_internal=is_buyable_internal,
+        public_flags=public_flags_clean,
+        internal_flags=internal_flags,
+        failure_reasons=failure_reasons,
+    )
+
 
 def score_daily(stage: str, trend_template_ok: bool, regime_label: str, liquidity_ok: bool, near_pivot_ok: bool, breakout_today: bool, contraction_score_val: float, base_duration: float, dist_from_high: float, volume_dryup_ratio: float, breakout_volume_ratio: float, rs_3m: float, rs_6m: float) -> float:
     score = 0.0
@@ -1400,174 +2021,86 @@ def combined_bucket(daily_bucket: str, weekly_bucket: str) -> str:
     return "watchlist"
 
 def analyze_symbol(ticker: str, df: pd.DataFrame, benchmark_df: pd.DataFrame, regime: MarketRegime, config: dict) -> Optional[VCPScoreCard]:
-    required = {"Open", "High", "Low", "Close", "Volume"}
-    if not required.issubset(df.columns):
+    """Analyze one symbol using one evidence engine and two output heads.
+
+    Public head: weekly-first stage classification.
+    Internal head: leader/setup/risk quality scoring used for ranking.
+    """
+    f = compute_stock_features(ticker, df, benchmark_df, config)
+    if f is None:
         return None
 
-    df = df.dropna(subset=["Open", "High", "Low", "Close", "Volume"]).copy()
-    if len(df) < config["min_history"]:
-        return None
+    stage_result = classify_public_stage(f, config)
+    setup_result = evaluate_internal_setup_quality(f, stage_result, regime, config)
 
-    close = df["Close"].astype(float)
-    high = df["High"].astype(float)
-    low = df["Low"].astype(float)
-    volume = df["Volume"].astype(float)
-
-    weekly_df = resample_weekly(df)
-    if len(weekly_df) < 60:
-        return None
-    weekly_close = weekly_df["Close"].astype(float)
-    weekly_high = weekly_df["High"].astype(float)
-    weekly_low = weekly_df["Low"].astype(float)
-
-    close_now = float(close.iloc[-1])
-    ma50 = float(close.rolling(50).mean().iloc[-1])
-    ma150 = float(close.rolling(150).mean().iloc[-1])
-    ma200 = float(close.rolling(200).mean().iloc[-1])
-    ma50_series = close.rolling(50).mean()
-    ma150_series = close.rolling(150).mean()
-    ma200_series = close.rolling(200).mean()
-    stage, stage_variant, stage_confidence, stage_reason = determine_stage_details(close, ma50, ma150, ma200)
-
-    high_52w = float(close.iloc[-252:].max())
-    low_52w = float(close.iloc[-252:].min())
-    dist_from_high = (close_now / high_52w - 1) * 100 if high_52w > 0 else np.nan
-    advance_from_low = (close_now / low_52w - 1) * 100 if low_52w > 0 else np.nan
-
-    ma50_slope_pct = slope_pct(ma50_series, 20)
-    ma150_slope_pct = slope_pct(ma150_series, 20)
-    ma200_slope_pct = slope_pct(ma200_series, 20)
-    weekly_ma10 = float(weekly_close.rolling(10).mean().iloc[-1]) if len(weekly_close) >= 10 else np.nan
-    weekly_ma30 = float(weekly_close.rolling(30).mean().iloc[-1]) if len(weekly_close) >= 30 else np.nan
+    stage = stage_result.stage
+    stage_variant = stage_result.variant
+    stage_confidence = stage_result.confidence
+    stage_reason = stage_result.reason
 
     market_regime_ok = regime.regime_label in {"strong_risk_on", "risk_on", "mixed"}
+    rs_combo = np.nanmean([f.rs_3m_pct, f.rs_6m_pct])
 
-    daily_window = df.iloc[-140:]
-    daily_depths, daily_durations, daily_base_duration = detect_vcp_contractions(
-        daily_window["High"], daily_window["Low"], daily_window["Close"],
-        config["swing_order_daily"], config["max_contractions"],
-        config["min_contraction_days_daily"], config["min_contraction_depth_pct_daily"]
-    )
-    daily_contraction_score_val = contraction_score(daily_depths)
-
-    weekly_window = weekly_df.iloc[-52:]
-    weekly_depths, weekly_durations, weekly_base_duration = detect_vcp_contractions(
-        weekly_window["High"], weekly_window["Low"], weekly_window["Close"],
-        config["swing_order_weekly"], config["max_contractions"],
-        config["min_contraction_days_weekly"], config["min_contraction_depth_pct_weekly"]
-    )
-    weekly_contraction_score_val = contraction_score(weekly_depths)
-    weekly_quality = vcp_quality_label(
-        weekly_contraction_score_val, weekly_base_duration, weekly_depths, config["min_base_duration_weeks"]
-    )
-
-    volume_dryup_ratio = volume_ratio(volume, config["volume_short_window"], config["volume_long_window"])
-    weekly_volume_dryup_ratio = volume_ratio(weekly_df["Volume"].astype(float), 4, 12) if len(weekly_df) >= 12 else np.nan
-     # Daily card volume: current day / previous 30 trading-day average.
-    breakout_volume_ratio = recent_breakout_volume_ratio(volume, 30)
-     # Weekly card volume: latest 5 trading days / previous 10 completed weekly volumes.
-    weekly_volume_ratio = current_week_volume_ratio(volume, weekly_df["Volume"].astype(float), current_days=5, weekly_window=10)
-    avg_turnover_inr = avg_turnover(close, volume, 20)
-    liquidity_ok = pd.notna(avg_turnover_inr) and avg_turnover_inr >= config["min_avg_turnover_inr"]
-
-    stock_3m = pct_return(close, 63)
-    stock_6m = pct_return(close, 126)
-    bm_3m = pct_return(benchmark_df["Close"], 63)
-    bm_6m = pct_return(benchmark_df["Close"], 126)
-    rs_3m = stock_3m - bm_3m if pd.notna(stock_3m) and pd.notna(bm_3m) else np.nan
-    rs_6m = stock_6m - bm_6m if pd.notna(stock_6m) and pd.notna(bm_6m) else np.nan
-    rs_combo = np.nanmean([rs_3m, rs_6m])
-
-    daily_pivot = compute_pivot(high, config["pivot_lookback_daily"], daily_base_duration)
-    daily_breakout_distance = (close_now / daily_pivot - 1) * 100 if pd.notna(daily_pivot) and daily_pivot > 0 else np.nan
-    weekly_pivot = compute_pivot(weekly_high, config["pivot_lookback_weekly"], weekly_base_duration)
-    weekly_breakout_distance = (float(weekly_close.iloc[-1]) / weekly_pivot - 1) * 100 if pd.notna(weekly_pivot) and weekly_pivot > 0 else np.nan
-
-    recent_range_pct = (
-        (close.iloc[-config["recent_range_days"]:].max() - close.iloc[-config["recent_range_days"]:].min()) /
-        close.iloc[-config["recent_range_days"]:].max() * 100
-    ) if len(close) >= config["recent_range_days"] else np.nan
-    tight_range_ok = pd.notna(recent_range_pct) and recent_range_pct <= config["recent_range_max_pct"]
-
-    price_above_ma50 = close_now > ma50
-    price_above_ma150 = close_now > ma150
-    price_above_ma200 = close_now > ma200
-    ma_stack_bull = close_now > ma50 > ma150 > ma200
-    ma_stack_bear = close_now < ma50 < ma150 < ma200
-
-    weekly_range_12w = ((weekly_close.iloc[-12:].max() / weekly_close.iloc[-12:].min()) - 1) * 100 if len(weekly_close) >= 12 and weekly_close.iloc[-12:].min() > 0 else np.nan
-    weekly_range_20w = ((weekly_close.iloc[-20:].max() / weekly_close.iloc[-20:].min()) - 1) * 100 if len(weekly_close) >= 20 and weekly_close.iloc[-20:].min() > 0 else np.nan
-    recent_low_6w = float(low.iloc[-30:].min()) if len(low) >= 30 else np.nan
-    no_recent_breakdown = pd.notna(recent_low_6w) and close_now >= recent_low_6w * 1.03
-
-    stage2_trend_template = (
-        stage == "Stage 2"
-        and ma_stack_bull
-        and pd.notna(ma50_slope_pct) and ma50_slope_pct > 0.0005
-        and pd.notna(ma150_slope_pct) and ma150_slope_pct >= 0
-        and pd.notna(ma200_slope_pct) and ma200_slope_pct >= -0.00015
-        and pd.notna(dist_from_high) and dist_from_high >= -18
-        and pd.notna(advance_from_low) and advance_from_low >= 30
-        and pd.notna(rs_combo) and rs_combo >= 0
-    )
+    stage2_trend_template = bool(setup_result.trend_template_pass)
 
     stage1_base_ready = (
         stage == "Stage 1"
-        and pd.notna(ma200_slope_pct) and -0.00035 <= ma200_slope_pct <= 0.00035
-        and pd.notna(ma150_slope_pct) and ma150_slope_pct >= -0.00035
-        and price_above_ma150
-        and price_above_ma200
-        and pd.notna(dist_from_high) and -30 <= dist_from_high <= -3
-        and pd.notna(weekly_range_12w) and weekly_range_12w <= 20
-        and pd.notna(weekly_range_20w) and weekly_range_20w <= 35
-        and pd.notna(rs_combo) and rs_combo >= -5
-        and no_recent_breakdown
-        and not ma_stack_bear
+        and _finite(f.weekly_ma30_trend_10w_pct) and -2.0 <= f.weekly_ma30_trend_10w_pct <= 2.5
+        and _finite(f.ma200_trend_1m_pct) and f.ma200_trend_1m_pct >= -1.5
+        and f.price_above_ma150
+        and f.price_above_ma200
+        and _finite(f.dist_from_52w_high_pct) and -35 <= f.dist_from_52w_high_pct <= -3
+        and _finite(f.weekly_range_12w_pct) and f.weekly_range_12w_pct <= 22
+        and _finite(f.weekly_range_20w_pct) and f.weekly_range_20w_pct <= 38
+        and _finite(rs_combo) and rs_combo >= -5
+        and f.no_recent_breakdown
+        and not f.ma_stack_bearish
     )
 
     strong_daily_vcp = (
-        len(daily_depths) >= 2
-        and daily_base_duration >= config["min_base_duration_days"]
-        and daily_contraction_score_val >= 0.60
-        and daily_depths[-1] <= min(config["max_latest_contraction_pct"], 8.0)
-        and pd.notna(volume_dryup_ratio) and volume_dryup_ratio <= 0.90
+        len(f.daily_depths) >= 2
+        and f.daily_base_duration >= config["min_base_duration_days"]
+        and f.daily_contraction_score >= 0.60
+        and f.daily_depths[-1] <= min(config["max_latest_contraction_pct"], 8.0)
+        and _finite(f.volume_dryup_ratio) and f.volume_dryup_ratio <= 0.90
     )
     strict_stage1_daily_vcp = (
         strong_daily_vcp
-        and daily_depths[0] <= 30
-        and max(daily_depths) <= 30
-        and pd.notna(daily_breakout_distance) and -4.0 <= daily_breakout_distance <= 1.5
-        and tight_range_ok
+        and f.daily_depths[0] <= 30
+        and max(f.daily_depths) <= 30
+        and _finite(f.daily_breakout_distance_pct) and -4.0 <= f.daily_breakout_distance_pct <= 1.5
+        and f.tight_range_ok
     )
     weekly_vcp_ok = (
-        len(weekly_depths) >= 2
-        and weekly_base_duration >= config["min_base_duration_weeks"]
-        and weekly_contraction_score_val >= max(config["min_weekly_strength_score"], 0.55)
-        and weekly_quality in {"strong", "moderate"}
+        len(f.weekly_depths) >= 2
+        and f.weekly_base_duration >= config["min_base_duration_weeks"]
+        and f.weekly_contraction_score >= max(config["min_weekly_strength_score"], 0.55)
+        and f.weekly_quality in {"strong", "moderate"}
     )
 
     near_pivot_stage2_ok = (
-        pd.notna(daily_breakout_distance)
-        and -5.0 <= daily_breakout_distance <= 1.5
-        and tight_range_ok
-        and pd.notna(breakout_volume_ratio) and breakout_volume_ratio >= 0.85
+        _finite(f.daily_breakout_distance_pct)
+        and -5.0 <= f.daily_breakout_distance_pct <= 1.5
+        and f.tight_range_ok
+        and _finite(f.breakout_volume_ratio) and f.breakout_volume_ratio >= 0.85
     )
     near_pivot_stage1_ok = (
-        pd.notna(daily_breakout_distance)
-        and -3.0 <= daily_breakout_distance <= 1.0
-        and tight_range_ok
-        and pd.notna(volume_dryup_ratio) and volume_dryup_ratio <= 0.90
-        and no_recent_breakdown
+        _finite(f.daily_breakout_distance_pct)
+        and -3.0 <= f.daily_breakout_distance_pct <= 1.0
+        and f.tight_range_ok
+        and _finite(f.volume_dryup_ratio) and f.volume_dryup_ratio <= 0.90
+        and f.no_recent_breakdown
     )
     near_pivot_ok = near_pivot_stage2_ok if stage == "Stage 2" else near_pivot_stage1_ok if stage == "Stage 1" else False
 
     breakout_today = bool(
-        pd.notna(daily_breakout_distance)
-        and daily_breakout_distance > 0
-        and pd.notna(breakout_volume_ratio)
-        and breakout_volume_ratio >= config["breakout_volume_ratio"]
+        _finite(f.daily_breakout_distance_pct)
+        and f.daily_breakout_distance_pct > 0
+        and _finite(f.breakout_volume_ratio)
+        and f.breakout_volume_ratio >= config["breakout_volume_ratio"]
         and stage2_trend_template
         and strong_daily_vcp
+        and "Extended" not in stage_variant
     )
 
     daily_vcp_ok = strong_daily_vcp if stage == "Stage 2" else strict_stage1_daily_vcp if stage == "Stage 1" else False
@@ -1581,13 +2114,11 @@ def analyze_symbol(ticker: str, df: pd.DataFrame, benchmark_df: pd.DataFrame, re
             daily_vcp_ok,
             near_pivot_ok,
             breakout_today,
-            tight_range_ok,
+            f.tight_range_ok,
             market_regime_ok,
         )
-        if stage == "Stage 1" and daily_bucket == "building_setup":
-            daily_bucket = "watchlist"
 
-    weekly_bucket = classify_weekly_bucket(stage, weekly_vcp_ok, weekly_breakout_distance, weekly_quality)
+    weekly_bucket = classify_weekly_bucket(stage, weekly_vcp_ok, f.weekly_breakout_distance_pct, f.weekly_quality)
     if stage == "Stage 1" and (not stage1_base_ready or not weekly_vcp_ok):
         weekly_bucket = "weekly_watchlist"
 
@@ -1595,27 +2126,29 @@ def analyze_symbol(ticker: str, df: pd.DataFrame, benchmark_df: pd.DataFrame, re
         stage,
         trend_template_ok,
         regime.regime_label,
-        liquidity_ok,
+        f.liquidity_ok,
         near_pivot_ok,
         breakout_today,
-        daily_contraction_score_val,
-        daily_base_duration,
-        dist_from_high,
-        volume_dryup_ratio,
-        breakout_volume_ratio,
-        rs_3m,
-        rs_6m,
+        f.daily_contraction_score,
+        f.daily_base_duration,
+        f.dist_from_52w_high_pct,
+        f.volume_dryup_ratio,
+        f.breakout_volume_ratio,
+        f.rs_3m_pct,
+        f.rs_6m_pct,
     )
     weekly_score = score_weekly(
         stage,
-        weekly_contraction_score_val,
-        weekly_base_duration,
-        weekly_breakout_distance,
-        weekly_quality,
-        rs_3m,
-        rs_6m,
+        f.weekly_contraction_score,
+        f.weekly_base_duration,
+        f.weekly_breakout_distance_pct,
+        f.weekly_quality,
+        f.rs_3m_pct,
+        f.rs_6m_pct,
     )
 
+    # Public stage penalties are still stage-specific, but setup quality now
+    # contributes to ranking separately from the public stage label.
     if stage == "Stage 1":
         if not stage1_base_ready:
             daily_score -= 12
@@ -1625,24 +2158,39 @@ def analyze_symbol(ticker: str, df: pd.DataFrame, benchmark_df: pd.DataFrame, re
             weekly_score -= 5
         if breakout_today:
             daily_score -= 8
-        if pd.notna(daily_breakout_distance) and daily_breakout_distance > 0:
+        if _finite(f.daily_breakout_distance_pct) and f.daily_breakout_distance_pct > 0:
             daily_score -= 3
-
-    if stage == "Stage 3":
-        daily_score -= 8
-        weekly_score -= 6
+    elif stage == "Stage 3":
+        daily_score -= 10
+        weekly_score -= 8
     elif stage == "Stage 4":
-        daily_score -= 12
-        weekly_score -= 10
+        daily_score -= 14
+        weekly_score -= 12
+    elif stage == "Not Sure":
+        daily_score -= 8
+        weekly_score -= 8
 
-    daily_score = round(float(max(0.0, daily_score)), 2)
-    weekly_score = round(float(max(0.0, weekly_score)), 2)
+    # Penalize public ranking for technical traps without converting them into advice.
+    trap_penalty = 0.0
+    if f.illiquidity_risk:
+        trap_penalty += 6
+    if f.corporate_action_suspected:
+        trap_penalty += 6
+    if f.upper_circuit_like_days_20 >= 3 or f.lower_circuit_like_days_20 >= 2:
+        trap_penalty += 8
+    if f.distribution_weeks_12 >= 2 and f.distribution_weeks_12 > f.accumulation_weeks_12:
+        trap_penalty += 6
+
+    daily_score = round(float(max(0.0, daily_score - trap_penalty * 0.40)), 2)
+    weekly_score = round(float(max(0.0, weekly_score - trap_penalty * 0.30)), 2)
 
     combo_bucket = combined_bucket(daily_bucket, weekly_bucket)
-    combined_score = round(0.55 * daily_score + 0.45 * weekly_score, 2)
+    classic_combined = 0.55 * daily_score + 0.45 * weekly_score
+    combined_score = round(max(0.0, 0.68 * classic_combined + 0.32 * setup_result.quality_score - trap_penalty), 2)
+    structure_score = combined_score
 
-    volume_is_drying_up = bool(pd.notna(volume_dryup_ratio) and volume_dryup_ratio <= 0.85)
-    weekly_volume_is_drying_up = bool(pd.notna(weekly_volume_ratio) and weekly_volume_ratio <= 0.90)
+    volume_is_drying_up = bool(_finite(f.volume_dryup_ratio) and f.volume_dryup_ratio <= 0.85)
+    weekly_volume_is_drying_up = bool(_finite(f.weekly_volume_ratio) and f.weekly_volume_ratio <= 0.90)
 
     notes = [stage, stage_variant]
     if trend_template_ok:
@@ -1659,36 +2207,78 @@ def analyze_symbol(ticker: str, df: pd.DataFrame, benchmark_df: pd.DataFrame, re
         notes.append("weekly_volume_dryup")
     if breakout_today:
         notes.append("daily_breakout_volume")
-    if weekly_quality == "strong":
+    if f.weekly_quality == "strong":
         notes.append("weekly_strong")
+    if setup_result.public_flags:
+        notes.append("flags=" + ";".join(setup_result.public_flags))
     if stage == "Stage 1" and not strict_stage1_daily_vcp:
         notes.append("stage1_not_actionable")
     if stage == "Stage 1" and not stage1_base_ready:
         notes.append("stage1_needs_more_base")
     if stage == "Stage 3":
-        notes.append("distribution_risk")
+        notes.append("distribution_or_weakening_risk")
     if stage == "Stage 4":
         notes.append("downtrend")
 
     return VCPScoreCard(
-        ticker, round(close_now, 2), round(ma50, 2), round(ma150, 2), round(ma200, 2), stage,
-        stage_variant, round(float(stage_confidence), 2), stage_reason,
-        round(float(rs_3m), 2) if pd.notna(rs_3m) else np.nan,
-        round(float(rs_6m), 2) if pd.notna(rs_6m) else np.nan,
-        round(float(avg_turnover_inr), 2) if pd.notna(avg_turnover_inr) else np.nan,
-        daily_bucket, daily_score, round(float(daily_pivot), 2) if pd.notna(daily_pivot) else np.nan,
-        round(float(daily_breakout_distance), 2) if pd.notna(daily_breakout_distance) else np.nan,
-        daily_depths, daily_durations, round(float(daily_contraction_score_val), 2), round(float(daily_base_duration), 2),
-        weekly_bucket, weekly_score, round(float(weekly_pivot), 2) if pd.notna(weekly_pivot) else np.nan,
-        round(float(weekly_breakout_distance), 2) if pd.notna(weekly_breakout_distance) else np.nan,
-        weekly_depths, weekly_durations, round(float(weekly_contraction_score_val), 2), round(float(weekly_base_duration), 2),
-        weekly_quality, combo_bucket, combined_score,
-        round(float(volume_dryup_ratio), 2) if pd.notna(volume_dryup_ratio) else np.nan,
-        round(float(breakout_volume_ratio), 2) if pd.notna(breakout_volume_ratio) else np.nan,
-        round(float(weekly_volume_ratio), 2) if pd.notna(weekly_volume_ratio) else np.nan,
+        ticker,
+        round(f.close, 2),
+        round(f.ma50, 2) if _finite(f.ma50) else np.nan,
+        round(f.ma150, 2) if _finite(f.ma150) else np.nan,
+        round(f.ma200, 2) if _finite(f.ma200) else np.nan,
+        stage,
+        stage_variant,
+        round(float(stage_confidence), 2),
+        stage_reason,
+        round(float(f.rs_3m_pct), 2) if _finite(f.rs_3m_pct) else np.nan,
+        round(float(f.rs_6m_pct), 2) if _finite(f.rs_6m_pct) else np.nan,
+        round(float(f.avg_turnover_inr), 2) if _finite(f.avg_turnover_inr) else np.nan,
+        daily_bucket,
+        daily_score,
+        round(float(f.daily_pivot), 2) if _finite(f.daily_pivot) else np.nan,
+        round(float(f.daily_breakout_distance_pct), 2) if _finite(f.daily_breakout_distance_pct) else np.nan,
+        f.daily_depths,
+        f.daily_durations,
+        round(float(f.daily_contraction_score), 2),
+        round(float(f.daily_base_duration), 2),
+        weekly_bucket,
+        weekly_score,
+        round(float(f.weekly_pivot), 2) if _finite(f.weekly_pivot) else np.nan,
+        round(float(f.weekly_breakout_distance_pct), 2) if _finite(f.weekly_breakout_distance_pct) else np.nan,
+        f.weekly_depths,
+        f.weekly_durations,
+        round(float(f.weekly_contraction_score), 2),
+        round(float(f.weekly_base_duration), 2),
+        f.weekly_quality,
+        combo_bucket,
+        combined_score,
+        round(float(f.volume_dryup_ratio), 2) if _finite(f.volume_dryup_ratio) else np.nan,
+        round(float(f.breakout_volume_ratio), 2) if _finite(f.breakout_volume_ratio) else np.nan,
+        round(float(f.weekly_volume_ratio), 2) if _finite(f.weekly_volume_ratio) else np.nan,
         volume_is_drying_up,
         weekly_volume_is_drying_up,
         ", ".join(notes),
+        public_stage_label=public_stage_label(stage, stage_variant),
+        volume_pattern_display=_volume_pattern_display(f),
+        nifty_3m_outperformance_pct=round(float(f.rs_3m_pct), 2) if _finite(f.rs_3m_pct) else np.nan,
+        nifty_3m_outperformance_label=_nifty_3m_outperformance_label(f.rs_3m_pct),
+        structure_score=round(float(structure_score), 2),
+        trend_template_pass=bool(trend_template_ok),
+        setup_quality_label=setup_result.setup_quality_label,
+        relative_strength_label=setup_result.relative_strength_label,
+        volume_pattern_label=setup_result.volume_pattern_label,
+        technical_flags="; ".join(setup_result.public_flags) if setup_result.public_flags else "No Flags",
+        risk_pct=round(float(f.risk_pct), 2) if _finite(f.risk_pct) else np.nan,
+        internal_leader_score=setup_result.leader_score,
+        internal_trend_score=setup_result.trend_score,
+        internal_setup_score=setup_result.setup_score,
+        internal_risk_score=setup_result.risk_score,
+        internal_quality_score=setup_result.quality_score,
+        internal_is_true_leader=setup_result.is_true_leader,
+        internal_is_proper_setup=setup_result.is_proper_setup,
+        internal_is_low_risk=setup_result.is_low_risk,
+        internal_is_buyable_setup=setup_result.is_buyable_setup_internal,
+        internal_failure_reasons="; ".join(setup_result.failure_reasons) if setup_result.failure_reasons else "No Internal Gaps",
     )
 
 
@@ -1801,9 +2391,8 @@ def export_chart(
     """
     if df.empty:
         return
-    # Always regenerate charts on every run. Existing PNGs are intentionally overwritten
-    # because the Watchlist and Charts search pages must reflect the latest price/state.
-    # The `skip_existing` argument is kept only for backward compatibility and ignored.
+    if skip_existing and outfile.exists() and outfile.stat().st_size > 10_000:
+        return
 
     target_display_bars = 180 if not is_weekly else 104
     fast_window = 10 if is_weekly else 50
@@ -2085,7 +2674,7 @@ def build_dashboard_chart_tickers(
     stock_changes: pd.DataFrame,
     outdir: Path,
     *,
-    top_rank_limit: int = 140,
+    top_rank_limit: int = 180,
 ) -> List[str]:
     """Return all tickers needed by the public dashboard views.
 
@@ -2175,7 +2764,6 @@ def export_selected_charts(
 
     print(f"Generating charts for {len(tickers):,} symbols ({'all' if tickers_to_export is None else 'dashboard-needed'} scope)...")
     t0 = time.perf_counter()
-    failed_charts = 0
     for idx, ticker in enumerate(tickers, start=1):
         df = price_data.get(ticker)
         if df is None or df.empty:
@@ -2183,44 +2771,36 @@ def export_selected_charts(
         row = score_map.get(ticker, {})
         chart_name = str(row.get("Company Name") or ticker).strip()
         safe = sanitize_filename(ticker)
-        try:
+        export_chart(
+            df,
+            chart_name,
+            "Daily",
+            daily_dir / f"{safe}_daily.png",
+            row.get("daily_pivot"),
+            row.get("daily_setup_bucket", "watchlist"),
+            float(row.get("final_daily_score", row.get("daily_score", 0)) or 0),
+            row.get("stage", ""),
+            False,
+            dpi=dpi,
+            skip_existing=skip_existing,
+        )
+        weekly_df = resample_weekly(df)
+        if not weekly_df.empty:
             export_chart(
-                df,
+                weekly_df,
                 chart_name,
-                "Daily",
-                daily_dir / f"{safe}_daily.png",
-                row.get("daily_pivot"),
-                row.get("daily_setup_bucket", "watchlist"),
-                float(row.get("final_daily_score", row.get("daily_score", 0)) or 0),
+                "Weekly",
+                weekly_dir / f"{safe}_weekly.png",
+                row.get("weekly_pivot"),
+                row.get("weekly_setup_bucket", "weekly_watchlist"),
+                float(row.get("final_weekly_score", row.get("weekly_score", 0)) or 0),
                 row.get("stage", ""),
-                False,
+                True,
                 dpi=dpi,
                 skip_existing=skip_existing,
             )
-            weekly_df = resample_weekly(df)
-            if not weekly_df.empty:
-                export_chart(
-                    weekly_df,
-                    chart_name,
-                    "Weekly",
-                    weekly_dir / f"{safe}_weekly.png",
-                    row.get("weekly_pivot"),
-                    row.get("weekly_setup_bucket", "weekly_watchlist"),
-                    float(row.get("final_weekly_score", row.get("weekly_score", 0)) or 0),
-                    row.get("stage", ""),
-                    True,
-                    dpi=dpi,
-                    skip_existing=skip_existing,
-                )
-        except Exception as exc:
-            failed_charts += 1
-            print(f"Warning: chart export failed for {ticker}: {exc}")
-            plt.close("all")
         if idx % 25 == 0 or idx == len(tickers):
-            gc.collect()
             print(f"Charts processed {idx:,}/{len(tickers):,} in {time.perf_counter()-t0:.2f}s")
-    if failed_charts:
-        print(f"Chart generation completed with {failed_charts:,} chart warning(s).")
     print(f"Chart generation complete in {time.perf_counter()-t0:.2f}s")
     return {"daily_charts_dir": str(daily_dir), "weekly_charts_dir": str(weekly_dir)}
 
@@ -2249,12 +2829,13 @@ def _clean_stock_snapshot(df: Optional[pd.DataFrame]) -> pd.DataFrame:
         if col not in out.columns:
             out[col] = pd.NA
     keep_cols = [
-        "ticker", "Company Name", "Industry", "sector", "is_fo_stock", "fo_category", "Include", "stage", "stage_raw", "stage_variant", "stage_classification", "stage_display", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "daily_setup_bucket", "weekly_setup_bucket", "combined_bucket",
+        "ticker", "Company Name", "Industry", "sector", "is_fo_stock", "fo_category", "Include", "stage", "stage_raw", "stage_variant", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "daily_setup_bucket", "weekly_setup_bucket", "combined_bucket",
         "daily_score", "weekly_score", "combined_score", "industry_boost", "final_daily_score", "final_weekly_score",
-        "final_combined_score", "rs_3m_pct", "rs_6m_pct", "avg_turnover_inr", "notes",
+        "final_combined_score", "public_stage_label", "structure_score", "relative_strength_label", "volume_pattern_label", "volume_pattern_display", "nifty_3m_outperformance_pct", "nifty_3m_outperformance_label", "trend_template_pass",
+        "rs_3m_pct", "rs_6m_pct", "avg_turnover_inr", "notes",
     ]
     out = out[[c for c in keep_cols if c in out.columns]].copy()
-    for col in ["daily_score", "weekly_score", "combined_score", "industry_boost", "final_daily_score", "final_weekly_score", "final_combined_score", "rs_3m_pct", "rs_6m_pct", "avg_turnover_inr"]:
+    for col in ["daily_score", "weekly_score", "combined_score", "industry_boost", "final_daily_score", "final_weekly_score", "final_combined_score", "structure_score", "nifty_3m_outperformance_pct", "rs_3m_pct", "rs_6m_pct", "avg_turnover_inr"]:
         if col in out.columns:
             out[col] = pd.to_numeric(out[col], errors="coerce")
     return out.drop_duplicates(subset=["ticker"]).reset_index(drop=True)
@@ -2404,7 +2985,19 @@ def _ticker_history(history_df: pd.DataFrame, ticker: str) -> pd.DataFrame:
     return hist
 
 
-def _consecutive_raw_stage_runs(history_df: pd.DataFrame, prev_combined: Optional[pd.DataFrame], ticker: str, target_stage: str) -> int:
+def _run_date(config: Optional[dict] = None) -> pd.Timestamp:
+    """The market date this run computes, as a naive midnight timestamp.
+
+    MarketGita edit: build_outputs puts the benchmark's last bar in config["as_of"].
+    This used to read the IST wall clock, so a run after midnight (a catch-up, or a
+    missed day) stamped a session with the wrong date. Without as_of it still does.
+    """
+    if config and config.get("as_of") is not None:
+        return pd.Timestamp(config["as_of"])
+    return pd.Timestamp.now(tz="Asia/Kolkata").normalize().tz_localize(None)
+
+
+def _consecutive_raw_stage_runs(history_df: pd.DataFrame, prev_combined: Optional[pd.DataFrame], ticker: str, target_stage: str, as_of: pd.Timestamp) -> int:
     """Count prior consecutive daily runs where raw stage matched target_stage.
 
     Current day is intentionally NOT counted here. Caller should add 1 when today's raw stage matches.
@@ -2432,7 +3025,7 @@ def _consecutive_raw_stage_runs(history_df: pd.DataFrame, prev_combined: Optiona
             stg = str(r.get("stage_raw", r.get("stage", "")) or "").strip()
             if stg:
                 # Use a synthetic timestamp after history, so it contributes if history is missing/not initialized.
-                records.append((pd.Timestamp.now(tz="Asia/Kolkata").tz_localize(None).normalize() - pd.Timedelta(hours=1), stg))
+                records.append((as_of - pd.Timedelta(hours=1), stg))
 
     if not records:
         return 0
@@ -2449,7 +3042,7 @@ def _consecutive_raw_stage_runs(history_df: pd.DataFrame, prev_combined: Optiona
     return count
 
 
-def _consecutive_public_stage_runs(history_df: pd.DataFrame, prev_combined: Optional[pd.DataFrame], ticker: str, target_stage: str) -> int:
+def _consecutive_public_stage_runs(history_df: pd.DataFrame, prev_combined: Optional[pd.DataFrame], ticker: str, target_stage: str, as_of: pd.Timestamp) -> int:
     target = str(target_stage or "").strip()
     if not target:
         return 0
@@ -2466,7 +3059,7 @@ def _consecutive_public_stage_runs(history_df: pd.DataFrame, prev_combined: Opti
         prev["ticker"] = prev["ticker"].astype(str).str.upper().str.strip()
         row = prev[prev["ticker"].eq(str(ticker or "").upper().strip())]
         if not row.empty:
-            records.append((pd.Timestamp.now(tz="Asia/Kolkata").tz_localize(None).normalize() - pd.Timedelta(hours=1), str(row.iloc[-1].get("stage", "") or "").strip()))
+            records.append((as_of - pd.Timedelta(hours=1), str(row.iloc[-1].get("stage", "") or "").strip()))
     if not records:
         return 0
     df = pd.DataFrame(records, columns=["dt", "stage"])
@@ -2545,15 +3138,15 @@ def apply_stage_state_memory(
     # If stage_action_history is absent/stale, yesterday's combined file is still useful.
     prior_stage.update({k: v for k, v in _previous_stage_map_from_combined(prev_combined).items() if k not in prior_stage})
     last_stage2 = _last_stage2_date_map(history_df)
+    today = _run_date(config)
 
     if prev_combined is not None and not prev_combined.empty and "ticker" in prev_combined.columns and "stage" in prev_combined.columns:
-        yesterday = pd.Timestamp.now(tz="Asia/Kolkata").normalize().tz_localize(None) - pd.Timedelta(days=1)
+        yesterday = today - pd.Timedelta(days=1)
         for _, prev_row in prev_combined.iterrows():
             ticker = str(prev_row.get("ticker", "")).upper().strip()
             if ticker and str(prev_row.get("stage", "")) == "Stage 2" and ticker not in last_stage2:
                 last_stage2[ticker] = yesterday
 
-    today = pd.Timestamp.now(tz="Asia/Kolkata").normalize().tz_localize(None)
     failed_hold_days = int(config.get("stage2_failed_hold_days", 21) or 21)
     transition_confirm_days = int(config.get("stage_transition_confirm_days", 3) or 3)
     stage2_confirm_days = int(config.get("stage2_entry_confirm_days", transition_confirm_days) or transition_confirm_days)
@@ -2576,36 +3169,42 @@ def apply_stage_state_memory(
             except Exception:
                 days_since_s2 = None
 
-        raw_confirm_runs = _consecutive_raw_stage_runs(history_df, prev_combined, ticker, raw_stage) + (1 if raw_stage not in {"Not Sure"} else 0)
-        public_stage1_runs = _consecutive_public_stage_runs(history_df, prev_combined, ticker, "Stage 1")
+        raw_confirm_runs = _consecutive_raw_stage_runs(history_df, prev_combined, ticker, raw_stage, today) + (1 if raw_stage not in {"Not Sure"} else 0)
+        public_stage1_runs = _consecutive_public_stage_runs(history_df, prev_combined, ticker, "Stage 1", today)
         recently_stage2 = days_since_s2 is not None and days_since_s2 <= failed_hold_days
+
+        # On a first ever run, do not turn clean raw Stage 2 names into Not Sure
+        # only because the memory table has not accumulated confirmation rows yet.
+        if not prev_stage:
+            out.at[idx, "stage_state_reason"] = "Initial classification; no prior stage memory available."
+            continue
 
         # 1) Explicit failed Stage 2 mechanism. This takes priority over normal transitions.
         broke_from_stage2 = (
             raw_stage != "Stage 2"
-            and (prev_stage == "Stage 2" or (prev_stage == "Stage 2 Failed" and recently_stage2) or recently_stage2)
+            and (prev_stage == "Stage 2" or (prev_stage in {"Failed Stage 2", "Stage 2 Failed"} and recently_stage2) or recently_stage2)
         )
         if broke_from_stage2:
-            out.at[idx, "stage"] = "Stage 2 Failed"
+            out.at[idx, "stage"] = "Failed Stage 2"
             out.at[idx, "stage_variant"] = "Failed Stage 2"
             out.at[idx, "stage_confidence"] = 0.72
             if not str(row.get("stage_failed_since", "") or "").strip():
                 out.at[idx, "stage_failed_since"] = today.date().isoformat()
             out.at[idx, "stage_reason"] = (
                 "This stock was recently Stage 2, but the latest structure no longer satisfies Stage 2 rules. "
-                "It is kept as Stage 2 Failed until a fresh base/repair structure forms."
+                "It is kept as Failed Stage 2 until a fresh base/repair structure forms."
             )
-            out.at[idx, "stage_state_reason"] = "Recent Stage 2 break; public stage held as Stage 2 Failed."
+            out.at[idx, "stage_state_reason"] = "Recent Stage 2 break; public stage held as Failed Stage 2."
             out.at[idx, "notes"] = _append_note(row.get("notes", ""), "Stage 2 failed state applied from stage memory.")
             continue
 
         # 2) While in failed Stage 2, do not instantly relabel unless the repair/advance is confirmed.
-        if prev_stage == "Stage 2 Failed":
+        if prev_stage in {"Failed Stage 2", "Stage 2 Failed"}:
             if raw_stage == "Stage 2" and raw_confirm_runs >= stage2_confirm_days:
                 out.at[idx, "stage_state_reason"] = f"Stage 2 reclaimed after {raw_confirm_runs} confirmation runs."
                 continue
             if recently_stage2:
-                out.at[idx, "stage"] = "Stage 2 Failed"
+                out.at[idx, "stage"] = "Failed Stage 2"
                 out.at[idx, "stage_variant"] = "Failed Stage 2"
                 out.at[idx, "stage_confidence"] = 0.70
                 out.at[idx, "stage_reason"] = "Failed Stage 2 cooling period is still active; waiting for a fresh base or confirmed reclaim."
@@ -2613,7 +3212,7 @@ def apply_stage_state_memory(
                 out.at[idx, "notes"] = _append_note(row.get("notes", ""), "Failed Stage 2 hold period active.")
                 continue
             if raw_stage in {"Stage 1", "Stage 3", "Stage 4"} and raw_confirm_runs < transition_confirm_days:
-                _set_pending_stage(out, idx, row, raw_stage, f"Stage 2 Failed -> {raw_stage} needs {transition_confirm_days} confirmation runs; current count {raw_confirm_runs}.")
+                _set_pending_stage(out, idx, row, raw_stage, f"Failed Stage 2 -> {raw_stage} needs {transition_confirm_days} confirmation runs; current count {raw_confirm_runs}.")
                 out.at[idx, "stage_pending_raw"] = raw_stage
                 continue
 
@@ -2663,6 +3262,9 @@ def apply_stage_state_memory(
             out.at[idx, "stage_reason"] = "Stage rules did not identify a reliable structure."
             out.at[idx, "stage_state_reason"] = "No confident stage classification."
 
+    if "public_stage_label" in out.columns:
+        out["public_stage_label"] = out.apply(lambda r: public_stage_label(str(r.get("stage", "")), str(r.get("stage_variant", ""))), axis=1)
+
     return out
 
 
@@ -2688,7 +3290,7 @@ def _interesting_priority(row: pd.Series) -> float:
     daily_bucket = str(row.get("daily_setup_bucket", ""))
     weekly_bucket = str(row.get("weekly_setup_bucket", ""))
 
-    priority += {"Stage 2": 30, "Stage 1": 12, "Stage 2 Failed": 5, "Stage 3": 6, "Stage 4": 0, "Not Sure": 1}.get(stage, 1)
+    priority += {"Stage 2": 30, "Stage 1": 12, "Failed Stage 2": 5, "Stage 2 Failed": 5, "Stage 3": 6, "Stage 4": 0, "Not Sure": 1}.get(stage, 1)
     priority += {
         "high_conviction_breakout": 70,
         "high_conviction_near_pivot": 62,
@@ -2706,6 +3308,24 @@ def _interesting_priority(row: pd.Series) -> float:
         "weekly_near_pivot": 36,
         "weekly_watchlist": 4,
     }.get(weekly_bucket, 0)
+
+    priority += {
+        "High": 18,
+        "Medium": 8,
+        "Low": 2,
+        "Not Rated": 0,
+    }.get(str(row.get("setup_quality_label", "")), 0)
+    priority += {
+        "Very Strong": 14,
+        "Strong": 8,
+        "Neutral": 2,
+        "Weak": -8,
+    }.get(str(row.get("relative_strength_label", "")), 0)
+    flags = str(row.get("technical_flags", "") or "")
+    if any(x in flags for x in ["Circuit Risk", "Corporate Action Check", "Low Liquidity"]):
+        priority -= 18
+    if "Extended" in flags:
+        priority -= 6
 
     for col, points in [("volume_is_drying_up", 9), ("weekly_volume_is_drying_up", 7)]:
         val = row.get(col, False)
@@ -2733,7 +3353,7 @@ def _interesting_priority(row: pd.Series) -> float:
     return round(float(priority), 4)
 
 
-def build_interesting20_snapshot(combined_df: pd.DataFrame, limit: int = 20, top_pool: int = 30) -> pd.DataFrame:
+def build_interesting20_snapshot(combined_df: pd.DataFrame, limit: int = 20, top_pool: int = 30, config: Optional[dict] = None) -> pd.DataFrame:
     """Build the public Interesting 20 list from the top-ranked dataset pool."""
     if combined_df is None or combined_df.empty:
         return pd.DataFrame()
@@ -2746,11 +3366,12 @@ def build_interesting20_snapshot(combined_df: pd.DataFrame, limit: int = 20, top
     sort_cols = ["interesting_priority", "current_rank", "final_combined_score"]
     ascending = [False, True, False]
     pool = pool.sort_values(sort_cols, ascending=ascending, na_position="last").head(limit).copy()
-    pool["snapshot_date"] = pd.Timestamp.now(tz="Asia/Kolkata").date().isoformat()
+    pool["snapshot_date"] = _run_date(config).date().isoformat()
     keep = [c for c in [
-        "snapshot_date", "ticker", "Company Name", "Industry", "stage", "stage_raw", "stage_variant", "stage_classification", "stage_display", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "current_rank",
+        "snapshot_date", "ticker", "Company Name", "Industry", "stage", "stage_raw", "stage_variant", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "current_rank",
         "interesting_priority", "daily_setup_bucket", "weekly_setup_bucket", "combined_bucket",
-        "final_combined_score", "daily_breakout_distance_pct", "weekly_breakout_distance_pct",
+        "final_combined_score", "public_stage_label", "structure_score", "relative_strength_label", "volume_pattern_label", "volume_pattern_display", "nifty_3m_outperformance_pct", "nifty_3m_outperformance_label",
+        "daily_breakout_distance_pct", "weekly_breakout_distance_pct",
         "rs_3m_pct", "rs_6m_pct", "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio",
         "volume_is_drying_up", "weekly_volume_is_drying_up", "notes",
     ] if c in pool.columns]
@@ -2821,12 +3442,10 @@ def build_outputs(
     config: Optional[dict] = None,
     export_all_ticker_charts: bool = True,
     wide_price: Optional[str] = None,
-    chart_scope: str = "all",
+    chart_scope: str = "dashboard",
     skip_existing_charts: bool = False,
     chart_dpi: int = 150,
 ) -> Dict[str, str]:
-    # Charts are always regenerated. This keeps Watchlist and Charts-tab search fresh.
-    skip_existing_charts = False
     cfg = {**DEFAULT_CONFIG, **(config or {})}
     out_path = Path(outdir)
     out_path.mkdir(parents=True, exist_ok=True)
@@ -2834,7 +3453,7 @@ def build_outputs(
     overall_t0 = time.perf_counter()
     universe_df = load_nifty500_universe(universe_path)
     universe_used_file = out_path / "universe_used.csv"
-    atomic_to_csv(universe_df, universe_used_file)
+    universe_df.to_csv(universe_used_file, index=False)
     tickers = universe_df["Ticker"].astype(str).str.upper().tolist()
     print(f"Universe used: {len(tickers):,} included EQ stocks")
 
@@ -2846,36 +3465,50 @@ def build_outputs(
     report, regime, price_data = build_vcp_universe_report(tickers, cfg, price_data=price_data)
     if report.empty:
         raise RuntimeError("No screener results produced.")
+    # MarketGita edit: every date below comes from the data, not the wall clock (see _run_date).
+    last_bar = pd.Timestamp(price_data[cfg["market_index"]]["Close"].dropna().index[-1])
+    cfg["as_of"] = (last_bar.tz_localize(None) if last_bar.tzinfo else last_bar).normalize()
+    print(f"Market date (last {cfg['market_index']} bar): {cfg['as_of'].date()}")
 
     final_report = report.merge(universe_df, left_on="ticker", right_on="Ticker", how="left")
     industry_df = build_industry_strength_table(final_report)
     final_report = apply_industry_boost(final_report, industry_df, cfg)
 
-    prev_combined_for_stage_memory = _safe_read_csv(out_path / "vcp_combined_ranked.csv")
+    prev_combined_for_stage_memory = pd.read_csv(out_path / "vcp_combined_ranked.csv") if (out_path / "vcp_combined_ranked.csv").exists() else None
     final_report = apply_stage_state_memory(final_report, out_path, prev_combined_for_stage_memory, cfg)
-    final_report = ensure_stage_classification_columns(final_report)
 
     metadata_cols = ["sector", "industry_group", "is_fo_stock", "fo_category", "Include"]
-    common_cols = ["ticker", "Company Name", "Industry"] + metadata_cols + ["stage", "stage_raw", "stage_variant", "stage_classification", "stage_display", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "rs_3m_pct", "rs_6m_pct", "avg_turnover_inr", "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio", "volume_is_drying_up", "weekly_volume_is_drying_up", "notes"]
+    public_structure_cols = [
+        "public_stage_label", "structure_score", "relative_strength_label",
+        "volume_pattern_label", "volume_pattern_display",
+        "nifty_3m_outperformance_pct", "nifty_3m_outperformance_label",
+        "trend_template_pass",
+    ]
+    internal_setup_cols = [
+        "setup_quality_label", "technical_flags", "risk_pct",
+        "internal_leader_score", "internal_trend_score", "internal_setup_score", "internal_risk_score", "internal_quality_score",
+        "internal_is_true_leader", "internal_is_proper_setup", "internal_is_low_risk", "internal_is_buyable_setup", "internal_failure_reasons",
+    ]
+    common_cols = ["ticker", "Company Name", "Industry"] + metadata_cols + ["stage", "stage_raw", "stage_variant", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw"] + public_structure_cols + ["rs_3m_pct", "rs_6m_pct", "avg_turnover_inr", "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio", "volume_is_drying_up", "weekly_volume_is_drying_up", "notes"]
     daily_cols = common_cols + ["daily_setup_bucket", "daily_score", "final_daily_score", "daily_pivot", "daily_breakout_distance_pct", "daily_contraction_depths_pct", "daily_contraction_durations", "daily_contraction_score", "daily_base_duration_days"]
     weekly_cols = common_cols + ["weekly_setup_bucket", "weekly_score", "final_weekly_score", "weekly_pivot", "weekly_breakout_distance_pct", "weekly_contraction_depths_pct", "weekly_contraction_durations", "weekly_contraction_score", "weekly_base_duration_weeks", "weekly_vcp_quality"]
     combined_cols = common_cols + ["daily_setup_bucket", "weekly_setup_bucket", "combined_bucket", "daily_score", "weekly_score", "combined_score", "industry_boost", "final_combined_score"]
+    internal_cols = ["ticker", "Company Name", "Industry"] + metadata_cols + ["stage", "stage_raw", "stage_variant", "stage_confidence", "stage_reason"] + public_structure_cols + internal_setup_cols + ["daily_setup_bucket", "weekly_setup_bucket", "combined_bucket", "final_combined_score", "notes"]
 
     daily_df = final_report[[c for c in daily_cols if c in final_report.columns]].sort_values(["final_daily_score", "daily_score"], ascending=[False, False]).reset_index(drop=True)
     weekly_df = final_report[[c for c in weekly_cols if c in final_report.columns]].sort_values(["final_weekly_score", "weekly_score"], ascending=[False, False]).reset_index(drop=True)
     combined_df = final_report[[c for c in combined_cols if c in final_report.columns]].sort_values(["final_combined_score", "combined_score"], ascending=[False, False]).reset_index(drop=True)
+    internal_df = final_report[[c for c in internal_cols if c in final_report.columns]].sort_values(["internal_quality_score", "final_combined_score"], ascending=[False, False]).reset_index(drop=True)
 
     daily_df["current_rank"] = np.arange(1, len(daily_df) + 1)
     weekly_df["current_rank"] = np.arange(1, len(weekly_df) + 1)
     combined_df["current_rank"] = np.arange(1, len(combined_df) + 1)
-    daily_df = ensure_stage_classification_columns(daily_df)
-    weekly_df = ensure_stage_classification_columns(weekly_df)
-    combined_df = ensure_stage_classification_columns(combined_df)
+    internal_df["current_rank"] = np.arange(1, len(internal_df) + 1)
     industry_df = industry_df.copy().reset_index(drop=True)
     industry_df["current_rank"] = np.arange(1, len(industry_df) + 1)
 
-    prev_combined = _safe_read_csv(out_path / "vcp_combined_ranked.csv")
-    prev_industry = _safe_read_csv(out_path / "industry_strength.csv")
+    prev_combined = pd.read_csv(out_path / "vcp_combined_ranked.csv") if (out_path / "vcp_combined_ranked.csv").exists() else None
+    prev_industry = pd.read_csv(out_path / "industry_strength.csv") if (out_path / "industry_strength.csv").exists() else None
 
     stock_changes = build_stock_changes(combined_df, prev_combined)
     industry_changes = build_industry_changes(industry_df, prev_industry)
@@ -2888,6 +3521,7 @@ def build_outputs(
     daily_file = out_path / "vcp_daily_ranked.csv"
     weekly_file = out_path / "vcp_weekly_ranked.csv"
     combined_file = out_path / "vcp_combined_ranked.csv"
+    internal_file = out_path / "internal_setup_ranked.csv"
     industry_file = out_path / "industry_strength.csv"
     regime_file = out_path / "market_regime.csv"
     stock_changes_file = out_path / "stock_changes.csv"
@@ -2895,15 +3529,16 @@ def build_outputs(
     top_movers_file = out_path / "top_movers.csv"
     price_moves_file = out_path / "stock_price_moves.csv"
 
-    atomic_to_csv(daily_df, daily_file)
-    atomic_to_csv(weekly_df, weekly_file)
-    atomic_to_csv(combined_df, combined_file)
-    atomic_to_csv(industry_df, industry_file)
-    atomic_to_csv(pd.DataFrame([asdict(regime)]), regime_file)
-    atomic_to_csv(ensure_stage_classification_columns(stock_changes), stock_changes_file)
-    atomic_to_csv(industry_changes, industry_changes_file)
-    atomic_to_csv(ensure_stage_classification_columns(top_movers), top_movers_file)
-    atomic_to_csv(ensure_stage_classification_columns(price_moves), price_moves_file)
+    daily_df.to_csv(daily_file, index=False)
+    weekly_df.to_csv(weekly_file, index=False)
+    combined_df.to_csv(combined_file, index=False)
+    internal_df.to_csv(internal_file, index=False)
+    industry_df.to_csv(industry_file, index=False)
+    pd.DataFrame([asdict(regime)]).to_csv(regime_file, index=False)
+    stock_changes.to_csv(stock_changes_file, index=False)
+    industry_changes.to_csv(industry_changes_file, index=False)
+    top_movers.to_csv(top_movers_file, index=False)
+    price_moves.to_csv(price_moves_file, index=False)
 
     
     if not export_all_ticker_charts or chart_scope == "none":
@@ -2913,10 +3548,10 @@ def build_outputs(
     else:
         chart_tickers = build_dashboard_chart_tickers(combined_df, price_moves, stock_changes, out_path)
         chart_paths = export_selected_charts(final_report, price_data, out_path, tickers_to_export=chart_tickers, skip_existing=skip_existing_charts, dpi=chart_dpi)
-    interesting_snapshot = build_interesting20_snapshot(combined_df, limit=20, top_pool=30)
+    interesting_snapshot = build_interesting20_snapshot(combined_df, limit=20, top_pool=30, config=cfg)
     interesting_paths = save_interesting20_archive(out_path, interesting_snapshot, chart_paths)
     print(f"Total engine runtime: {time.perf_counter()-overall_t0:.2f}s")
-    return {"daily": str(daily_file), "weekly": str(weekly_file), "combined": str(combined_file), "industry": str(industry_file), "regime": str(regime_file), "stock_changes": str(stock_changes_file), "industry_changes": str(industry_changes_file), "top_movers": str(top_movers_file), "price_moves": str(price_moves_file), "history": str(history_file), "universe_used": str(universe_used_file), **chart_paths, **interesting_paths}
+    return {"daily": str(daily_file), "weekly": str(weekly_file), "combined": str(combined_file), "internal": str(internal_file), "industry": str(industry_file), "regime": str(regime_file), "stock_changes": str(stock_changes_file), "industry_changes": str(industry_changes_file), "top_movers": str(top_movers_file), "price_moves": str(price_moves_file), "history": str(history_file), "universe_used": str(universe_used_file), "as_of": cfg["as_of"].date().isoformat(), **chart_paths, **interesting_paths}
 
 def _perf_from_close(close: pd.Series, bars_back: int) -> float:
     s = close.dropna()
@@ -2980,55 +3615,70 @@ def build_price_moves(current_df: pd.DataFrame, price_data: Dict[str, pd.DataFra
     return out.sort_values(["change_1d_pct", "final_combined_score"], ascending=[False, False]).reset_index(drop=True)
 
 
-def derive_public_action(stage: str, combined_bucket: str, score: float) -> str:
-    if stage == "Stage 2 Failed":
+def derive_technical_status(stage: str, combined_bucket: str, score: float) -> str:
+    """Public-safe structure label. No buy/sell/hold language."""
+    if stage in {"Failed Stage 2", "Stage 2 Failed"}:
         return "Failed Stage 2"
     if stage == "Not Sure":
-        return "Not Sure"
+        return "Unclear Structure"
     if stage == "Stage 2":
         if combined_bucket in {"high_conviction_breakout", "high_conviction_near_pivot"} and score >= 70:
-            return "Strong Structure"
-        return "Advancing"
+            return "Strong Stage 2 Structure"
+        return "Stage 2 Structure"
     if stage == "Stage 1":
-        return "Base Building"
+        return "Stage 1 Structure"
     if stage == "Stage 3":
-        return "Transition"
+        return "Stage 3 Structure"
     if stage == "Stage 4":
-        return "Weak Structure"
-    return "Mixed"
+        return "Stage 4 Structure"
+    return "Mixed Structure"
 
-def derive_super_action(stage: str, combined_bucket: str, score: float) -> str:
-    if stage == "Stage 2 Failed":
-        return "Avoid / Wait for new base"
+
+def derive_structure_status(stage: str, combined_bucket: str, score: float) -> str:
+    """Secondary public-safe status for history snapshots."""
+    if stage in {"Failed Stage 2", "Stage 2 Failed"}:
+        return "Failed Stage 2"
     if stage == "Not Sure":
-        return "No Action"
+        return "Not Rated"
     if stage == "Stage 2":
         if combined_bucket == "high_conviction_breakout" and score >= 72:
-            return "Buy"
+            return "High Structure Quality"
         if combined_bucket in {"high_conviction_near_pivot", "building_setup"} and score >= 62:
-            return "Watch / Add on confirmation"
-        return "Hold / Trend intact"
+            return "Improving Structure Quality"
+        return "Stage 2 Structure"
     if stage == "Stage 1":
-        return "Watchlist / Early base"
+        return "Stage 1 Structure"
     if stage == "Stage 3":
-        return "Reduce / Avoid fresh longs"
+        return "Stage 3 Structure"
     if stage == "Stage 4":
-        return "Exit / Avoid"
-    return "No Action"
+        return "Stage 4 Structure"
+    return "Not Rated"
+
+
+# Backward-compatible names kept for older private workflows. They now return
+# public-safe structure language only.
+def derive_public_action(stage: str, combined_bucket: str, score: float) -> str:
+    return derive_technical_status(stage, combined_bucket, score)
+
+
+def derive_super_action(stage: str, combined_bucket: str, score: float) -> str:
+    return derive_structure_status(stage, combined_bucket, score)
+
 
 def build_stage_action_history_snapshot(snapshot_df: pd.DataFrame, snapshot_date: pd.Timestamp) -> pd.DataFrame:
     if snapshot_df is None or snapshot_df.empty:
         return pd.DataFrame()
-    out = ensure_stage_classification_columns(snapshot_df)
+    out = snapshot_df.copy()
     score_col = "final_combined_score" if "final_combined_score" in out.columns else "combined_score"
     out[score_col] = pd.to_numeric(out[score_col], errors="coerce")
     out["snapshot_date"] = pd.Timestamp(snapshot_date).normalize()
-    out["public_action"] = out.apply(lambda r: derive_public_action(str(r.get("stage", "")), str(r.get("combined_bucket", "")), float(pd.to_numeric(r.get(score_col), errors="coerce") if pd.notna(pd.to_numeric(r.get(score_col), errors="coerce")) else 0.0)), axis=1)
-    out["super_action"] = out.apply(lambda r: derive_super_action(str(r.get("stage", "")), str(r.get("combined_bucket", "")), float(pd.to_numeric(r.get(score_col), errors="coerce") if pd.notna(pd.to_numeric(r.get(score_col), errors="coerce")) else 0.0)), axis=1)
+    out["technical_status"] = out.apply(lambda r: derive_technical_status(str(r.get("stage", "")), str(r.get("combined_bucket", "")), float(pd.to_numeric(r.get(score_col), errors="coerce") if pd.notna(pd.to_numeric(r.get(score_col), errors="coerce")) else 0.0)), axis=1)
+    out["structure_status"] = out.apply(lambda r: derive_structure_status(str(r.get("stage", "")), str(r.get("combined_bucket", "")), float(pd.to_numeric(r.get(score_col), errors="coerce") if pd.notna(pd.to_numeric(r.get(score_col), errors="coerce")) else 0.0)), axis=1)
     keep_cols = [c for c in [
-        "snapshot_date", "ticker", "Company Name", "Industry", "sector", "is_fo_stock", "fo_category", "stage", "stage_raw", "stage_variant", "stage_classification", "stage_display", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "combined_bucket", score_col,
+        "snapshot_date", "ticker", "Company Name", "Industry", "sector", "is_fo_stock", "fo_category", "stage", "stage_raw", "stage_variant", "stage_confidence", "stage_reason", "stage_state_reason", "stage_failed_since", "last_stage2_date", "stage_pending_raw", "combined_bucket", score_col,
+        "public_stage_label", "structure_score", "relative_strength_label", "volume_pattern_label", "volume_pattern_display", "nifty_3m_outperformance_pct", "nifty_3m_outperformance_label",
         "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio", "volume_is_drying_up", "weekly_volume_is_drying_up",
-        "public_action", "super_action"
+        "technical_status", "structure_status"
     ] if c in out.columns]
     history = out[keep_cols].copy()
     if score_col in history.columns and score_col != "final_combined_score":
@@ -3063,16 +3713,14 @@ def build_six_month_history(price_data: Dict[str, pd.DataFrame], benchmark_df: p
                 if not result:
                     continue
                 row = asdict(result)
-                row["stage_classification"] = row.get("stage_variant", row.get("stage", "Not Sure"))
-                row["stage_display"] = row.get("stage", "Not Sure") if row.get("stage_classification") == row.get("stage") else f"{row.get('stage', 'Not Sure')} • {row.get('stage_classification', 'Not Sure')}"
                 row["snapshot_date"] = pd.Timestamp(snap_date).normalize()
                 row["Company Name"] = company
                 row["Industry"] = industry
-                row["public_action"] = derive_public_action(row.get("stage", ""), row.get("combined_bucket", ""), float(row.get("combined_score", 0) or 0))
-                row["super_action"] = derive_super_action(row.get("stage", ""), row.get("combined_bucket", ""), float(row.get("combined_score", 0) or 0))
+                row["technical_status"] = derive_technical_status(row.get("stage", ""), row.get("combined_bucket", ""), float(row.get("combined_score", 0) or 0))
+                row["structure_status"] = derive_structure_status(row.get("stage", ""), row.get("combined_bucket", ""), float(row.get("combined_score", 0) or 0))
                 history_rows.append({k: row.get(k) for k in [
-                    "snapshot_date", "ticker", "Company Name", "Industry", "stage", "stage_variant", "stage_classification", "stage_display", "stage_confidence", "stage_reason", "combined_bucket", "combined_score",
-                    "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio", "volume_is_drying_up", "weekly_volume_is_drying_up", "public_action", "super_action"
+                    "snapshot_date", "ticker", "Company Name", "Industry", "stage", "combined_bucket", "combined_score",
+                    "volume_dryup_ratio", "breakout_volume_ratio", "weekly_volume_ratio", "volume_is_drying_up", "weekly_volume_is_drying_up", "technical_status", "structure_status"
                 ]})
             except Exception:
                 continue
@@ -3085,54 +3733,58 @@ def build_six_month_history(price_data: Dict[str, pd.DataFrame], benchmark_df: p
 
 def update_stage_action_history(out_path: Path, current_snapshot: pd.DataFrame, price_data: Dict[str, pd.DataFrame], benchmark_df: pd.DataFrame, universe_df: pd.DataFrame, config: dict) -> Path:
     history_file = out_path / str(config.get("history_file_name", "stage_action_history.csv"))
-    today = pd.Timestamp.now("UTC").normalize().tz_localize(None)
+    today = _run_date(config)
     current_history = build_stage_action_history_snapshot(current_snapshot, today)
 
-    existing = _safe_read_csv(history_file, parse_dates=["snapshot_date"])
-    if existing is None:
+    if history_file.exists():
+        existing = pd.read_csv(history_file, parse_dates=["snapshot_date"])
+    else:
         existing = build_six_month_history(price_data, benchmark_df, universe_df, config) if bool(config.get("history_init_enabled", True)) else pd.DataFrame()
 
     if not current_history.empty:
         existing = pd.concat([existing, current_history], ignore_index=True) if not existing.empty else current_history
 
     if existing.empty:
-        atomic_to_csv(existing, history_file)
+        existing.to_csv(history_file, index=False)
         return history_file
 
     existing["snapshot_date"] = pd.to_datetime(existing["snapshot_date"], utc=True).dt.tz_convert(None).dt.normalize()
     existing = existing.drop_duplicates(subset=["snapshot_date", "ticker"], keep="last")
     existing = existing.sort_values(["snapshot_date", "ticker"]).reset_index(drop=True)
-    atomic_to_csv(existing, history_file)
+    existing.to_csv(history_file, index=False)
     return history_file
 
 
 
-def write_engine_run_metadata(out_path: Path) -> None:
+def write_engine_run_metadata(out_path: Path, as_of: Optional[str] = None) -> None:
     """Persist actual engine run time for dashboard display.
 
     Dashboard should not infer freshness from current time. It should read this file.
+    MarketGita edit: also records the market date computed and the code version.
     """
     metadata = {
         "engine_ran_at_ist": pd.Timestamp.now(tz="Asia/Kolkata").isoformat(),
-        "engine_ran_at_utc": pd.Timestamp.utcnow().isoformat(),
+        "engine_ran_at_utc": pd.Timestamp.now(tz="UTC").isoformat(),
+        "as_of": as_of,
+        "code_version": os.environ.get("GITHUB_SHA", "local"),
     }
     try:
         out_path.mkdir(parents=True, exist_ok=True)
-        atomic_write_text(out_path / "engine_run_metadata.json", json.dumps(metadata, indent=2), encoding="utf-8")
+        (out_path / "engine_run_metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     except Exception as exc:
         print(f"Warning: could not write engine_run_metadata.json: {exc}")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Daily + Weekly VCP Change-Tracking Screener with local Yahoo wide-file support")
+    parser = argparse.ArgumentParser(description="Daily + Weekly VCP Screener with local Yahoo wide-file support")
     parser.add_argument("--universe", required=True, help="Path to universe CSV. New schema supports Include and f&o columns.")
     parser.add_argument("--outdir", default="outputs", help="Output directory")
     parser.add_argument("--wide-price", default=None, help="Folder containing wide_open.csv/wide_high.csv/wide_low.csv/wide_close.csv/wide_volume.csv, or yahoo_price_data_wide.xlsx")
     parser.add_argument("--max-price-rows", type=int, default=620, help="Read only the latest N rows from the wide price files. Use 0 to load all rows.")
     parser.add_argument("--no-charts", action="store_true", help="Skip chart generation for fast testing.")
-    parser.add_argument("--chart-scope", choices=["dashboard", "all", "none"], default="all", help="all = generate charts for every included stock; dashboard = dashboard-needed charts only; none = no charts. Default: all.")
-    parser.add_argument("--skip-existing-charts", action="store_true", help="Deprecated and ignored. Charts are regenerated every run so Watchlist and Charts search stay current.")
-    parser.add_argument("--chart-dpi", type=int, default=150, help="PNG DPI for dashboard charts. 130-160 is usually enough for Streamlit.")
+    parser.add_argument("--chart-scope", choices=["dashboard", "all", "none"], default="dashboard", help="dashboard = generate only charts used by dashboard views; all = every included stock; none = no charts. Default: dashboard.")
+    parser.add_argument("--skip-existing-charts", action="store_true", help="Do not regenerate chart PNGs that already exist. Fastest for reruns after non-price changes.")
+    parser.add_argument("--chart-dpi", type=int, default=240, help="PNG DPI for dashboard charts. 130-160 is usually enough for Streamlit.")
     parser.add_argument("--init-history", action="store_true", help="Backfill historical stage_action_history. Slow; off by default.")
     return parser.parse_args()
 
@@ -3150,10 +3802,10 @@ def main() -> None:
         export_all_ticker_charts=not args.no_charts,
         wide_price=args.wide_price,
         chart_scope="none" if args.no_charts else args.chart_scope,
-        skip_existing_charts=False,
+        skip_existing_charts=bool(args.skip_existing_charts),
         chart_dpi=int(args.chart_dpi),
     )
-    write_engine_run_metadata(Path(args.outdir))
+    write_engine_run_metadata(Path(args.outdir), as_of=outputs.pop("as_of", None))
     print("Saved files:")
     for key, value in outputs.items():
         print(f"- {key}: {value}")
